@@ -1,31 +1,40 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.5'
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id 'java'
+	id("java")
+	kotlin("jvm") version "1.7.20" apply false
 }
 
-group = 'com.maeasoftworks'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+allprojects {
+	repositories {
+		mavenCentral()
+	}
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+	group = "com.maeasoftworks"
+	version = "0.0.1-SNAPSHOT"
 }
 
-repositories {
-    mavenCentral()
+val finalize by tasks.registering {
+	dependsOn(subprojects.mapNotNull {
+		when (it.name) {
+			"frontend" -> it.tasks.findByName("stop")
+			else -> null
+		}
+	})
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+val start by tasks.registering {
+	dependsOn(subprojects.mapNotNull {
+		when (it.name) {
+			"backend" -> it.tasks.findByName("start")
+			else -> null
+		}
+	})
+
+	dependsOn(subprojects.mapNotNull {
+		when (it.name) {
+			"frontend" -> it.tasks.findByName("start")
+			else -> null
+		}
+	})
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+start { finalizedBy(finalize) }

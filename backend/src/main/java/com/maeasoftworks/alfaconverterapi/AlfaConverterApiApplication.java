@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AlfaConverterApplication {
+public class AlfaConverterApiApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AlfaConverterApplication.class, args);
+        SpringApplication.run(AlfaConverterApiApplication.class, args);
     }
 }

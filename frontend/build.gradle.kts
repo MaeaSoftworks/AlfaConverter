@@ -1,6 +1,13 @@
+import com.github.gradle.node.npm.task.NpmTask
+
 plugins {
 	id("idea")
-	id("com.github.node-gradle.node")
+	id("com.github.node-gradle.node") version "3.5.0"
+}
+
+repositories {
+	mavenCentral()
+	gradlePluginPortal()
 }
 
 buildscript {
@@ -15,35 +22,26 @@ buildscript {
 }
 
 node {
-	version = '19.0.0'
-	npmVersion = '8.15.0'
-	download = false
-	workDir = file("${project.buildDir}/node")
-	nodeModulesDir = file("${project.projectDir}/node_modules")
+	version.set("16.14.0")
+	npmVersion.set("8.3.1")
+	download.set(false)
+	workDir.set(file("${project.buildDir}/node"))
+	nodeProjectDir.set(file("${project.projectDir}"))
 }
 
-/**
- * Runs "npm run build" to build the angular app.
- */
-fun Task build(type: NpmTask) {
-	args = ['run', 'build']
-}
-build.dependsOn(npm_install)
-
-/**
- * Deletes the "dist" folder containing the result of the Angular build process.
- */
-fun Task clean(type: Delete){
-	delete "dist"
+val installDependencies by tasks.registering(NpmTask::class) {
+	args.set(listOf("install"))
 }
 
-/**
- * Cleans everything that is created by the node plugin, i.e. the node installation and the node_modules
- * folder.
- */
-fun Task cleanAll(type: Delete){
-	delete "build"
-	delete "node_modules"
-	delete ".gradle"
+val build by tasks.registering(NpmTask::class) {
+	dependsOn(installDependencies)
+	args.set(listOf("run", "build"))
 }
-cleanAll.dependsOn(clean)
+
+val start by tasks.registering(NpmTask::class) {
+	args.set(listOf("start"))
+}
+
+val stop by tasks.registering(NpmTask::class) {
+	args.set(listOf("stop"))
+}
