@@ -7,16 +7,19 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-class Conversion(private val actions: @Contextual List<Action>) {
+internal class Conversion(private val actions: @Contextual MutableList<Action>) {
 	@Transient
 	lateinit var initialTable: Table
+
 	@Transient
 	lateinit var resultTable: Table
+
+	internal fun addAction(action: Action) = actions.add(action)
 
 	fun register(initialTable: Table, resultTable: Table) {
 		this.initialTable = initialTable
 		this.resultTable = resultTable
-		this.initialTable.columns.forEach {(pos, column) ->
+		this.initialTable.columns.forEach { (pos, column) ->
 			actions.forEach {
 				if (it.uses(pos)) {
 					column.hasAction = true
@@ -26,6 +29,9 @@ class Conversion(private val actions: @Contextual List<Action>) {
 	}
 
 	fun start() {
-		actions.forEach { it.run(initialTable, resultTable) }
+		for (action in actions.indices) {
+			actions[0].run(initialTable, resultTable)
+			actions.removeAt(0)
+		}
 	}
 }

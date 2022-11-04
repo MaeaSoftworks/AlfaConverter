@@ -3,7 +3,7 @@ package com.maeasoftworks.alfaconverter.wrappers
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage
 import org.xlsx4j.sml.Worksheet
 
-class Table {
+internal class Table {
 	val columns: MutableMap<Int, Column> = HashMap()
 
 	val headers: MutableList<Cell> = ArrayList()
@@ -11,15 +11,15 @@ class Table {
 	val rowsCount: Int
 		get() = columns.values.maxOf { it.cells.size }
 
-	operator fun get(column: Int, row: Int) : Cell? {
+	operator fun get(column: Int, row: Int): Cell? {
 		return columns[column]?.get(row)
 	}
 
-	operator fun get(column: Int) : Column? {
+	operator fun get(column: Int): Column? {
 		return columns[column]
 	}
 
-	operator fun get(columns: List<Int>) : List<Column> {
+	operator fun get(columns: List<Int>): List<Column> {
 		return columns.map { this.columns[it]!! }
 	}
 
@@ -28,16 +28,16 @@ class Table {
 	}
 
 	private fun append(column: Int, row: Int, value: org.xlsx4j.sml.Cell, spreadsheet: SpreadsheetMLPackage) {
-		if (!columns.values.any {it.pos == column}) {
+		if (!columns.values.any { it.pos == column }) {
 			columns[column] = Column(column)
 		}
 		if (columns[column]?.cells?.values?.any { it.row == row && it.column == column } == false) {
-			columns[column]?.set(row, Cell.extractValue(value, spreadsheet, column, row))
+			columns[column]?.set(row, Cell.extractValue(value, spreadsheet, row, column))
 		}
 	}
 
 	companion object {
-		fun create(spreadsheet: SpreadsheetMLPackage, worksheet: Worksheet) : Table {
+		fun create(spreadsheet: SpreadsheetMLPackage, worksheet: Worksheet): Table {
 			val table = Table()
 			for (row in worksheet.sheetData.row.indices) {
 				for (cell in worksheet.sheetData.row[row].c.indices) {
@@ -48,7 +48,7 @@ class Table {
 			return table
 		}
 
-		private fun extractHeaders(table: Table) : Table {
+		private fun extractHeaders(table: Table): Table {
 			table.columns.forEach { (key, value) ->
 				table.headers.add(value.cells.values.first())
 				table.columns[key]!!.cells.remove(0)

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("bind")
-class Bind(
+internal class Bind(
 	@SerialName("initial-column")
 	val initialColumn: Int,
 	@SerialName("target-column")
@@ -14,7 +14,9 @@ class Bind(
 ) : Action() {
 
 	override fun run(initialTable: Table, resultTable: Table): Table {
-		initialTable[initialColumn]?.cells?.values?.forEach { resultTable[targetColumn]?.cells?.put(it.row, it) }
+		for (cell in initialTable[initialColumn]?.cells?.values!!) {
+			resultTable[targetColumn]?.cells?.put(cell.row, cell.also { it.column = targetColumn })
+		}
 		return resultTable
 	}
 

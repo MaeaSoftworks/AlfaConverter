@@ -1,10 +1,10 @@
 import com.maeasoftworks.alfaconverter.Conversion
 import com.maeasoftworks.alfaconverter.Converter
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import java.nio.file.Files
 import java.nio.file.Path
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.encodeToString
 import kotlin.test.assertEquals
 
 class TableGeneratorTests {

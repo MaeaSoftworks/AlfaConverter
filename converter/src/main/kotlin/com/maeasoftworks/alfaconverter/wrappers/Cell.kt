@@ -11,7 +11,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class Cell(
+internal class Cell(
 	var row: Int,
 	var column: Int
 ) {
@@ -19,6 +19,21 @@ class Cell(
 	var stringValue: String? = null
 	lateinit var wrapped: org.xlsx4j.sml.Cell
 	var format: Long = -1
+
+	override fun equals(other: Any?): Boolean {
+		return other != null
+				&& other is Cell
+				&& row == other.row
+				&& column == other.column
+				&& value == other.value
+				&& stringValue == other.stringValue
+	}
+
+	override fun hashCode(): Int {
+		var result = value?.hashCode() ?: 0
+		result = 31 * result + wrapped.hashCode()
+		return result
+	}
 
 	companion object {
 		private val sharedStringsPart = PartName("/xl/sharedStrings.xml")
@@ -37,25 +52,31 @@ class Cell(
 					cell.value = docx4jCell.f.value == "TRUE"
 					cell.stringValue = cell.value.toString().uppercase(Locale.getDefault())
 				}
+
 				STCellType.N -> {
 					parseNumber(cell, docx4jCell, spreadsheet)
 				}
+
 				STCellType.E -> {
 					cell.value = "error"
 					cell.stringValue = "error"
 				}
+
 				STCellType.S -> {
 					cell.value = findString(spreadsheet, docx4jCell.v)
 					cell.stringValue = cell.value as String
 				}
+
 				STCellType.STR -> {
 					cell.value = "str"
 					cell.stringValue = "str"
 				}
+
 				STCellType.INLINE_STR -> {
 					cell.value = "inline"
 					cell.stringValue = "inline"
 				}
+
 				null -> {
 					cell.value = "null"
 					cell.stringValue = "null"
@@ -92,24 +113,25 @@ class Cell(
 
 		private fun parseNumber(cell: Cell, docx4jCell: org.xlsx4j.sml.Cell, spreadsheet: SpreadsheetMLPackage) {
 			val style = (spreadsheet.parts[stylesPart] as Styles).getXfByIndex(docx4jCell.s)
-			when(style.numFmtId) {
+			when (style.numFmtId) {
 				0L -> {
 					cell.value = docx4jCell.v.toInt()
 					cell.stringValue = cell.value.toString()
 				}
-				1L  -> {
+
+				1L -> {
 					cell.stringValue = style.numFmtId.toString()
 				} //?????
-				2L  -> {
+				2L -> {
 					cell.stringValue = style.numFmtId.toString()
 				} //?????
-				3L  -> {
+				3L -> {
 					cell.stringValue = style.numFmtId.toString()
 				} //?????
-				4L  -> {
+				4L -> {
 					cell.stringValue = style.numFmtId.toString()
 				} //?????
-				9L  -> {
+				9L -> {
 					cell.stringValue = style.numFmtId.toString()
 				} //?????
 				10L -> {
@@ -129,6 +151,7 @@ class Cell(
 					cell.value = date
 					cell.stringValue = SimpleDateFormat("dd.MM.yyyy").format(date)
 				}
+
 				15L -> {
 					cell.stringValue = style.numFmtId.toString()
 				} //?????
@@ -153,16 +176,19 @@ class Cell(
 					}.time
 					cell.stringValue = SimpleDateFormat("HH:mm").format(c)
 				}
+
 				21L -> {
 					val date = convertFromOADate(docx4jCell.v.toDouble())
 					cell.value = date
 					cell.stringValue = SimpleDateFormat("H:mm:ss").format(date)
 				}
+
 				22L -> {
 					val date = convertFromOADate(docx4jCell.v.toDouble())
 					cell.value = date
 					cell.stringValue = SimpleDateFormat("dd.MM.yyyy H:mm").format(date)
 				}
+
 				else -> throw InvalidClassException("Unknown number format")
 			}
 		}

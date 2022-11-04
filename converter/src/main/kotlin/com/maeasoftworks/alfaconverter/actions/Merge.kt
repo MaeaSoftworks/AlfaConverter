@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("merge")
-class Merge(
+internal class Merge(
 	@SerialName("initial-columns")
 	private val initialColumns: List<Int>,
 	@SerialName("target-column")
@@ -18,13 +18,18 @@ class Merge(
 
 	override fun run(initialTable: Table, resultTable: Table): Table {
 		val initialColumns = initialTable[initialColumns]
-		for (y in 0 until initialTable.rowsCount) {
+		for (y in 1 until initialTable.rowsCount) {
 			resultTable[targetColumn, y] = let {
 				var result = pattern
 				initialColumns.horizontal(y).forEach { cell ->
 					result = result.replace("$${cell?.column}", cell?.value!!.toString())
 				}
-				return@let Cell(targetColumn, y).also { z -> z.value = result }
+				return@let Cell(targetColumn, y).also { z ->
+					z.value = result
+					z.stringValue = result
+					z.column = targetColumn
+					z.row = y
+				}
 			}
 		}
 		return resultTable

@@ -25,17 +25,17 @@ class Converter(
 	internal lateinit var initialTable: Table
 	internal lateinit var resultTable: Table
 
-	private val conversion: Conversion = Json.decodeFromString(conversionJson)
-	lateinit var finalDocument: SpreadsheetMLPackage
+	internal val conversion: Conversion = Json.decodeFromString(conversionJson)
+	private lateinit var finalDocument: SpreadsheetMLPackage
 
-	internal fun initialize() : Converter {
+	internal fun initialize(): Converter {
 		initialTable = Table.create(initialDocument, initialWorksheet)
 		resultTable = Table.create(resultDocument, resultWorksheet)
 		conversion.register(initialTable, resultTable)
 		return this
 	}
 
-	fun convert() : ByteArray {
+	fun convert(): ByteArray {
 		initialize()
 		return if (firstFile.isNotEmpty() && secondFile.isNotEmpty()) ByteArray(1) else ByteArray(0)
 	}

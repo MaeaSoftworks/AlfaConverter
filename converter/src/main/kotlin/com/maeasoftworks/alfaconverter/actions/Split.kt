@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("split")
-class Split(
+internal class Split(
 	@SerialName("initial-column")
 	val initialColumn: Int,
 	@SerialName("target-columns")
@@ -16,11 +16,13 @@ class Split(
 ) : Action() {
 	override fun run(initialTable: Table, resultTable: Table): Table {
 		val initialColumn = initialTable[initialColumn]
-		for (y in 0 until initialTable.rowsCount) {
-			val results = Regex(pattern).split(initialColumn?.get(y)?.value!!.toString())
-			for (col in resultTable[targetColumns].indices) {
-				for (a in resultTable[targetColumns].indices) {
-					resultTable[targetColumns][a] = Cell(y, col).also { it.value = results[col] }
+		for (y in 1 until initialTable.rowsCount) {
+			val results = Regex(pattern).matchEntire(initialColumn?.get(y)?.value!!.toString())
+			for (col in targetColumns.indices) {
+				resultTable[targetColumns[col]]!![y] = Cell(y, col).also {
+					it.value = results!!.groups[col + 1]!!.value
+					it.stringValue = it.value as String
+					it.column = targetColumns[col]
 				}
 			}
 		}
