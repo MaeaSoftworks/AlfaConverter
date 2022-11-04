@@ -22,11 +22,13 @@ class Merge(
 			resultTable[targetColumn, y] = let {
 				var result = pattern
 				initialColumns.horizontal(y).forEach { cell ->
-					result = result.replace("$${cell?.column}", cell?.value!!)
+					result = result.replace("$${cell?.column}", cell?.value!!.toString())
 				}
 				return@let Cell(targetColumn, y).also { z -> z.value = result }
 			}
 		}
 		return resultTable
 	}
+
+	override fun uses(column: Int) = initialColumns.any { it == column }
 }

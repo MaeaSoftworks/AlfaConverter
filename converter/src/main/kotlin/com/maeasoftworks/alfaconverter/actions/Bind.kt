@@ -17,4 +17,6 @@ class Bind(
 		initialTable[initialColumn]?.cells?.values?.forEach { resultTable[targetColumn]?.cells?.put(it.row, it) }
 		return resultTable
 	}
+
+	override fun uses(column: Int) = initialColumn == column
 }

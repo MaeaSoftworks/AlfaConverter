@@ -6,6 +6,8 @@ import org.xlsx4j.sml.Worksheet
 class Table {
 	val columns: MutableMap<Int, Column> = HashMap()
 
+	val headers: MutableList<Cell> = ArrayList()
+
 	val rowsCount: Int
 		get() = columns.values.maxOf { it.cells.size }
 
@@ -26,13 +28,12 @@ class Table {
 	}
 
 	private fun append(column: Int, row: Int, value: org.xlsx4j.sml.Cell, spreadsheet: SpreadsheetMLPackage) {
-		if (columns.values.all {it.pos != column}) {
+		if (!columns.values.any {it.pos == column}) {
 			columns[column] = Column(column)
 		}
-		if (columns[column]?.cells?.values?.all { it.row != row } == true) {
-			columns[column]?.set(row, Cell(column, row))
+		if (columns[column]?.cells?.values?.any { it.row == row && it.column == column } == false) {
+			columns[column]?.set(row, Cell.extractValue(value, spreadsheet, column, row))
 		}
-		columns[column]?.get(row)?.value = Cell.extractValue(value, spreadsheet)
 	}
 
 	companion object {
@@ -42,6 +43,15 @@ class Table {
 				for (cell in worksheet.sheetData.row[row].c.indices) {
 					table.append(cell, row, worksheet.sheetData.row[row].c[cell], spreadsheet)
 				}
+			}
+			extractHeaders(table)
+			return table
+		}
+
+		private fun extractHeaders(table: Table) : Table {
+			table.columns.forEach { (key, value) ->
+				table.headers.add(value.cells.values.first())
+				table.columns[key]!!.cells.remove(0)
 			}
 			return table
 		}

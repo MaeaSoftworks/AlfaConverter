@@ -19,16 +19,24 @@ class Converter(
 	private val initialDocument: SpreadsheetMLPackage = SpreadsheetMLPackage.load(ByteArrayInputStream(firstFile))
 	private val resultDocument: SpreadsheetMLPackage = SpreadsheetMLPackage.load(ByteArrayInputStream(secondFile))
 
-	private val initialTable: Worksheet = (initialDocument.parts[worksheet] as WorksheetPart).jaxbElement
-	private val resultTable: Worksheet = (resultDocument.parts[worksheet] as WorksheetPart).jaxbElement
+	private val initialWorksheet: Worksheet = (initialDocument.parts[worksheet] as WorksheetPart).jaxbElement
+	private val resultWorksheet: Worksheet = (resultDocument.parts[worksheet] as WorksheetPart).jaxbElement
+
+	internal lateinit var initialTable: Table
+	internal lateinit var resultTable: Table
 
 	private val conversion: Conversion = Json.decodeFromString(conversionJson)
 	lateinit var finalDocument: SpreadsheetMLPackage
 
+	internal fun initialize() : Converter {
+		initialTable = Table.create(initialDocument, initialWorksheet)
+		resultTable = Table.create(resultDocument, resultWorksheet)
+		conversion.register(initialTable, resultTable)
+		return this
+	}
+
 	fun convert() : ByteArray {
-		conversion.register()
-		var table1 = Table.create(initialDocument, initialTable)
-		var table2 = Table.create(resultDocument, resultTable)
+		initialize()
 		return if (firstFile.isNotEmpty() && secondFile.isNotEmpty()) ByteArray(1) else ByteArray(0)
 	}
 }

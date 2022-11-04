@@ -25,7 +25,9 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 	runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.4.1")
 
+	testImplementation(kotlin("test"))
 	testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
+	testImplementation("org.assertj:assertj-core:3.23.1")
 }
 
 tasks.withType<Test> {

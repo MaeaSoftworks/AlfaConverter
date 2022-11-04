@@ -6,4 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class Action {
 	abstract fun run(initialTable: Table, resultTable: Table) : Table
+
+	abstract fun uses(column: Int) : Boolean
 }
