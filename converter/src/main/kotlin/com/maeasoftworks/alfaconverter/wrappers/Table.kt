@@ -1,7 +1,14 @@
 package com.maeasoftworks.alfaconverter.wrappers
 
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage
+import org.docx4j.openpackaging.parts.PartName
+import org.xlsx4j.jaxb.Context
+import org.xlsx4j.sml.CTRst
+import org.xlsx4j.sml.ObjectFactory
+import org.xlsx4j.sml.STCellType
 import org.xlsx4j.sml.Worksheet
+import java.io.ByteArrayOutputStream
+
 
 internal class Table {
 	val columns: MutableMap<Int, Column> = HashMap()
@@ -36,7 +43,50 @@ internal class Table {
 		}
 	}
 
+	fun save(): ByteArray {
+		val pkg = SpreadsheetMLPackage.createPackage()
+		val factory = Context.getsmlObjectFactory()
+
+		val sheet = pkg.createWorksheetPart(PartName("/xl/worksheets/sheet1.xml"), "result", 1)
+		val sheetData = sheet.contents.sheetData
+
+		val header = factory.createRow()
+		for (columnNumber in 0 until columns.size) {
+			val cell = createCell(headers[columnNumber].stringValue, factory)
+			cell.r = toExcel(columnNumber) + "1"
+			header.c.add(cell)
+		}
+		sheetData.row.add(header)
+
+		for (rowNumber in 1 until rowsCount) {
+			val row = factory.createRow()
+			for (columnNumber in 0 until columns.size) {
+				val cell = createCell(columns[columnNumber]?.get(rowNumber)?.stringValue, factory)
+				cell.r = toExcel(columnNumber) + (rowNumber + 1).toString()
+				row.c.add(cell)
+			}
+			sheetData.row.add(row)
+		}
+		val stream = ByteArrayOutputStream()
+		pkg.save(stream)
+		return stream.toByteArray()
+	}
+
+
+	private fun createCell(content: String?, factory: ObjectFactory): org.xlsx4j.sml.Cell {
+		val cell = factory.createCell()
+		val ctx = factory.createCTXstringWhitespace()
+		ctx.value = content
+		val ctr = CTRst()
+		ctr.t = ctx
+		cell.t = STCellType.INLINE_STR
+		cell.`is` = ctr
+		return cell
+	}
+
 	companion object {
+		private val alphabet = ('A'..'Z').toMutableList()
+
 		fun create(spreadsheet: SpreadsheetMLPackage, worksheet: Worksheet): Table {
 			val table = Table()
 			for (row in worksheet.sheetData.row.indices) {
@@ -67,6 +117,23 @@ internal class Table {
 
 		internal fun slice(columns: List<Column>, pos: Int): List<Cell?> {
 			return columns.map { it[pos] }
+		}
+
+		fun toExcel(number: Int): String {
+			var num = number
+			fun divAndMod(n: Int): Pair<Int, Int> {
+				val a = n / 26
+				val b = n % 26
+				return if (b == 0) Pair(a - 1, 26) else Pair(a, b)
+			}
+
+			val chars = mutableListOf<Char>()
+			while (num > 0) {
+				val param = divAndMod(num)
+				num = param.first
+				chars.add(alphabet[param.second])
+			}
+			return chars.joinToString { it.toString() }
 		}
 	}
 }

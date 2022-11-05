@@ -20,7 +20,7 @@
    ```
    `file1` and `file2` is same `byte[]` from stage 2.
 
-4. Set file order (source file and structure file)
+4. Set file order (source file and structure file)  
    **Should be set after reinitialization and before conversion!**
    ```java
    container.setHeadship(0 /*or 1*/);
