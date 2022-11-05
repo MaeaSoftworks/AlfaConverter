@@ -1,6 +1,8 @@
 package com.maeasoftworks.alfaconverter
 
 import com.maeasoftworks.alfaconverter.actions.Action
+import com.maeasoftworks.alfaconverter.model.BondedPair
+import com.maeasoftworks.alfaconverter.wrappers.Document
 import com.maeasoftworks.alfaconverter.wrappers.Table
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -16,9 +18,9 @@ internal class Conversion(private val actions: @Contextual MutableList<Action>) 
 
 	internal fun addAction(action: Action) = actions.add(action)
 
-	fun register(initialTable: Table, resultTable: Table) {
-		this.initialTable = initialTable
-		this.resultTable = resultTable
+	fun register(documents: BondedPair<Document>) {
+		this.initialTable = documents.master.table
+		this.resultTable = documents.slave.table
 		this.initialTable.columns.forEach { (pos, column) ->
 			actions.forEach {
 				if (it.uses(pos)) {
@@ -33,5 +35,10 @@ internal class Conversion(private val actions: @Contextual MutableList<Action>) 
 			actions[0].run(initialTable, resultTable)
 			actions.removeAt(0)
 		}
+	}
+
+	companion object {
+		val empty: Conversion
+			get() = Conversion(mutableListOf())
 	}
 }

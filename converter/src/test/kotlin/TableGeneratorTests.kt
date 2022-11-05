@@ -1,58 +1,59 @@
-import com.maeasoftworks.alfaconverter.Conversion
-import com.maeasoftworks.alfaconverter.Converter
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import com.maeasoftworks.alfaconverter.ConverterContainer
+import com.maeasoftworks.alfaconverter.wrappers.Table
 import org.junit.jupiter.api.Test
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.test.assertEquals
 
 class TableGeneratorTests {
-	private val converter = Converter(
-		Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx")),
-		Files.readAllBytes(Path.of("src/test/resources/to.xlsx")),
-		Json.encodeToString(Conversion(arrayListOf()))
-	).initialize()
+	private val converter = ConverterContainer().also {
+		it.initialize(
+			Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx")),
+			Files.readAllBytes(Path.of("src/test/resources/to.xlsx"))
+		)
+	}.converter
+	private val initial: Table
+		get() = converter.documents.master.table
 
 	@Test
 	fun `size detection`() {
-		assertEquals(10, converter.initialTable.columns.size)
-		assertEquals(1, converter.initialTable.rowsCount)
-		assertEquals(10, converter.initialTable.headers.count())
+		assertEquals(10, initial.columns.size)
+		assertEquals(1, initial.rowsCount)
+		assertEquals(10, initial.headers.count())
 	}
 
 	@Test
 	fun `string detection`() {
-		assertEquals("Иванов", converter.initialTable[0, 1]!!.value)
+		assertEquals("Иванов", initial[0, 1]!!.value)
 	}
 
 	@Test
 	fun `number detection`() {
-		assertEquals(59, converter.initialTable[2, 1]!!.value)
+		assertEquals(59, initial[2, 1]!!.value)
 	}
 
 	@Test
 	fun `date detection`() {
-		assertEquals("21.06.1963", converter.initialTable[1, 1]!!.stringValue)
+		assertEquals("21.06.1963", initial[1, 1]!!.stringValue)
 	}
 
 	@Test
 	fun `time detection with sec`() {
-		assertEquals("9:20:00", converter.initialTable[7, 1]!!.stringValue)
+		assertEquals("9:20:00", initial[7, 1]!!.stringValue)
 	}
 
 	@Test
 	fun `time detection without sec`() {
-		assertEquals("13:53", converter.initialTable[9, 1]!!.stringValue)
+		assertEquals("13:53", initial[9, 1]!!.stringValue)
 	}
 
 	@Test
 	fun `date & time detection`() {
-		assertEquals("22.06.2022 9:20", converter.initialTable[4, 1]!!.stringValue)
+		assertEquals("22.06.2022 9:20", initial[4, 1]!!.stringValue)
 	}
 
 	@Test
 	fun `boolean detection`() {
-		assertEquals("FALSE", converter.initialTable[3, 1]!!.stringValue)
+		assertEquals("FALSE", initial[3, 1]!!.stringValue)
 	}
 }

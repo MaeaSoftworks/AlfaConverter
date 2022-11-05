@@ -48,12 +48,25 @@ internal class Table {
 			return table
 		}
 
+		fun getHeaders(spreadsheet: SpreadsheetMLPackage, worksheet: Worksheet): List<String?> {
+			val headers: MutableList<Cell> = mutableListOf()
+			if (worksheet.sheetData.row[0].c.isEmpty()) throw NoSuchElementException("First row of table was empty")
+			for (column in worksheet.sheetData.row[0].c.indices) {
+				headers.add(Cell.extractValue(worksheet.sheetData.row[0].c[column], spreadsheet, 0, column))
+			}
+			return headers.map { it.stringValue }
+		}
+
 		private fun extractHeaders(table: Table): Table {
 			table.columns.forEach { (key, value) ->
 				table.headers.add(value.cells.values.first())
 				table.columns[key]!!.cells.remove(0)
 			}
 			return table
+		}
+
+		internal fun slice(columns: List<Column>, pos: Int): List<Cell?> {
+			return columns.map { it[pos] }
 		}
 	}
 }

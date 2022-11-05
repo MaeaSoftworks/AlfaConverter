@@ -18,7 +18,7 @@ internal class Cell(
 	var value: Any? = null
 	var stringValue: String? = null
 	lateinit var wrapped: org.xlsx4j.sml.Cell
-	var format: Long = -1
+	var format: DataFormat = DataFormat.STRING
 
 	override fun equals(other: Any?): Boolean {
 		return other != null
