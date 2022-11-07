@@ -16,7 +16,7 @@ internal class Split(
 ) : Action() {
 	override fun run(initialTable: Table, resultTable: Table): Table {
 		val initialColumn = initialTable[initialColumn]
-		for (y in 1 until initialTable.rowsCount) {
+		for (y in 1..initialTable.rowsCount) {
 			val results = Regex(pattern).matchEntire(initialColumn?.get(y)?.value!!.toString())
 			for (col in targetColumns.indices) {
 				resultTable[targetColumns[col]]!![y] = Cell(y, col).also {

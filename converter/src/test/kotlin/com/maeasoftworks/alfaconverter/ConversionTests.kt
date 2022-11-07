@@ -27,9 +27,6 @@ class ConversionTests {
 	fun `binding test`() {
 		converter.conversion.addAction(Bind(0, 1))
 		converter.conversion.start()
-		for (cell in result.columns[0]!!.cells) {
-			assertNull(cell.value)
-		}
 		for (row in result.columns[1]!!.cells.values.indices) {
 			assertEquals(
 				Cell(row + 1, 1).also { it.value = (row + 1) * 10; it.stringValue = ((row + 1) * 10).toString() },

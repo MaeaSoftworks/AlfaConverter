@@ -21,6 +21,7 @@ dependencies {
 	implementation("org.glassfish.jaxb:jaxb-runtime:4.0.0")
 	implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.0")
 	implementation("jakarta.activation:jakarta.activation-api:2.1.0")
+	implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
 
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 	runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.4.1")

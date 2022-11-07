@@ -23,6 +23,68 @@ public class FileSplitterTests {
     @Autowired
     private FileSplitter fileSplitter;
 
+    static Stream<Pair<byte[][], byte[]>> shieldsProvider() {
+        return Stream.of(
+                new ImmutablePair<>(
+                        new byte[][]{
+                                new byte[]{0x11, 0x11, 0x11}
+                        },
+                        new byte[]{0x11, 0x11, 0x11, 0x00, 0x00}),
+                new ImmutablePair<>(
+                        new byte[][]{
+                                new byte[]{0x11, 0x00, 0x00}
+                        },
+                        new byte[]{0x11, 0x7f, 0x00, 0x00, 0x00, 0x00}),
+                new ImmutablePair<>(
+                        new byte[][]{
+                                new byte[]{0x11, 0x7f, 0x00, 0x00}
+                        },
+                        new byte[]{0x11, 0x7f, 0x7f, 0x7f, 0x00, 0x00, 0x00, 0x00})
+        );
+    }
+
+    static Stream<Pair<byte[][], byte[]>> mergesProvider() {
+        return Stream.of(
+                new ImmutablePair<>(
+                        new byte[][]{
+                                new byte[]{0x11, 0x11, 0x11},
+                                new byte[]{0x11, 0x11, 0x11}
+                        },
+                        new byte[]{0x11, 0x11, 0x11, 0x00, 0x00, 0x11, 0x11, 0x11, 0x00, 0x00}),
+                new ImmutablePair<>(
+                        new byte[][]{
+                                new byte[]{0x11, 0x00, 0x11},
+                                new byte[]{0x11, 0x00, 0x11}
+                        },
+                        new byte[]{0x11, 0x00, 0x11, 0x00, 0x00, 0x11, 0x00, 0x11, 0x00, 0x00}),
+                new ImmutablePair<>(
+                        new byte[][]{
+                                new byte[]{0x11, 0x00, 0x00},
+                                new byte[]{0x11, 0x00, 0x00}
+                        },
+                        new byte[]{0x11, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x11, 0x7f, 0x00, 0x00, 0x00, 0x00})
+        );
+    }
+
+    static Stream<ImmutablePair<byte[], List<byte[]>>> splitsProvider() {
+        return Stream.of(
+                new ImmutablePair<>(
+                        new byte[]{0x11, 0x11, 0x11, 0x00, 0x00, 0x11, 0x11, 0x11, 0x00, 0x00},
+                        new ArrayList<>(List.of(
+                                new byte[]{0x11, 0x11, 0x11},
+                                new byte[]{0x11, 0x11, 0x11}
+                        ))
+                ),
+                new ImmutablePair<>(
+                        new byte[]{0x11, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x11, 0x7f, 0x00, 0x00, 0x00, 0x00},
+                        new ArrayList<>(List.of(
+                                new byte[]{0x11, 0x00, 0x00},
+                                new byte[]{0x11, 0x00, 0x00}
+                        ))
+                )
+        );
+    }
+
     @ParameterizedTest
     @MethodSource({"shieldsProvider", "mergesProvider"})
     void shieldsCorrectly(Pair<byte[][], byte[]> source) {
@@ -33,49 +95,6 @@ public class FileSplitterTests {
         for (var i = 0; i < expected.length; i++) {
             assertEquals(actual[i], expected[i], "pos: " + i);
         }
-    }
-
-    static Stream<Pair<byte[][], byte[]>> shieldsProvider() {
-        return Stream.of(
-                new ImmutablePair<>(
-                        new byte[][]{
-                                new byte[] {0x11, 0x11, 0x11}
-                        },
-                        new byte[] {0x11, 0x11, 0x11, 0x00, 0x00}),
-                new ImmutablePair<>(
-                        new byte[][]{
-                                new byte[] {0x11, 0x00, 0x00}
-                        },
-                        new byte[] {0x11, 0x7f, 0x00, 0x00, 0x00, 0x00}),
-                new ImmutablePair<>(
-                        new byte[][]{
-                                new byte[] {0x11, 0x7f, 0x00, 0x00}
-                        },
-                        new byte[] {0x11, 0x7f, 0x7f, 0x7f, 0x00, 0x00, 0x00, 0x00})
-        );
-    }
-
-    static Stream<Pair<byte[][], byte[]>> mergesProvider() {
-        return Stream.of(
-                new ImmutablePair<>(
-                        new byte[][]{
-                                new byte[] {0x11, 0x11, 0x11},
-                                new byte[] {0x11, 0x11, 0x11}
-                        },
-                        new byte[] {0x11, 0x11, 0x11, 0x00, 0x00, 0x11, 0x11, 0x11, 0x00, 0x00}),
-                new ImmutablePair<>(
-                        new byte[][]{
-                                new byte[] {0x11, 0x00, 0x11},
-                                new byte[] {0x11, 0x00, 0x11}
-                        },
-                        new byte[] {0x11, 0x00, 0x11, 0x00, 0x00, 0x11, 0x00, 0x11, 0x00, 0x00}),
-                new ImmutablePair<>(
-                        new byte[][]{
-                                new byte[] {0x11, 0x00, 0x00},
-                                new byte[] {0x11, 0x00, 0x00}
-                        },
-                        new byte[] {0x11, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x11, 0x7f, 0x00, 0x00, 0x00, 0x00})
-        );
     }
 
     @ParameterizedTest
@@ -95,25 +114,6 @@ public class FileSplitterTests {
         }
     }
 
-    static Stream<ImmutablePair<byte[], List<byte[]>>> splitsProvider() {
-        return Stream.of(
-                new ImmutablePair<>(
-                        new byte[] {0x11, 0x11, 0x11, 0x00, 0x00, 0x11, 0x11, 0x11, 0x00, 0x00},
-                        new ArrayList<>(List.of(
-                                new byte[]{0x11, 0x11, 0x11},
-                                new byte[]{0x11, 0x11, 0x11}
-                        ))
-                ),
-                new ImmutablePair<>(
-                        new byte[] {0x11, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x11, 0x7f, 0x00, 0x00, 0x00, 0x00},
-                        new ArrayList<>(List.of(
-                                new byte[] {0x11, 0x00, 0x00},
-                                new byte[] {0x11, 0x00, 0x00}
-                        ))
-                )
-        );
-    }
-
     @Test
     void mergeAndConvertReturnSameFiles() throws IOException {
         var firstFile = Files.readAllBytes(Path.of("src/test/resources/first.xlsx"));
@@ -131,13 +131,5 @@ public class FileSplitterTests {
         for (var i = 0; i < secondFile.length; i++) {
             assertEquals(secondFile[i], actualSecond[i], "second: " + i);
         }
-    }
-
-    @Test
-    void a() throws IOException {
-        var firstFile = Files.readAllBytes(Path.of("src/test/resources/first.xlsx"));
-        var secondFile = Files.readAllBytes(Path.of("src/test/resources/second.xlsx"));
-        var merged = fileSplitter.merge(new byte[][]{firstFile, secondFile});
-        Files.write(Path.of("src/test/resources/result.xlsx"), merged);
     }
 }

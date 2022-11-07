@@ -21,13 +21,12 @@ internal class Merge(
 
 	override fun run(initialTable: Table, resultTable: Table): Table {
 		val initialColumns = initialTable[initialColumns]
-		for (y in 1 until initialTable.rowsCount) {
-			resultTable[targetColumn, y] = let {
-				var result = pattern
-				Table.slice(initialColumns, y).forEach { cell ->
-					result = result.replace("$${cell?.column}", cell?.value!!.toString())
-				}
-				return@let Cell(targetColumn, y).also { z ->
+		for (y in 1..initialTable.rowsCount) {
+			var result = pattern
+			Table.slice(initialColumns, y).forEach { cell ->
+				result = result.replace("$${cell?.column}", cell?.value!!.toString())
+			}
+			resultTable[targetColumn, y] = Cell(targetColumn, y).also { z ->
 					z.value = result
 					z.stringValue = result
 					z.column = targetColumn
@@ -35,7 +34,6 @@ internal class Merge(
 					z.format = targetDataFormat
 				}
 			}
-		}
 		return resultTable
 	}
 

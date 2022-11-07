@@ -1,5 +1,5 @@
-import com.maeasoftworks.alfaconverter.Conversion
-import com.maeasoftworks.alfaconverter.ConverterContainer
+package com.maeasoftworks.alfaconverter
+
 import com.maeasoftworks.alfaconverter.actions.Bind
 import com.maeasoftworks.alfaconverter.actions.Merge
 import com.maeasoftworks.alfaconverter.actions.Split
