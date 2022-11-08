@@ -1,30 +1,34 @@
 package com.maeasoftworks.alfaconverterapi.dao;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Table
+@Table(name = "logs")
+@Getter
+@Setter
 public class Log {
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    public long id;
+    private long id;
+    private final LocalDateTime timestamp;
+    @Lob
+    private final String conversion;
+    private final int resultCode;
 
-    @Getter
-    @Setter
-    public Date timestamp;
+    public Log(LocalDateTime timestamp, String conversion, int resultCode) {
+        this.conversion = conversion;
+        this.resultCode = resultCode;
+        this.timestamp = timestamp;
+    }
 
-    @Getter
-    @Setter
-    public String conversion;
-
-    @Getter
-    @Setter
-    public int resultCode;
+    protected Log() {
+        this.conversion = "";
+        this.resultCode = -1;
+        this.timestamp = LocalDateTime.now();
+    }
 }
