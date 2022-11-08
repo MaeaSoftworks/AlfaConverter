@@ -1,15 +1,17 @@
-import com.maeasoftworks.alfaconverter.Conversion
-import com.maeasoftworks.alfaconverter.ConverterContainer
+package com.maeasoftworks.alfaconverter
+
 import com.maeasoftworks.alfaconverter.actions.Bind
 import com.maeasoftworks.alfaconverter.actions.Merge
 import com.maeasoftworks.alfaconverter.actions.Split
 import com.maeasoftworks.alfaconverter.wrappers.Cell
 import com.maeasoftworks.alfaconverter.wrappers.Table
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 class ConversionTests {
 	private val converter = ConverterContainer().also {
@@ -72,5 +74,15 @@ class ConversionTests {
 				result.columns[5]!!.cells[row]
 			)
 		}
+	}
+
+	@Ignore
+	@Test
+	fun `generate conversion string`() {
+		converter.conversion.addAction(Bind(0, 1))
+		converter.conversion.addAction(Bind(1, 0))
+		converter.conversion.addAction(Split(2, listOf(2, 3, 4), "(\\S+) (\\S+) (\\S+)"))
+		converter.conversion.addAction(Merge(listOf(3, 4, 5), 5, "$3 $4 $5"))
+		println(Json.encodeToString(converter.conversion))
 	}
 }
