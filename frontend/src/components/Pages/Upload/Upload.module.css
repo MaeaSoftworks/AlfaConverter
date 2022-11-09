@@ -1,0 +1,117 @@
+.page {
+    font-family: Segoe UI, serif;
+    display: flex;
+    justify-content: center;
+    padding-top: 170px;
+    padding-bottom: 170px;
+}
+
+.upload {
+    display: flex;
+    width: 1000px;
+    gap: 32px;
+}
+
+.header {
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 67px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.description {
+    margin-top: 16px;
+
+    font-family: Segoe UI, serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 39px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.form {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.file_upload_block {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.file_input {
+    display: none;
+}
+
+.file_input_label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 310px;
+    height: 75px;
+    background: #EA5B5B;
+    border-radius: 20px;
+    color: #FFFFFF;
+    text-transform: uppercase;
+
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 34px;
+    letter-spacing: 0.015em;
+
+}
+
+.file_input_description {
+    width: 275px;
+    font-family: Segoe UI, serif;
+    font-size: 20px;
+    font-weight: 350;
+    line-height: 29px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.send_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    max-width: 300px;
+    max-height: 75px;
+    background: #A82F2F;
+    border-radius: 20px;
+    color: #FFFFFF;
+    text-transform: uppercase;
+
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 34px;
+    letter-spacing: 0.015em;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+
+    box-shadow: none;
+    border: none;
+}
+
+.image {
+    width: 432px;
+    height: 432px;
+}
+
+.file_input_label:hover,
+.send_button:hover {
+    cursor: pointer;
+    background-color: lightgrey;
+    color: #000000;
+    transition-duration: 0.5s;
+}
