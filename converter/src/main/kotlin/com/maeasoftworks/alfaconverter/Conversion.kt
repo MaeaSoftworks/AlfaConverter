@@ -2,8 +2,8 @@ package com.maeasoftworks.alfaconverter
 
 import com.maeasoftworks.alfaconverter.actions.Action
 import com.maeasoftworks.alfaconverter.actions.Bind
+import com.maeasoftworks.alfaconverter.documents.Document
 import com.maeasoftworks.alfaconverter.model.BondedPair
-import com.maeasoftworks.alfaconverter.wrappers.Document
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

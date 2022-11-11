@@ -12,7 +12,7 @@ internal class Split(
 	val initialColumn: Int,
 	@SerialName("target-columns")
 	val targetColumns: List<Int>,
-	val pattern: String
+	private val pattern: String
 ) : Action() {
 	override fun run(initialTable: Table, resultTable: Table): Table {
 		val initialColumn = initialTable[initialColumn]

@@ -14,21 +14,22 @@ import kotlin.test.Ignore
 import kotlin.test.assertEquals
 
 class ConversionTests {
-	private val converter = ConverterContainer().also {
-		it.initialize(
-			Files.readAllBytes(Path.of("src/test/resources/conversions_from.xlsx")),
-			Files.readAllBytes(Path.of("src/test/resources/conversions_to.xlsx"))
-		)
-		it.setConversion(Conversion.empty)
-	}.converter
+	private val converter = Converter.ofFiles(
+		Files.readAllBytes(Path.of("src/test/resources/conversions_from.xlsx")),
+		Files.readAllBytes(Path.of("src/test/resources/conversions_to.xlsx")),
+		"xlsx"
+	).initialize()
 
 	private val result: Table
 		get() = converter.documents.slave.table
 
+	private val conversion: Conversion
+		get() = converter.conversion
+
 	@Test
 	fun `binding test`() {
-		converter.conversion.addAction(Bind(0, 1))
-		converter.conversion.start()
+		conversion.addAction(Bind(0, 1))
+		conversion.start()
 		for (row in result.columns[1]!!.cells.values.indices) {
 			assertEquals(
 				Cell(row + 1, 1).also { it.value = (row + 1) * 10; it.stringValue = ((row + 1) * 10).toString() },
@@ -44,8 +45,8 @@ class ConversionTests {
 				0 -> "c"; 1 -> "a"; 2 -> "b"; else -> "d"
 			}
 		}
-		converter.conversion.addAction(Split(2, listOf(2, 3, 4), "(\\S+) (\\S+) (\\S+)"))
-		converter.conversion.start()
+		conversion.addAction(Split(2, listOf(2, 3, 4), "(\\S+) (\\S+) (\\S+)"))
+		conversion.start()
 		for (column in 2..4) {
 			for (row in result.columns[column]!!.cells.keys) {
 				assertEquals(
@@ -66,8 +67,8 @@ class ConversionTests {
 			}
 		}
 
-		converter.conversion.addAction(Merge(listOf(3, 4, 5), 5, "$3 $4 $5"))
-		converter.conversion.start()
+		conversion.addAction(Merge(listOf(3, 4, 5), 5, "$3 $4 $5"))
+		conversion.start()
 		for (row in result.columns[5]!!.cells.keys) {
 			assertEquals(
 				Cell(row, 5).also { it.value = getString(row); it.stringValue = getString(row) },
@@ -79,10 +80,10 @@ class ConversionTests {
 	@Ignore
 	@Test
 	fun `generate conversion string`() {
-		converter.conversion.addAction(Bind(0, 1))
-		converter.conversion.addAction(Bind(1, 0))
-		converter.conversion.addAction(Split(2, listOf(2, 3, 4), "(\\S+) (\\S+) (\\S+)"))
-		converter.conversion.addAction(Merge(listOf(3, 4, 5), 5, "$3 $4 $5"))
-		println(Json.encodeToString(converter.conversion))
+		conversion.addAction(Bind(0, 1))
+		conversion.addAction(Bind(1, 0))
+		conversion.addAction(Split(2, listOf(2, 3, 4), "(\\S+) (\\S+) (\\S+)"))
+		conversion.addAction(Merge(listOf(3, 4, 5), 5, "$3 $4 $5"))
+		println(Json.encodeToString(conversion))
 	}
 }

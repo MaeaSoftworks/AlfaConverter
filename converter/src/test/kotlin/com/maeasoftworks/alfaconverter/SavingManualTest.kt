@@ -8,18 +8,22 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 class SavingManualTest {
-	private val converter = ConverterContainer().also {
-		it.initialize(
+	private val converter = Converter.ofFiles(
 			Files.readAllBytes(Path.of("src/test/resources/conversions_from.xlsx")),
-			Files.readAllBytes(Path.of("src/test/resources/conversions_to.xlsx"))
+			Files.readAllBytes(Path.of("src/test/resources/conversions_to.xlsx")),
+			"xlsx"
 		)
-		it.setConversion(Conversion(mutableListOf(
-			Bind(0, 1),
-			Bind(1, 0),
-			Split(2, listOf(2, 3, 4), "(\\S+) (\\S+) (\\S+)"),
-			Merge(listOf(3, 4, 5), 5, "$3 $4 $5")
-		)))
-	}
+		.setConversion(
+			Conversion(
+				mutableListOf(
+					Bind(0, 1),
+					Bind(1, 0),
+					Split(2, listOf(2, 3, 4), "(\\S+) (\\S+) (\\S+)"),
+					Merge(listOf(3, 4, 5), 5, "$3 $4 $5")
+				)
+			)
+		)
+		.initialize()
 
 	@Test
 	fun `saving test`() {

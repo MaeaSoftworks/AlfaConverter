@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverterapi.controllers;
 
-import com.maeasoftworks.alfaconverter.ConverterContainer;
+import com.maeasoftworks.alfaconverter.Converter;
 import com.maeasoftworks.alfaconverterapi.dao.Log;
 import com.maeasoftworks.alfaconverterapi.services.Logger;
 import lombok.val;
@@ -33,7 +33,7 @@ public class FileController {
             @RequestParam("first-file") MultipartFile firstFile,
             @RequestParam("second-file") MultipartFile secondFile
     ) {
-        checkFiles(firstFile, secondFile, null);
+        val extension = checkFiles(firstFile, secondFile, null);
         byte[] bytes1;
         byte[] bytes2;
         try {
@@ -42,7 +42,7 @@ public class FileController {
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot process this document");
         }
-        return new ConverterContainer().getHeaders(bytes1, bytes2);
+        return Converter.Companion.ofFiles(bytes1, bytes2, extension).getHeaders();
     }
 
     @PostMapping("convert")
@@ -52,7 +52,7 @@ public class FileController {
             @RequestParam("first-file") MultipartFile firstFile,
             @RequestParam("second-file") MultipartFile secondFile
     ) {
-        checkFiles(firstFile, secondFile, conversion);
+        val extension = checkFiles(firstFile, secondFile, conversion);
         byte[] bytes1;
         byte[] bytes2;
         try {
@@ -62,8 +62,8 @@ public class FileController {
             logger.write(new Log(LocalDateTime.now(), conversion, 422));
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot process this document");
         }
-        var converter = new ConverterContainer();
-        converter.initialize(bytes1, bytes2);
+        var converter = Converter.Companion.ofFiles(bytes1, bytes2, extension);
+        converter.initialize();
         converter.setConversion(conversion);
         converter.setHeadship(masterFile);
         val result = converter.convert();
@@ -81,7 +81,7 @@ public class FileController {
         return ResponseEntity.ok().headers(headers).body(new ByteArrayResource(result));
     }
 
-    private void checkFiles(MultipartFile firstFile, MultipartFile secondFile, String conversion) {
+    private String checkFiles(MultipartFile firstFile, MultipartFile secondFile, String conversion) {
         if (firstFile.getOriginalFilename() == null || Objects.equals(firstFile.getOriginalFilename(), "") ||
                 secondFile.getOriginalFilename() == null || Objects.equals(secondFile.getOriginalFilename(), "")
         ) {
@@ -90,12 +90,18 @@ public class FileController {
             }
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Required arguments were empty");
         }
-        if (!Objects.equals(firstFile.getOriginalFilename().split("\\.")[1], "xlsx") &&
-                !Objects.equals(secondFile.getOriginalFilename().split("\\.")[1], "xlsx")) {
+        val extension1 = firstFile.getOriginalFilename().split("\\.")[1];
+        val extension2 = secondFile.getOriginalFilename().split("\\.")[1];
+
+        if (!Objects.equals(extension1, "xlsx") && !Objects.equals(extension2, "xlsx")) {
             if (conversion != null) {
                 logger.write(new Log(LocalDateTime.now(), conversion, 422));
             }
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot process this documents");
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Unsupported file format");
         }
+        if (!Objects.equals(extension1, extension2)) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Files' extensions was not the same");
+        }
+        return extension1;
     }
 }

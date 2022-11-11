@@ -1,4 +1,4 @@
-import com.maeasoftworks.alfaconverter.ConverterContainer
+import com.maeasoftworks.alfaconverter.Converter
 import com.maeasoftworks.alfaconverter.wrappers.Table
 import org.junit.jupiter.api.Test
 import java.nio.file.Files
@@ -6,12 +6,12 @@ import java.nio.file.Path
 import kotlin.test.assertEquals
 
 class TableGeneratorTests {
-	private val converter = ConverterContainer().also {
-		it.initialize(
-			Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx")),
-			Files.readAllBytes(Path.of("src/test/resources/to.xlsx"))
-		)
-	}.converter
+	private val converter = Converter.ofFiles(
+		Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx")),
+		Files.readAllBytes(Path.of("src/test/resources/to.xlsx")),
+		"xlsx"
+	).initialize()
+
 	private val initial: Table
 		get() = converter.documents.master.table
 
