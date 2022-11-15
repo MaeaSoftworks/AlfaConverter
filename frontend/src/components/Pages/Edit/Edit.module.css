@@ -136,6 +136,10 @@
     border: none;
 }
 
+.control_button_active {
+    box-shadow: 0 0 14px 12px #ccc;
+}
+
 .control_button:hover {
     cursor: pointer;
 }
