@@ -2,6 +2,7 @@ package com.maeasoftworks.alfaconverterapi.controllers;
 
 import com.maeasoftworks.alfaconverter.Converter;
 import com.maeasoftworks.alfaconverterapi.dao.Log;
+import com.maeasoftworks.alfaconverterapi.dto.LiteDocument;
 import com.maeasoftworks.alfaconverterapi.services.Logger;
 import lombok.val;
 import org.springframework.core.io.ByteArrayResource;
@@ -30,7 +31,7 @@ public class FileController {
 
     @PostMapping("headers")
     @ResponseBody
-    public List<List<String>> getHeaders(
+    public List<LiteDocument> getHeaders(
             @RequestParam("first-file") MultipartFile firstFile,
             @RequestParam("second-file") MultipartFile secondFile
     ) {
@@ -43,7 +44,8 @@ public class FileController {
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot process this document");
         }
-        return Converter.Companion.ofFiles(bytes1, bytes2, extension).getHeaders();
+        val result = Converter.Companion.ofFiles(bytes1, bytes2, extension).getHeaders();
+        return List.of(new LiteDocument(result.get(0), result.get(1)), new LiteDocument(result.get(2), result.get(3)));
     }
 
     @PostMapping("convert")

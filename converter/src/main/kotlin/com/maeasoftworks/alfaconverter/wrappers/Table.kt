@@ -1,9 +1,14 @@
 package com.maeasoftworks.alfaconverter.wrappers
 
+import com.maeasoftworks.alfaconverter.model.datatypes.XObject
+
 internal class Table {
+	var isInitialized: Boolean = false
 	val columns: MutableMap<Int, Column> = HashMap()
 
 	val headers: MutableList<Cell> = ArrayList()
+
+	private val scope = Scope(this)
 
 	val rowsCount: Int
 		get() = columns.values.maxOf { it.cells.size }
@@ -33,9 +38,35 @@ internal class Table {
 		}
 	}
 
+	fun fill(function: Scope.() -> Unit): Table {
+		isInitialized = true
+		scope.function()
+		return this
+	}
+
 	companion object {
 		internal fun slice(columns: List<Column>, pos: Int): List<Cell?> {
 			return columns.map { it[pos] }
+		}
+	}
+
+	inner class Scope(private val table: Table) {
+		operator fun Column.unaryPlus() {
+			table.columns[this.pos] = this
+		}
+
+		fun header(cell: Cell) {
+			columns[cell.column] = Column(cell.column)
+			headers.add(cell)
+		}
+
+		fun put(cell: Cell) {
+			table.append(cell.column, cell.row, cell)
+		}
+
+		infix fun Cell.with(obj: XObject): Cell {
+			this.value = obj
+			return this
 		}
 	}
 }

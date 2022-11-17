@@ -1,32 +1,22 @@
 package com.maeasoftworks.alfaconverter.model
 
-import com.maeasoftworks.alfaconverter.annotations.UsedExternally
-
-class BondedPair<T>() : Iterable<T> {
-	@UsedExternally
+class BondedPair<T> : Iterable<T> {
 	var first: T? = null
-	@UsedExternally
+
 	var second: T? = null
 
-	@UsedExternally
-	constructor(first: T, second: T) : this() {
-		this.first = first
-		this.second = second
-	}
-
-	var dependence: Headship = Headship.FIRST
+	var headship: Headship = Headship.FIRST
 
 	val master: T
-		get() = if (dependence == Headship.FIRST) first!! else second!!
+		get() = if (headship == Headship.FIRST) first!! else second!!
 
 	val slave: T
-		get() = if (dependence == Headship.SECOND) first!! else second!!
+		get() = if (headship == Headship.SECOND) first!! else second!!
 
 	val size: Int
 		get() = if (second != null) 2 else if (first != null) 1 else 0
 
-	@UsedExternally
-	fun add(value: T) {
+	private fun add(value: T) {
 		if (first == null) {
 			first = value
 			return

@@ -1,7 +1,7 @@
-package com.maeasoftworks.alfaconverter.actions
+package com.maeasoftworks.alfaconverter.conversions.actions
 
+import com.maeasoftworks.alfaconverter.model.datatypes.XString
 import com.maeasoftworks.alfaconverter.wrappers.Cell
-import com.maeasoftworks.alfaconverter.wrappers.DataFormat
 import com.maeasoftworks.alfaconverter.wrappers.Table
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -14,9 +14,7 @@ internal class Merge(
 	@SerialName("target-column")
 	private val targetColumn: Int,
 	@SerialName("pattern")
-	private val pattern: String,
-	@SerialName("target-data-format")
-	private val targetDataFormat: DataFormat = DataFormat.STRING
+	private val pattern: String
 ) : Action() {
 
 	override fun run(initialTable: Table, resultTable: Table): Table {
@@ -24,18 +22,16 @@ internal class Merge(
 		for (y in 1..initialTable.rowsCount) {
 			var result = pattern
 			Table.slice(initialColumns, y).forEach { cell ->
-				result = result.replace("$${cell?.column}", cell?.value!!.toString())
+				result = result.replace("$${cell?.column}", cell?.value!!.getString())
 			}
 			resultTable[targetColumn, y] = Cell(targetColumn, y).also { z ->
-					z.value = result
-					z.stringValue = result
-					z.column = targetColumn
-					z.row = y
-					z.format = targetDataFormat
-				}
+				z.value = XString(result)
+				z.column = targetColumn
+				z.row = y
 			}
+		}
 		return resultTable
 	}
 
-	override fun uses(column: Int) = initialColumns.any { it == column }
+	override fun isUsing(column: Int) = initialColumns.any { it == column } || targetColumn == column
 }

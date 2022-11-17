@@ -1,13 +1,12 @@
 package com.maeasoftworks.alfaconverter.wrappers
 
+import com.maeasoftworks.alfaconverter.model.datatypes.XObject
+
 internal class Cell(
 	var row: Int,
 	var column: Int
 ) {
-	var value: Any? = null
-	var stringValue: String? = null
-	lateinit var wrapped: org.xlsx4j.sml.Cell
-	var format: DataFormat = DataFormat.STRING
+	lateinit var value: XObject
 
 	override fun equals(other: Any?): Boolean {
 		return other != null
@@ -15,12 +14,12 @@ internal class Cell(
 				&& row == other.row
 				&& column == other.column
 				&& value == other.value
-				&& stringValue == other.stringValue
 	}
 
 	override fun hashCode(): Int {
-		var result = value?.hashCode() ?: 0
-		result = 31 * result + wrapped.hashCode()
+		var result = row
+		result = 31 * result + column
+		result = 31 * result + value.hashCode()
 		return result
 	}
 }

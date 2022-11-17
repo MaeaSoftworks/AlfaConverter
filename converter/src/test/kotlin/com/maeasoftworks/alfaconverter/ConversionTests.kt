@@ -1,24 +1,20 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.actions.Bind
-import com.maeasoftworks.alfaconverter.actions.Merge
-import com.maeasoftworks.alfaconverter.actions.Split
+import com.maeasoftworks.alfaconverter.conversions.Conversion
+import com.maeasoftworks.alfaconverter.conversions.TypeConversion
+import com.maeasoftworks.alfaconverter.conversions.actions.Bind
+import com.maeasoftworks.alfaconverter.conversions.actions.Merge
+import com.maeasoftworks.alfaconverter.conversions.actions.Split
+import com.maeasoftworks.alfaconverter.model.datatypes.XNumber
+import com.maeasoftworks.alfaconverter.model.datatypes.XString
+import com.maeasoftworks.alfaconverter.model.datatypes.XTypeName
 import com.maeasoftworks.alfaconverter.wrappers.Cell
 import com.maeasoftworks.alfaconverter.wrappers.Table
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
-import java.nio.file.Files
-import java.nio.file.Path
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 
 class ConversionTests {
-	private val converter = Converter.ofFiles(
-		Files.readAllBytes(Path.of("src/test/resources/conversions_from.xlsx")),
-		Files.readAllBytes(Path.of("src/test/resources/conversions_to.xlsx")),
-		"xlsx"
-	).initialize()
+	private val converter = Converter.ofTables(ExampleTables.tableFrom, ExampleTables.tableTo).initialize()
 
 	private val result: Table
 		get() = converter.documents.slave.table
@@ -29,11 +25,13 @@ class ConversionTests {
 	@Test
 	fun `binding test`() {
 		conversion.addAction(Bind(0, 1))
+		conversion.addTypeConversion(1, TypeConversion(XTypeName.XNumber, 0))
 		conversion.start()
-		for (row in result.columns[1]!!.cells.values.indices) {
+		for (row in 1..result.columns[1]!!.cells.values.size) {
+			val expected = Cell(row, 1).also { it.value = XNumber((row) * 10, 0) }
 			assertEquals(
-				Cell(row + 1, 1).also { it.value = (row + 1) * 10; it.stringValue = ((row + 1) * 10).toString() },
-				result.columns[1]!!.cells[row + 1]
+				expected,
+				result.columns[1]!!.cells[row]
 			)
 		}
 	}
@@ -51,7 +49,7 @@ class ConversionTests {
 			for (row in result.columns[column]!!.cells.keys) {
 				assertEquals(
 					Cell(row, column).also {
-						it.value = getString(row + column - 2); it.stringValue = getString(row + column - 2)
+						it.value = XString(getString(row + column - 2))
 					},
 					result.columns[column]!!.cells[row]
 				)
@@ -71,19 +69,9 @@ class ConversionTests {
 		conversion.start()
 		for (row in result.columns[5]!!.cells.keys) {
 			assertEquals(
-				Cell(row, 5).also { it.value = getString(row); it.stringValue = getString(row) },
+				Cell(row, 5).also { it.value = XString(getString(row)) },
 				result.columns[5]!!.cells[row]
 			)
 		}
-	}
-
-	@Ignore
-	@Test
-	fun `generate conversion string`() {
-		conversion.addAction(Bind(0, 1))
-		conversion.addAction(Bind(1, 0))
-		conversion.addAction(Split(2, listOf(2, 3, 4), "(\\S+) (\\S+) (\\S+)"))
-		conversion.addAction(Merge(listOf(3, 4, 5), 5, "$3 $4 $5"))
-		println(Json.encodeToString(conversion))
 	}
 }
