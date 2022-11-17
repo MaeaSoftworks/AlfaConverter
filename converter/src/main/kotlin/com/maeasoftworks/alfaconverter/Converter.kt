@@ -1,8 +1,10 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.model.BondedPair
 import com.maeasoftworks.alfaconverter.documents.Document
 import com.maeasoftworks.alfaconverter.documents.XlsxDocument
+import com.maeasoftworks.alfaconverter.exceptions.UnsupportedExtensionException
+import com.maeasoftworks.alfaconverter.model.BondedPair
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -11,9 +13,9 @@ class Converter private constructor() {
 	internal var conversion: Conversion = Conversion.empty
 
 	private fun addFile(file: ByteArray, extension: String) {
-		documents += when(extension) {
+		documents += when (extension) {
 			"xlsx" -> XlsxDocument().open(file)
-			else -> throw Exception("Incorrect file extension")
+			else -> throw UnsupportedExtensionException(extension)
 		}
 	}
 
@@ -24,18 +26,20 @@ class Converter private constructor() {
 	}
 
 	fun setHeadship(headship: Int) {
-		documents.dependence = BondedPair.Headship.values()[headship]
+		documents.headship = BondedPair.Headship.values()[headship]
 	}
 
 	fun getHeaders(): List<List<String?>> {
 		return listOf(documents.first!!.getHeaders(), documents.second!!.getHeaders())
 	}
 
-	fun setConversion(conversion: String) = setConversion(Json.decodeFromString(conversion) as Conversion)
-
-	internal fun setConversion(conversion: Conversion) : Converter {
+	internal fun setConversion(conversion: Conversion): Converter {
 		this.conversion = conversion
 		return this
+	}
+
+	fun setConversion(conversion: String) : Converter {
+		return setConversion(Json.decodeFromString(conversion) as Conversion)
 	}
 
 	fun convert(): ByteArray {

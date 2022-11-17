@@ -27,15 +27,15 @@ internal class Merge(
 				result = result.replace("$${cell?.column}", cell?.value!!.toString())
 			}
 			resultTable[targetColumn, y] = Cell(targetColumn, y).also { z ->
-					z.value = result
-					z.stringValue = result
-					z.column = targetColumn
-					z.row = y
-					z.format = targetDataFormat
-				}
+				z.value = result
+				z.stringValue = result
+				z.column = targetColumn
+				z.row = y
+				z.format = targetDataFormat
 			}
+		}
 		return resultTable
 	}
 
-	override fun uses(column: Int) = initialColumns.any { it == column }
+	override fun isUsing(column: Int) = initialColumns.any { it == column } || targetColumn == column
 }

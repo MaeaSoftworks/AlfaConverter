@@ -4,12 +4,17 @@ import com.maeasoftworks.alfaconverter.actions.Action
 import com.maeasoftworks.alfaconverter.actions.Bind
 import com.maeasoftworks.alfaconverter.documents.Document
 import com.maeasoftworks.alfaconverter.model.BondedPair
+import com.maeasoftworks.alfaconverter.wrappers.DataFormat
 import kotlinx.serialization.Contextual
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-internal class Conversion(private val actions: @Contextual MutableList<Action>) {
+internal class Conversion(
+	private val actions: @Contextual MutableList<Action>,
+	@SerialName("type-conversions") private val typeConversions: @Contextual MutableMap<Int, DataFormat>? = null
+) {
 	@Transient
 	lateinit var document: BondedPair<Document>
 
@@ -19,7 +24,7 @@ internal class Conversion(private val actions: @Contextual MutableList<Action>) 
 		this.document = document
 		this.document.master.table.columns.forEach { (pos, column) ->
 			actions.forEach {
-				if (it.uses(pos)) {
+				if (it.isUsing(pos)) {
 					column.hasAction = true
 				}
 			}

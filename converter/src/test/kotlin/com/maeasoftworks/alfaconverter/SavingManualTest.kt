@@ -9,10 +9,10 @@ import java.nio.file.Path
 
 class SavingManualTest {
 	private val converter = Converter.ofFiles(
-			Files.readAllBytes(Path.of("src/test/resources/conversions_from.xlsx")),
-			Files.readAllBytes(Path.of("src/test/resources/conversions_to.xlsx")),
-			"xlsx"
-		)
+		Files.readAllBytes(Path.of("src/test/resources/conversions_from.xlsx")),
+		Files.readAllBytes(Path.of("src/test/resources/conversions_to.xlsx")),
+		"xlsx"
+	)
 		.setConversion(
 			Conversion(
 				mutableListOf(

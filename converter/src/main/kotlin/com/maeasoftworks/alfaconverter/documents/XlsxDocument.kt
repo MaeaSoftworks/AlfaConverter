@@ -18,13 +18,12 @@ import java.io.InvalidClassException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.NoSuchElementException
 
 internal class XlsxDocument : Document() {
 	private lateinit var document: SpreadsheetMLPackage
 	private lateinit var worksheet: Worksheet
 
-	override fun open(file: ByteArray) : Document {
+	override fun open(file: ByteArray): Document {
 		document = SpreadsheetMLPackage.load(ByteArrayInputStream(file))
 		worksheet = (document.parts[sheet] as WorksheetPart).jaxbElement
 		return this
@@ -65,7 +64,7 @@ internal class XlsxDocument : Document() {
 		}
 		sheetData.row.add(header)
 
-		for (rowNumber in 1 until table.rowsCount) {
+		for (rowNumber in 1 until table.rowsCount + 1) {
 			val row = factory.createRow()
 			for (columnNumber in 0 until table.columns.size) {
 				val cell = createCell(table.columns[columnNumber]?.get(rowNumber)?.stringValue, factory)
@@ -169,7 +168,7 @@ internal class XlsxDocument : Document() {
 		val style = (spreadsheet.parts[stylesPart] as Styles).getXfByIndex(docx4jCell.s)
 		when (style.numFmtId) {
 			0L -> {
-				cell.value = docx4jCell.v.toInt()
+				cell.value = docx4jCell.v.toDouble()
 				cell.stringValue = cell.value.toString()
 			}
 

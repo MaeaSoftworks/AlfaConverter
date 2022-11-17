@@ -4,6 +4,7 @@ import com.maeasoftworks.alfaconverter.wrappers.Cell
 import com.maeasoftworks.alfaconverter.wrappers.Table
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 @SerialName("split")
@@ -14,13 +15,16 @@ internal class Split(
 	val targetColumns: List<Int>,
 	private val pattern: String
 ) : Action() {
+	@Transient
+	private val regex = Regex(pattern)
+
 	override fun run(initialTable: Table, resultTable: Table): Table {
 		val initialColumn = initialTable[initialColumn]
 		for (y in 1..initialTable.rowsCount) {
-			val results = Regex(pattern).matchEntire(initialColumn?.get(y)?.value!!.toString())
-			for (col in targetColumns.indices) {
+			val results = regex.matchEntire(initialColumn?.get(y)?.value!!.toString().trim())!!.groups.filterNotNull().drop(1)
+			for (col in results.indices) {
 				resultTable[targetColumns[col]]!![y] = Cell(y, col).also {
-					it.value = results!!.groups[col + 1]!!.value
+					it.value = results[col].value
 					it.stringValue = it.value as String
 					it.column = targetColumns[col]
 				}
@@ -29,5 +33,5 @@ internal class Split(
 		return resultTable
 	}
 
-	override fun uses(column: Int) = initialColumn == column
+	override fun isUsing(column: Int) = initialColumn == column || targetColumns.contains(column)
 }

@@ -5,6 +5,7 @@ import com.maeasoftworks.alfaconverter.annotations.UsedExternally
 class BondedPair<T>() : Iterable<T> {
 	@UsedExternally
 	var first: T? = null
+
 	@UsedExternally
 	var second: T? = null
 
@@ -14,13 +15,13 @@ class BondedPair<T>() : Iterable<T> {
 		this.second = second
 	}
 
-	var dependence: Headship = Headship.FIRST
+	var headship: Headship = Headship.FIRST
 
 	val master: T
-		get() = if (dependence == Headship.FIRST) first!! else second!!
+		get() = if (headship == Headship.FIRST) first!! else second!!
 
 	val slave: T
-		get() = if (dependence == Headship.SECOND) first!! else second!!
+		get() = if (headship == Headship.SECOND) first!! else second!!
 
 	val size: Int
 		get() = if (second != null) 2 else if (first != null) 1 else 0

@@ -20,5 +20,5 @@ internal class Bind(
 		return resultTable
 	}
 
-	override fun uses(column: Int) = initialColumn == column
+	override fun isUsing(column: Int) = initialColumn == column
 }

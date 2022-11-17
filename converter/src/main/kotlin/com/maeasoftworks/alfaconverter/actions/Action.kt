@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 internal sealed class Action {
 	abstract fun run(initialTable: Table, resultTable: Table): Table
 
-	abstract fun uses(column: Int): Boolean
+	abstract fun isUsing(column: Int): Boolean
 }
