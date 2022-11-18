@@ -1,8 +1,13 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.actions.Bind
-import com.maeasoftworks.alfaconverter.actions.Merge
-import com.maeasoftworks.alfaconverter.actions.Split
+import com.maeasoftworks.alfaconverter.conversions.Conversion
+import com.maeasoftworks.alfaconverter.conversions.TypeConversion
+import com.maeasoftworks.alfaconverter.conversions.actions.Bind
+import com.maeasoftworks.alfaconverter.conversions.actions.Merge
+import com.maeasoftworks.alfaconverter.conversions.actions.Split
+import com.maeasoftworks.alfaconverter.model.datatypes.XNumber
+import com.maeasoftworks.alfaconverter.model.datatypes.XString
+import com.maeasoftworks.alfaconverter.model.datatypes.XTypeName
 import com.maeasoftworks.alfaconverter.wrappers.Cell
 import com.maeasoftworks.alfaconverter.wrappers.Table
 import kotlinx.serialization.encodeToString
@@ -29,11 +34,13 @@ class ConversionTests {
 	@Test
 	fun `binding test`() {
 		conversion.addAction(Bind(0, 1))
+		conversion.addTypeConversion(1, TypeConversion(XTypeName.XNumber, 0))
 		conversion.start()
-		for (row in result.columns[1]!!.cells.values.indices) {
+		for (row in 1..result.columns[1]!!.cells.values.size) {
+			val expected = Cell(row, 1).also { it.value = XNumber((row) * 10, 0) }
 			assertEquals(
-				Cell(row + 1, 1).also { it.value = (row + 1) * 10; it.stringValue = ((row + 1) * 10).toString() },
-				result.columns[1]!!.cells[row + 1]
+				expected,
+				result.columns[1]!!.cells[row]
 			)
 		}
 	}
@@ -51,7 +58,7 @@ class ConversionTests {
 			for (row in result.columns[column]!!.cells.keys) {
 				assertEquals(
 					Cell(row, column).also {
-						it.value = getString(row + column - 2); it.stringValue = getString(row + column - 2)
+						it.value = XString(getString(row + column - 2))
 					},
 					result.columns[column]!!.cells[row]
 				)
@@ -71,7 +78,7 @@ class ConversionTests {
 		conversion.start()
 		for (row in result.columns[5]!!.cells.keys) {
 			assertEquals(
-				Cell(row, 5).also { it.value = getString(row); it.stringValue = getString(row) },
+				Cell(row, 5).also { it.value = XString(getString(row)) },
 				result.columns[5]!!.cells[row]
 			)
 		}

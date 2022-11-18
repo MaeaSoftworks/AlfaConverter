@@ -1,5 +1,6 @@
-package com.maeasoftworks.alfaconverter.actions
+package com.maeasoftworks.alfaconverter.conversions.actions
 
+import com.maeasoftworks.alfaconverter.wrappers.Cell
 import com.maeasoftworks.alfaconverter.wrappers.Table
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -15,7 +16,9 @@ internal class Bind(
 
 	override fun run(initialTable: Table, resultTable: Table): Table {
 		for (cell in initialTable[initialColumn]?.cells?.values!!) {
-			resultTable[targetColumn]?.cells?.put(cell.row, cell.also { it.column = targetColumn })
+			resultTable[targetColumn]?.cells?.put(cell.row, Cell(cell.row, targetColumn).also {
+				it.value = cell.value
+			})
 		}
 		return resultTable
 	}

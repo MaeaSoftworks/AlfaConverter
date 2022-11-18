@@ -1,4 +1,4 @@
-package com.maeasoftworks.alfaconverter.actions
+package com.maeasoftworks.alfaconverter.conversions.actions
 
 import com.maeasoftworks.alfaconverter.wrappers.Table
 import kotlinx.serialization.Serializable

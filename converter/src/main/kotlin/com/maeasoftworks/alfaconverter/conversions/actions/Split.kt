@@ -1,5 +1,6 @@
-package com.maeasoftworks.alfaconverter.actions
+package com.maeasoftworks.alfaconverter.conversions.actions
 
+import com.maeasoftworks.alfaconverter.model.datatypes.XString
 import com.maeasoftworks.alfaconverter.wrappers.Cell
 import com.maeasoftworks.alfaconverter.wrappers.Table
 import kotlinx.serialization.SerialName
@@ -13,6 +14,7 @@ internal class Split(
 	val initialColumn: Int,
 	@SerialName("target-columns")
 	val targetColumns: List<Int>,
+	@Suppress("CanBeParameter")
 	private val pattern: String
 ) : Action() {
 	@Transient
@@ -21,11 +23,11 @@ internal class Split(
 	override fun run(initialTable: Table, resultTable: Table): Table {
 		val initialColumn = initialTable[initialColumn]
 		for (y in 1..initialTable.rowsCount) {
-			val results = regex.matchEntire(initialColumn?.get(y)?.value!!.toString().trim())!!.groups.filterNotNull().drop(1)
+			val results =
+				regex.matchEntire(initialColumn?.get(y)?.value!!.getString().trim())!!.groups.filterNotNull().drop(1)
 			for (col in results.indices) {
 				resultTable[targetColumns[col]]!![y] = Cell(y, col).also {
-					it.value = results[col].value
-					it.stringValue = it.value as String
+					it.value = XString(results[col].value)
 					it.column = targetColumns[col]
 				}
 			}

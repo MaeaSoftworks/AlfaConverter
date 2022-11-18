@@ -1,10 +1,10 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.documents.Document
-import com.maeasoftworks.alfaconverter.documents.XlsxDocument
+import com.maeasoftworks.alfaconverter.conversions.Conversion
 import com.maeasoftworks.alfaconverter.exceptions.UnsupportedExtensionException
 import com.maeasoftworks.alfaconverter.model.BondedPair
-import kotlinx.serialization.SerializationException
+import com.maeasoftworks.alfaconverter.model.documents.Document
+import com.maeasoftworks.alfaconverter.model.documents.XlsxDocument
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -20,7 +20,7 @@ class Converter private constructor() {
 	}
 
 	fun initialize(): Converter {
-		documents.map { it.table = it.createTable() }
+		documents.forEach { it.initializeTable() }
 		conversion.register(documents)
 		return this
 	}
@@ -30,7 +30,7 @@ class Converter private constructor() {
 	}
 
 	fun getHeaders(): List<List<String?>> {
-		return listOf(documents.first!!.getHeaders(), documents.second!!.getHeaders())
+		return documents.first!!.getHeadersAndExamples() + documents.second!!.getHeadersAndExamples()
 	}
 
 	internal fun setConversion(conversion: Conversion): Converter {
@@ -38,7 +38,7 @@ class Converter private constructor() {
 		return this
 	}
 
-	fun setConversion(conversion: String) : Converter {
+	fun setConversion(conversion: String): Converter {
 		return setConversion(Json.decodeFromString(conversion) as Conversion)
 	}
 

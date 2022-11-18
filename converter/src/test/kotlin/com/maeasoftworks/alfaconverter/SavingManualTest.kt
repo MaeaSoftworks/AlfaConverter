@@ -1,8 +1,9 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.actions.Bind
-import com.maeasoftworks.alfaconverter.actions.Merge
-import com.maeasoftworks.alfaconverter.actions.Split
+import com.maeasoftworks.alfaconverter.conversions.Conversion
+import com.maeasoftworks.alfaconverter.conversions.actions.Bind
+import com.maeasoftworks.alfaconverter.conversions.actions.Merge
+import com.maeasoftworks.alfaconverter.conversions.actions.Split
 import org.junit.jupiter.api.Test
 import java.nio.file.Files
 import java.nio.file.Path
