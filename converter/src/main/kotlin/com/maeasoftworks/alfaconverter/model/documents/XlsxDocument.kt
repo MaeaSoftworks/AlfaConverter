@@ -27,13 +27,17 @@ internal class XlsxDocument : Document() {
 	}
 
 	override fun initializeTable() {
-		table = Table()
+		if (super.isTableInitialized && super.table.isInitialized) {
+			return
+		}
+		super.table = Table()
 		for (row in worksheet.sheetData.row.indices) {
 			for (cell in worksheet.sheetData.row[row].c.indices) {
 				table.append(cell, row, extractValue(worksheet.sheetData.row[row].c[cell], row, cell))
 			}
 		}
 		extractHeaders(table)
+		super.table.isInitialized = true
 	}
 
 	override fun getHeadersAndExamples(): List<List<String?>> {

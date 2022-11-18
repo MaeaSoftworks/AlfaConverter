@@ -6,6 +6,10 @@ plugins {
 
 java.sourceCompatibility = JavaVersion.VERSION_17
 
+application {
+	mainClass.set("com.maeasoftworks.alfaconverter.MainKt")
+}
+
 repositories {
 	mavenCentral()
 }
@@ -17,6 +21,7 @@ dependencies {
 	implementation("org.slf4j:slf4j-api:2.0.3")
 	implementation("ch.qos.logback:logback-classic:1.4.4")
 
+	@Suppress("VulnerableLibrariesLocal")
 	implementation("org.docx4j:docx4j-JAXB-ReferenceImpl:11.4.8")
 	implementation("org.glassfish.jaxb:jaxb-runtime:4.0.0")
 	implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.0")

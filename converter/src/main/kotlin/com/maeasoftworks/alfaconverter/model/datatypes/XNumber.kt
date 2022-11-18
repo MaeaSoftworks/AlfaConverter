@@ -5,7 +5,6 @@ import org.xlsx4j.sml.STCellType
 import java.io.InvalidClassException
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.math.floor
 
 class XNumber(value: Number, dataFormat: Long = 0) : XObject() {
@@ -21,55 +20,11 @@ class XNumber(value: Number, dataFormat: Long = 0) : XObject() {
 			0L -> {
 				string = this.value.toString()
 			}
-
-			1L -> {
-				string = numFormat.toString()
-			} //?????
-			2L -> {
-				string = numFormat.toString()
-			} //?????
-			3L -> {
-				string = numFormat.toString()
-			} //?????
-			4L -> {
-				string = numFormat.toString()
-			} //?????
-			9L -> {
-				string = numFormat.toString()
-			} //?????
-			10L -> {
-				string = numFormat.toString()
-			} //?????
-			11L -> {
-				string = numFormat.toString()
-			} //?????
-			12L -> {
-				string = numFormat.toString()
-			} //?????
-			13L -> {
-				string = numFormat.toString()
-			} //?????
 			14L -> {
 				val date = convertFromOADate(rawValue.toDouble())
 				this.value = date
 				string = SimpleDateFormat("dd.MM.yyyy").format(date)
 			}
-
-			15L -> {
-				string = numFormat.toString()
-			} //?????
-			16L -> {
-				string = numFormat.toString()
-			} //?????
-			17L -> {
-				string = numFormat.toString()
-			} //?????
-			18L -> {
-				string = numFormat.toString()
-			} //?????
-			19L -> {
-				string = numFormat.toString()
-			} //?????
 			20L -> {
 				val date = convertFromOADate(rawValue.toDouble())
 				this.value = date
@@ -79,19 +34,16 @@ class XNumber(value: Number, dataFormat: Long = 0) : XObject() {
 				}.time
 				string = SimpleDateFormat("HH:mm").format(c)
 			}
-
 			21L -> {
 				val date = convertFromOADate(rawValue.toDouble())
 				this.value = date
 				string = SimpleDateFormat("H:mm:ss").format(date)
 			}
-
 			22L -> {
 				val date = convertFromOADate(rawValue.toDouble())
 				this.value = date
 				string = SimpleDateFormat("dd.MM.yyyy H:mm").format(date)
 			}
-
 			else -> throw InvalidClassException("Unknown number format")
 		}
 	}
@@ -108,7 +60,7 @@ class XNumber(value: Number, dataFormat: Long = 0) : XObject() {
 		return string
 	}
 
-	override fun getXmlRepresentation(): Any? {
+	override fun getXmlRepresentation(): Any {
 		return string
 	}
 
@@ -127,16 +79,6 @@ class XNumber(value: Number, dataFormat: Long = 0) : XObject() {
 		var result = rawValue.hashCode()
 		result = 31 * result + numFormat.hashCode()
 		return result
-	}
-
-	fun convertToOADate(date: Date): String {
-		val oaDate: Double
-		val myFormat = SimpleDateFormat("dd.MM.yyyy")
-		val baseDate = myFormat.parse("30.12.1899")
-		val days = TimeUnit.DAYS.convert(date.time - baseDate.time, TimeUnit.MILLISECONDS)
-		oaDate = days.toDouble() + date.hours.toDouble() / 24 + date.minutes.toDouble() / (60 * 24) + date.seconds
-			.toDouble() / (60 * 24 * 60)
-		return oaDate.toString()
 	}
 
 	private fun convertFromOADate(d: Double): Date {

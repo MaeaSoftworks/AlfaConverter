@@ -10,20 +10,11 @@ import com.maeasoftworks.alfaconverter.model.datatypes.XString
 import com.maeasoftworks.alfaconverter.model.datatypes.XTypeName
 import com.maeasoftworks.alfaconverter.wrappers.Cell
 import com.maeasoftworks.alfaconverter.wrappers.Table
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
-import java.nio.file.Files
-import java.nio.file.Path
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 
 class ConversionTests {
-	private val converter = Converter.ofFiles(
-		Files.readAllBytes(Path.of("src/test/resources/conversions_from.xlsx")),
-		Files.readAllBytes(Path.of("src/test/resources/conversions_to.xlsx")),
-		"xlsx"
-	).initialize()
+	private val converter = Converter.ofTables(ExampleTables.tableFrom, ExampleTables.tableTo).initialize()
 
 	private val result: Table
 		get() = converter.documents.slave.table
@@ -82,15 +73,5 @@ class ConversionTests {
 				result.columns[5]!!.cells[row]
 			)
 		}
-	}
-
-	@Ignore
-	@Test
-	fun `generate conversion string`() {
-		conversion.addAction(Bind(0, 1))
-		conversion.addAction(Bind(1, 0))
-		conversion.addAction(Split(2, listOf(2, 3, 4), "(\\S+) (\\S+) (\\S+)"))
-		conversion.addAction(Merge(listOf(3, 4, 5), 5, "$3 $4 $5"))
-		println(Json.encodeToString(conversion))
 	}
 }

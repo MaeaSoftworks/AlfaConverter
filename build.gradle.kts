@@ -9,7 +9,7 @@ allprojects {
 	}
 
 	group = "com.maeasoftworks"
-	version = "0.0.1-SNAPSHOT"
+	version = "1"
 }
 
 val finalize by tasks.registering {

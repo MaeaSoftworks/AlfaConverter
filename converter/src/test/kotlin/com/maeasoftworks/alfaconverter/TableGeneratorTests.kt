@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 class TableGeneratorTests {
 	private val converter = Converter.ofFiles(
 		Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx")),
-		Files.readAllBytes(Path.of("src/test/resources/to.xlsx")),
+		Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx")),
 		"xlsx"
 	).initialize()
 

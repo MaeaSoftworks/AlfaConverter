@@ -4,7 +4,6 @@ import com.maeasoftworks.alfaconverter.conversions.TypeConversion
 import com.maeasoftworks.alfaconverter.model.datatypes.XFactory
 
 internal class Column(val pos: Int) {
-	lateinit var name: String
 	val cells: MutableMap<Int, Cell> = HashMap()
 	var hasAction: Boolean = false
 
