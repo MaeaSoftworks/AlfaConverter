@@ -133,7 +133,7 @@ internal class XlsxDocument : Document() {
 		private val stylesPart = PartName("/xl/styles.xml")
 
 		fun toExcel(number: Int): String {
-			var num = number
+			var num = number + 1
 			fun divAndMod(n: Int): Pair<Int, Int> {
 				val a = n / 26
 				val b = n % 26
@@ -144,7 +144,7 @@ internal class XlsxDocument : Document() {
 			while (num > 0) {
 				val param = divAndMod(num)
 				num = param.first
-				chars.add(alphabet[param.second])
+				chars.add(alphabet[param.second - 1])
 			}
 			return chars.joinToString { it.toString() }
 		}

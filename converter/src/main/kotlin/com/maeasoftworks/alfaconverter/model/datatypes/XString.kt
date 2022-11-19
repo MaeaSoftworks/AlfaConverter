@@ -23,7 +23,7 @@ class XString : XObject {
 
 	override fun getXlsxRepresentation(): Cell {
 		return Cell().also {
-			it.t = STCellType.S
+			it.t = STCellType.INLINE_STR
 			it.`is` = CTRst().also { ctr ->
 				ctr.t = CTXstringWhitespace().also { ctx ->
 					ctx.value = value
@@ -36,7 +36,7 @@ class XString : XObject {
 		return value
 	}
 
-	override fun getXmlRepresentation(): Any? {
+	override fun getXmlRepresentation(): Any {
 		return value
 	}
 
