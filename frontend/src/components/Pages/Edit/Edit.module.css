@@ -42,7 +42,10 @@
 
 .scheme_board {
     width: 60%;
-    height: 700px;
+    min-height: 700px;
+    height: fit-content;
+    padding-top: 30px;
+    padding-bottom: 30px;
     background-color: #E5E5E5;
     border-radius: 12px;
     display: flex;
