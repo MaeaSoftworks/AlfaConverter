@@ -71,13 +71,15 @@ const Upload = () => {
             .then(response => response.json())
             .then(result => {
                 console.log('result:');
+                let firstFileColumns = result[0].headers;
+                let secondFileColumns = result[1].headers;
                 console.log(result);
-                console.log(result[0]);
-                console.log(result[1]);
-                result[0] = result[0].map(columnFromName => [columnFromName, uniqueId('init-')]);
-                result[1] = result[1].map(columnFromName => [columnFromName, uniqueId('wanted-')]);
+                console.log(firstFileColumns);
+                console.log(secondFileColumns);
+                firstFileColumns = firstFileColumns.map(columnFromName => [columnFromName, uniqueId('init-')]);
+                secondFileColumns = secondFileColumns.map(columnFromName => [columnFromName, uniqueId('wanted-')]);
                 console.log(result);
-                setDocColumns(result);
+                setDocColumns([firstFileColumns, secondFileColumns]);
                 setShouldRedirect(true);
             })
             .catch(error => console.log('error', error));
