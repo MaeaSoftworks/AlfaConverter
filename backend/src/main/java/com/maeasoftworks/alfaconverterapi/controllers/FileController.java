@@ -66,8 +66,8 @@ public class FileController {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot process this document");
         }
         var converter = Converter.Companion.ofFiles(bytes1, bytes2, extension);
-        converter.initialize();
         converter.setConversion(conversion);
+        converter.initialize();
         converter.setHeadship(masterFile);
         val result = converter.convert();
         logger.write(new Log(LocalDateTime.now(), conversion, 0));
