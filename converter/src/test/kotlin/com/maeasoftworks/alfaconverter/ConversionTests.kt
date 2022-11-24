@@ -8,13 +8,30 @@ import com.maeasoftworks.alfaconverter.conversions.actions.Split
 import com.maeasoftworks.alfaconverter.model.datatypes.XNumber
 import com.maeasoftworks.alfaconverter.model.datatypes.XString
 import com.maeasoftworks.alfaconverter.model.datatypes.XTypeName
+import com.maeasoftworks.alfaconverter.model.documents.Document
 import com.maeasoftworks.alfaconverter.wrappers.Cell
 import com.maeasoftworks.alfaconverter.wrappers.Table
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class ConversionTests {
-	private val converter = Converter.ofTables(ExampleTables.tableFrom, ExampleTables.tableTo).initialize()
+	private val converter = Converter().also {
+		it.documents.first = object : Document() {
+			override fun open(file: ByteArray) = this
+			override fun save() = ByteArray(0)
+			override fun initializeTable() { table = ExampleTables.tableFrom }
+			override fun getHeadersAndExamples(): List<List<String?>> = listOf()
+			override fun clean() {}
+		}
+
+		it.documents.second = object : Document() {
+			override fun open(file: ByteArray) = this
+			override fun save() = ByteArray(0)
+			override fun initializeTable() { table = ExampleTables.tableTo }
+			override fun getHeadersAndExamples(): List<List<String?>> = listOf()
+			override fun clean() {}
+		}
+	}.initialize()
 
 	private val result: Table
 		get() = converter.documents.slave.table

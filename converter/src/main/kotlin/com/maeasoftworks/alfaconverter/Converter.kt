@@ -5,7 +5,6 @@ import com.maeasoftworks.alfaconverter.exceptions.UnsupportedExtensionException
 import com.maeasoftworks.alfaconverter.model.BondedPair
 import com.maeasoftworks.alfaconverter.model.documents.Document
 import com.maeasoftworks.alfaconverter.model.documents.XlsxDocument
-import com.maeasoftworks.alfaconverter.wrappers.Table
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -34,7 +33,7 @@ class Converter internal constructor() {
 		return documents.first!!.getHeadersAndExamples() + documents.second!!.getHeadersAndExamples()
 	}
 
-	internal fun setConversion(conversion: Conversion): Converter {
+	private fun setConversion(conversion: Conversion): Converter {
 		this.conversion = conversion
 		return this
 	}
@@ -44,6 +43,7 @@ class Converter internal constructor() {
 	}
 
 	fun convert(): ByteArray {
+		documents.slave.clean()
 		conversion.start()
 		return documents.slave.save()
 	}
@@ -53,24 +53,6 @@ class Converter internal constructor() {
 			return Converter().also {
 				it.addFile(file1, extension)
 				it.addFile(file2, extension)
-			}
-		}
-
-		internal fun ofTables(table1: Table, table2: Table): Converter {
-			return Converter().also {
-				it.documents.first = object : Document() {
-					override fun open(file: ByteArray) = this
-					override fun save() = ByteArray(0)
-					override fun initializeTable() { table = table1 }
-					override fun getHeadersAndExamples(): List<List<String?>> = listOf()
-				}
-
-				it.documents.second = object : Document() {
-					override fun open(file: ByteArray) = this
-					override fun save() = ByteArray(0)
-					override fun initializeTable() { table = table2 }
-					override fun getHeadersAndExamples(): List<List<String?>> = listOf()
-				}
 			}
 		}
 	}

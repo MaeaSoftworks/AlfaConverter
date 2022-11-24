@@ -10,4 +10,5 @@ internal abstract class Document {
 	abstract fun save(): ByteArray
 	abstract fun initializeTable()
 	abstract fun getHeadersAndExamples(): List<List<String?>>
+	abstract fun clean()
 }

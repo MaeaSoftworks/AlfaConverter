@@ -71,7 +71,7 @@ internal class XlsxDocument : Document() {
 		for (rowNumber in 1 until table.rowsCount + 1) {
 			val row = factory.createRow()
 			for (columnNumber in 0 until table.columns.size) {
-				val cell = table.columns[columnNumber]?.get(rowNumber)?.value?.getXlsxRepresentation()
+				val cell = table.columns[columnNumber]?.get(rowNumber)?.value?.getXlsxRepresentation() ?: factory.createCell()
 				cell?.r = toExcel(columnNumber) + (rowNumber + 1).toString()
 				row.c.add(cell)
 			}
@@ -80,6 +80,12 @@ internal class XlsxDocument : Document() {
 		val stream = ByteArrayOutputStream()
 		pkg.save(stream)
 		return stream.toByteArray()
+	}
+
+	override fun clean() {
+		for (column in table.columns) {
+			column.value.cells.clear()
+		}
 	}
 
 	private fun extractHeaders(table: Table): Table {
