@@ -42,13 +42,24 @@
 
 .scheme_board {
     width: 60%;
-    height: 700px;
+    min-height: 700px;
+    height: fit-content;
+    padding-top: 30px;
+    padding-bottom: 30px;
     background-color: #E5E5E5;
     border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 64px;
+}
+
+.dynamic_arrow_endpoint {
+    visibility: hidden;
+    /*background-color: #A82F2F;*/
+    width: 1px;
+    height: 1px;
+    position: absolute;
 }
 
 .file_struct {
@@ -92,9 +103,14 @@
     text-align: center;
 }
 
+.struct_block:hover {
+    cursor: pointer;
+}
+
 .struct_input {
     border: none;
     background: none;
+    pointer-events: none;
 }
 
 .struct_input:focus, .struct_input:active {
@@ -130,17 +146,126 @@
     gap: 24px;
 }
 
-.control_button {
+.control_button_connection {
     padding: 0;
-    background: none;
+    background: url("connection_light_bg.png");
     border: none;
+    width: 81px;
+    height: 81px;
 }
 
-.control_button_active {
+.control_button_connection:hover {
+    padding: 0;
+    background: url("connection_dark_bg.png");
     box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+    cursor: pointer;
 }
 
-.control_button:hover {
+.control_button_connection_active {
+    padding: 0;
+    background: url("connection_dark_bg.png");
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_connection_active:hover {
+    cursor: pointer;
+}
+
+.control_button_split {
+    padding: 0;
+    background: url("split_light_bg.png");
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_split:hover {
+    padding: 0;
+    background: url("split_dark_bg.png");
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+    cursor: pointer;
+}
+
+.control_button_split_active {
+    padding: 0;
+    background: url("split_dark_bg.png");
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_split_active:hover {
+    cursor: pointer;
+}
+
+.control_button_merge {
+    padding: 0;
+    background: url("merge_light_bg.png");
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_merge:hover {
+    padding: 0;
+    background: url("merge_dark_bg.png");
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+    cursor: pointer;
+}
+
+.control_button_merge_active {
+    padding: 0;
+    background: url("merge_dark_bg.png");
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_merge_active:hover {
+    cursor: pointer;
+}
+
+.control_button_delete {
+    padding: 0;
+    background: url("delete.png");
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_delete:hover {
+    padding: 0;
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+    cursor: pointer;
+}
+
+.control_button_delete_active {
+    padding: 0;
+    background: url("delete.png");
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_delete_active:hover {
     cursor: pointer;
 }
 

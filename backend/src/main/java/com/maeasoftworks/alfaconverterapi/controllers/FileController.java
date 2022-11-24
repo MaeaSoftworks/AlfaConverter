@@ -21,6 +21,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("api")
+@CrossOrigin
 public class FileController {
     private final Logger logger;
 
@@ -28,7 +29,8 @@ public class FileController {
         this.logger = logger;
     }
 
-    @GetMapping("headers")
+
+    @PostMapping("headers")
     @ResponseBody
     public List<LiteDocument> getHeaders(
             @RequestParam("first-file") MultipartFile firstFile,
@@ -65,8 +67,8 @@ public class FileController {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot process this document");
         }
         var converter = Converter.Companion.ofFiles(bytes1, bytes2, extension);
-        converter.initialize();
         converter.setConversion(conversion);
+        converter.initialize();
         converter.setHeadship(masterFile);
         val result = converter.convert();
         logger.write(new Log(LocalDateTime.now(), conversion, 0));
