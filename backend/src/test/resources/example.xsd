@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified">
+    <xsd:element name="person">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="firstName" type="xsd:string" />
+                <xsd:element name="lastName" type="xsd:string" />
+                <xsd:element name="middleName" type="xsd:string" />
+                <xsd:element name="age" type="xsd:decimal" />
+                <xsd:element name="city" type="xsd:string" />
+                <xsd:element name="otherPerson" type="person2" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="person2">
+        <xsd:sequence>
+            <xsd:element name="firstName" type="xsd:string" />
+            <xsd:element name="lastName" type="xsd:string" />
+            <xsd:element name="middleName" type="xsd:string" />
+            <xsd:element name="age" type="xsd:decimal" />
+            <xsd:element name="city" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

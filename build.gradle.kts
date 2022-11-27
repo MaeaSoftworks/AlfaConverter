@@ -13,28 +13,13 @@ allprojects {
 }
 
 val finalize by tasks.registering {
-	dependsOn(subprojects.mapNotNull {
-		when (it.name) {
-			"frontend" -> it.tasks.findByName("stop")
-			else -> null
-		}
-	})
+	dependsOn(project(":frontend").tasks.findByName("stop"))
 }
 
 val start by tasks.registering {
-	dependsOn(subprojects.mapNotNull {
-		when (it.name) {
-			"backend" -> it.tasks.findByName("start")
-			else -> null
-		}
-	})
+	dependsOn(project(":backend").tasks.findByName("start"))
 
-	dependsOn(subprojects.mapNotNull {
-		when (it.name) {
-			"frontend" -> it.tasks.findByName("start")
-			else -> null
-		}
-	})
+	dependsOn(project(":frontend").tasks.findByName("start"))
+
+	finalizedBy(finalize)
 }
-
-start { finalizedBy(finalize) }
