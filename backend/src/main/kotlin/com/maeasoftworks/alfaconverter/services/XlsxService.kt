@@ -9,9 +9,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 
 @Service
-class XlsxService(
-	private val logger: Logger
-) {
+class XlsxService(private val logger: Logger) {
 	fun getHeaders(firstFile: MultipartFile, secondFile: MultipartFile) : List<Lines> {
 		val result = XlsxConverter(firstFile.bytes, secondFile.bytes).getHeaders()
 		return listOf(
@@ -26,7 +24,11 @@ class XlsxService(
 		isInverted: Boolean,
 		conversion: Conversion
 	): ByteArray {
-		val result = XlsxConverter(firstFile.bytes, secondFile.bytes, conversion = conversion).convert()
+		val result = XlsxConverter(
+			if (!isInverted) firstFile.bytes else secondFile.bytes,
+			if (!isInverted) secondFile.bytes else firstFile.bytes,
+			conversion = conversion
+		).convert()
 		logger.write(Log(LocalDateTime.now(), conversion, 0))
 		return result
 	}
