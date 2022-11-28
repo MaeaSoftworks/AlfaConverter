@@ -3,6 +3,7 @@ package com.maeasoftworks.alfaconverter.controllers
 import com.maeasoftworks.alfaconverter.services.XmlService
 import com.maeasoftworks.alfaconverter.validators.FileNotEmpty
 import com.maeasoftworks.alfaconverter.validators.MustBeXlsx
+import com.maeasoftworks.alfaconverter.validators.MustBeXsdOrXml
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -16,17 +17,17 @@ import org.springframework.web.multipart.MultipartFile
 @CrossOrigin
 @Validated
 class XmlController(private val xmlService: XmlService) {
-	@PostMapping("convert")
+	@PostMapping("headers", produces = ["application/json"])
+	@ResponseBody
+	fun getHeaders(
+		@RequestParam("first-file")     @FileNotEmpty   @MustBeXlsx     firstFile: MultipartFile,
+		@RequestParam("second-file")    @FileNotEmpty   @MustBeXsdOrXml secondFile: MultipartFile
+	) = xmlService.getHeadersAndSchema(firstFile, secondFile)
+
+
+	@PostMapping("convert", produces = ["application/xml"])
 	fun convert(
-		@RequestParam("file") @MustBeXlsx @FileNotEmpty file: MultipartFile,
-		@RequestParam("xsd") @MustBeXlsx @FileNotEmpty xsd: MultipartFile
-	): ResponseEntity<ByteArrayResource> = ResponseEntity
-		.ok()
-		.headers(
-			HttpHeaders().also {
-				it.contentType = MediaType.APPLICATION_OCTET_STREAM
-				it[HttpHeaders.CONTENT_DISPOSITION] = "attachment; filename=${file.originalFilename}.xml"
-			}
-		)
-		.body(ByteArrayResource(xmlService.convert(file, xsd)))
+		@RequestParam("file")   @MustBeXlsx     @FileNotEmpty   file: MultipartFile,
+		@RequestParam("xsd")    @MustBeXsdOrXml @FileNotEmpty   xsd: MultipartFile
+	): String = xmlService.convert(file, xsd)
 }

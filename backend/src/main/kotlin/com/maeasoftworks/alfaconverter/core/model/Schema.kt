@@ -1,6 +1,7 @@
 package com.maeasoftworks.alfaconverter.core.model
 
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.ComplexTypePlaceholder
+import com.maeasoftworks.alfaconverter.core.datatypes.xsd.UnknownType
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XPrimitive
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XType
 import org.jdom2.Element
@@ -11,7 +12,7 @@ class Schema(data: String) {
 	private val document = builder.build(data.byteInputStream())
 	private val root = document.rootElement
 
-	private val types = mutableListOf<XType>()
+	val types = mutableListOf<XType>()
 	private val placeholders = mutableMapOf<XType, ComplexTypePlaceholder>()
 
 	init {
@@ -37,23 +38,30 @@ class Schema(data: String) {
 	private fun createComplexType(complexType: Element) {
 		val sequence = complexType.children.first()
 		check(sequence.name == "sequence")
-		val type = XType(complexType.getAttribute("name")?.value ?: complexType.parentElement.getAttribute("name").value)
+		val type =
+			XType(complexType.getAttribute("name")?.value ?: complexType.parentElement.getAttribute("name").value)
 		for (field in sequence.children) {
 			val fieldName = field.getAttributeValue("name")
 			val fieldType = field.getAttributeValue("type")
-			type.fields[fieldName] = XPrimitive.findPrimitive(fieldType)?.xType?.invoke() ?: ComplexTypePlaceholder(fieldType, fieldName, type).register()
+			type.fields[fieldName] = XPrimitive.findPrimitive(fieldType)?.xType?.invoke() ?: ComplexTypePlaceholder(
+				fieldType,
+				fieldName,
+				type
+			).register()
 		}
 		types += type
 	}
 
 	private fun setPlaceholders() {
 		for (obj in placeholders) {
-			types.first { it.name == obj.key.name }.fields[obj.value.fieldName] = types.first { it.name == obj.value.typeName }
+			types.first { it.name == obj.key.name }.fields[obj.value.fieldName] =
+				types.firstOrNull { it.name == obj.value.typeName }?.also { it.dependent++ }
+					?: UnknownType(obj.value.typeName)
 		}
 	}
 
 	private fun ComplexTypePlaceholder.register(): ComplexTypePlaceholder {
-		placeholders[this.target] = this
+		placeholders[this.instance] = this
 		return this
 	}
 }
