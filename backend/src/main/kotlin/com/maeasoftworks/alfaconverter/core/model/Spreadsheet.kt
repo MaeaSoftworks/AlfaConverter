@@ -1,5 +1,7 @@
 package com.maeasoftworks.alfaconverter.core.model
 
+import com.maeasoftworks.alfaconverter.core.conversions.Target
+import com.maeasoftworks.alfaconverter.core.conversions.pos
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SBoolean
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SNull
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SNumber
@@ -33,7 +35,7 @@ class Spreadsheet {
 		table = Table()
 		for (row in worksheet.sheetData.row.indices) {
 			for (cell in worksheet.sheetData.row[row].c.indices) {
-				table.append(cell, row, extractValue(worksheet.sheetData.row[row].c[cell], row, cell))
+				cell.pos.let { table.append(it, row, extractValue(worksheet.sheetData.row[row].c[cell], row, it)) }
 			}
 		}
 		extractHeaders(table)
@@ -45,11 +47,11 @@ class Spreadsheet {
 		val examples: MutableList<Cell> = mutableListOf()
 		if (worksheet.sheetData.row[0].c.isEmpty()) throw NoSuchElementException("First row of table was empty")
 		for (column in worksheet.sheetData.row[0].c.indices) {
-			headers.add(extractValue(worksheet.sheetData.row[0].c[column], 0, column))
+			headers.add(extractValue(worksheet.sheetData.row[0].c[column], 0, column.pos))
 		}
 		if (worksheet.sheetData.row.count() > 1) {
 			for (column in worksheet.sheetData.row[1].c.indices) {
-				examples.add(extractValue(worksheet.sheetData.row[1].c[column], 1, column))
+				examples.add(extractValue(worksheet.sheetData.row[1].c[column], 1, column.pos))
 			}
 		}
 		return listOf(headers.map { it.value.getString() }, examples.map { it.value.getString() })
@@ -71,7 +73,7 @@ class Spreadsheet {
 		for (rowNumber in 1 until table.rowsCount + 1) {
 			val row = factory.createRow()
 			for (columnNumber in 0 until table.columns.size) {
-				val cell = table.columns[columnNumber]?.get(rowNumber)?.value?.getXlsxRepresentation() ?: factory.createCell()
+				val cell = table.columns[columnNumber.pos]?.get(rowNumber)?.value?.getXlsxRepresentation() ?: factory.createCell()
 				cell?.r = toExcel(columnNumber) + (rowNumber + 1).toString()
 				row.c.add(cell)
 			}
@@ -96,8 +98,8 @@ class Spreadsheet {
 		return table
 	}
 
-	private fun extractValue(docx4jCell: org.xlsx4j.sml.Cell, row: Int, column: Int): Cell {
-		val cell = Cell(row, column)
+	private fun extractValue(docx4jCell: org.xlsx4j.sml.Cell, row: Int, column: Target): Cell {
+		val cell = Cell(column, row)
 		when (docx4jCell.t) {
 			STCellType.B -> {
 				cell.value = SBoolean(docx4jCell)

@@ -1,7 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.conversions
 
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Action
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
 import com.maeasoftworks.alfaconverter.core.model.Table
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
@@ -12,7 +11,7 @@ import kotlinx.serialization.Transient
 class Conversion(
 	private val actions: @Contextual MutableList<Action>,
 	@SerialName("type-conversions")
-	private val typeConversions: @Contextual MutableMap<Int, TypeConversion> = mutableMapOf()
+	private val typeConversions: @Contextual MutableMap<Target, TypeConversion> = mutableMapOf()
 ) {
 	@Transient
 	lateinit var source: Table
@@ -21,23 +20,13 @@ class Conversion(
 
 	internal fun addAction(action: Action) = actions.add(action)
 
-	internal fun addTypeConversion(column: Int, conversion: TypeConversion) = typeConversions.set(column, conversion)
+	internal fun addActions(vararg action: Action) = actions.addAll(action)
+
+	internal fun addTypeConversion(column: Target, conversion: TypeConversion) = typeConversions.set(column, conversion)
 
 	fun register(source: Table, target: Table) {
 		this.source = source
 		this.target = target
-		this.source.columns.forEach { (pos, column) ->
-			actions.forEach {
-				if (it.isUsing(pos)) {
-					column.hasAction = true
-				}
-			}
-		}
-		this.source.columns.forEach { (pos, column) ->
-			if (!column.hasAction) {
-				actions.add(Bind(pos, pos))
-			}
-		}
 	}
 
 	fun start() {

@@ -2,11 +2,10 @@ package com.maeasoftworks.alfaconverter.core.datatypes.xsd
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
-import kotlinx.serialization.Serializable
 
-@Serializable
 open class XType(
-	val name: String,
+	val typename: String,
+	@Suppress("unused")
 	var complexity: Complexity = Complexity.COMPLEX_TYPE
 ) {
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -17,4 +16,25 @@ open class XType(
 	 */
 	@JsonIgnore
 	var dependent = 0
+
+	@JsonIgnore
+	var dsl = DSL()
+
+	constructor(
+		typename: String,
+		complexity: Complexity = Complexity.COMPLEX_TYPE,
+		initialization: DSL.() -> Unit
+	) : this(typename, complexity) {
+		dsl.initialization()
+	}
+
+	inner class DSL {
+		infix fun String.of(type: XType) {
+			fields[this] = type
+		}
+
+		infix fun String.of(type: XPrimitive) {
+			fields[this] = type.xType()
+		}
+	}
 }

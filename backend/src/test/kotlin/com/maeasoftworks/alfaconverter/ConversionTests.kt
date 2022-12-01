@@ -6,6 +6,7 @@ import com.maeasoftworks.alfaconverter.core.conversions.TypeConversion
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Merge
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Split
+import com.maeasoftworks.alfaconverter.core.conversions.pos
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SNumber
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.STypeName
@@ -24,14 +25,14 @@ class ConversionTests {
 
 	@Test
 	fun `binding test`() {
-		conversion.addAction(Bind(0, 1))
-		conversion.addTypeConversion(1, TypeConversion(STypeName.SNumber, 0))
+		conversion.addAction(Bind(0.pos, 1.pos))
+		conversion.addTypeConversion(1.pos, TypeConversion(STypeName.SNumber, 0))
 		conversion.start()
-		for (row in 1..result.columns[1]!!.cells.values.size) {
-			val expected = Table.Cell(row, 1).also { it.value = SNumber((row) * 10, 0) }
+		for (row in 1..result.columns[1.pos]!!.cells.values.size) {
+			val expected = Table.Cell(1.pos, row).also { it.value = SNumber((row) * 10, 0) }
 			assertEquals(
 				expected,
-				result.columns[1]!!.cells[row]
+				result.columns[1.pos]!!.cells[row]
 			)
 		}
 	}
@@ -43,15 +44,15 @@ class ConversionTests {
 				0 -> "c"; 1 -> "a"; 2 -> "b"; else -> "d"
 			}
 		}
-		conversion.addAction(Split(2, listOf(2, 3, 4), "(\\S+) (\\S+) (\\S+)"))
+		conversion.addAction(Split(2.pos, listOf(2.pos, 3.pos, 4.pos), "(\\S+) (\\S+) (\\S+)"))
 		conversion.start()
 		for (column in 2..4) {
-			for (row in result.columns[column]!!.cells.keys) {
+			for (row in result.columns[column.pos]!!.cells.keys) {
 				assertEquals(
-					Table.Cell(row, column).also {
+					Table.Cell(column.pos, row).also {
 						it.value = SString(getString(row + column - 2))
 					},
-					result.columns[column]!!.cells[row]
+					result.columns[column.pos]!!.cells[row]
 				)
 			}
 		}
@@ -65,12 +66,12 @@ class ConversionTests {
 			}
 		}
 
-		conversion.addAction(Merge(listOf(3, 4, 5), 5, "$3 $4 $5"))
+		conversion.addAction(Merge(listOf(3.pos, 4.pos, 5.pos), 5.pos, "$3 $4 $5"))
 		conversion.start()
-		for (row in result.columns[5]!!.cells.keys) {
+		for (row in result.columns[5.pos]!!.cells.keys) {
 			assertEquals(
-				Table.Cell(row, 5).also { it.value = SString(getString(row)) },
-				result.columns[5]!!.cells[row]
+				Table.Cell(5.pos, row).also { it.value = SString(getString(row)) },
+				result.columns[5.pos]!!.cells[row]
 			)
 		}
 	}

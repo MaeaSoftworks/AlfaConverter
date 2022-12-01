@@ -23,16 +23,16 @@ class XlsxController(private val xlsxService: XlsxService) {
 	@PostMapping("headers", produces = ["application/json"])
 	@ResponseBody
 	fun getHeaders(
-		@RequestParam("first-file") @FileNotEmpty @MustBeXlsx   firstFile: MultipartFile,
-		@RequestParam("second-file") @FileNotEmpty @MustBeXlsx  secondFile: MultipartFile
+		@RequestParam("first-file")     @FileNotEmpty   @MustBeXlsx firstFile: MultipartFile,
+		@RequestParam("second-file")    @FileNotEmpty   @MustBeXlsx secondFile: MultipartFile
 	) = xlsxService.getHeaders(firstFile, secondFile)
 
 	@PostMapping("convert")
 	fun convert(
-		@RequestParam("first-file") @MustBeXlsx @FileNotEmpty   firstFile: MultipartFile,
-		@RequestParam("second-file") @MustBeXlsx @FileNotEmpty  secondFile: MultipartFile,
-		@RequestParam("headship", required = false)             headship: Int? = 0,
-		@RequestParam("conversion", required = false)           conversion: String = ""
+		@RequestParam("first-file")     @FileNotEmpty   @MustBeXlsx firstFile: MultipartFile,
+		@RequestParam("second-file")    @FileNotEmpty   @MustBeXlsx secondFile: MultipartFile,
+		@RequestParam("headship", required = false)                 headship: Int = 0,
+		@RequestParam("conversion", required = false)               conversion: String = ""
 	): ResponseEntity<ByteArrayResource> = ResponseEntity
 		.ok()
 		.headers(

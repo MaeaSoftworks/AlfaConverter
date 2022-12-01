@@ -1,30 +1,42 @@
 package com.maeasoftworks.alfaconverter.core.model
 
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.ComplexTypePlaceholder
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.UnknownType
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XPrimitive
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XType
+import com.maeasoftworks.alfaconverter.core.conversions.at
+import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
+import com.maeasoftworks.alfaconverter.core.datatypes.xsd.*
+import org.jdom2.Document
 import org.jdom2.Element
 import org.jdom2.input.SAXBuilder
 
-class Schema(data: String) {
-	private val builder = SAXBuilder()
-	private val document = builder.build(data.byteInputStream())
-	private val root = document.rootElement
+class Schema {
+	var types = mutableListOf<XType>()
+	lateinit var table: Table
 
-	val types = mutableListOf<XType>()
+	private val builder = SAXBuilder()
+	private var document: Document? = null
+	private val root : Element?
+		get () = document?.rootElement
+
 	private val placeholders = mutableMapOf<XType, ComplexTypePlaceholder>()
 
-	init {
-		val namespaces = root.namespacesInScope
+	constructor(data: String) {
+		document = builder.build(data.byteInputStream())
+		val namespaces = root!!.namespacesInScope
 		if (namespaces.all { it.uri != "http://www.w3.org/2001/XMLSchema" }) {
 			throw Exception("File is not valid XSD schema.")
 		}
-		for (element in root.children) {
+		for (element in root!!.children) {
 			createElement(element)
 		}
 		setPlaceholders()
-		println()
+	}
+
+	constructor(schema: List<XType>) {
+		types = schema.toMutableList()
+		table = Table().fill {
+			for (header in convertTypesToHeaders()) {
+				header(Table.Cell(header[1] at header[0], 0) with SString("${header[0]}\$${header[1]}"))
+			}
+		}
 	}
 
 	private fun createElement(element: Element?) {
@@ -54,9 +66,27 @@ class Schema(data: String) {
 
 	private fun setPlaceholders() {
 		for (obj in placeholders) {
-			types.first { it.name == obj.key.name }.fields[obj.value.fieldName] =
-				types.firstOrNull { it.name == obj.value.typeName }?.also { it.dependent++ }
+			types.first { it.typename == obj.key.typename }.fields[obj.value.fieldName] =
+				types.firstOrNull { it.typename == obj.value.typeName }?.also { it.dependent++ }
 					?: UnknownType(obj.value.typeName)
+		}
+	}
+
+	private fun convertTypesToHeaders(): List<List<String>> {
+		val result = mutableListOf<List<String>>()
+		for (type in types) {
+			convertTypeToHeaders(type, result)
+		}
+		return result
+	}
+
+	private fun convertTypeToHeaders(type: XType, result: MutableList<List<String>>) {
+		for (field in type.fields) {
+			if (field.value.complexity != Complexity.COMPLEX_TYPE) {
+				result.add(listOf(type.typename, field.key))
+			} else {
+				convertTypeToHeaders(field.value, result)
+			}
 		}
 	}
 

@@ -1,13 +1,11 @@
 package com.maeasoftworks.alfaconverter.controllers
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.maeasoftworks.alfaconverter.services.XmlService
 import com.maeasoftworks.alfaconverter.validators.FileNotEmpty
 import com.maeasoftworks.alfaconverter.validators.MustBeXlsx
 import com.maeasoftworks.alfaconverter.validators.MustBeXsdOrXml
-import org.springframework.core.io.ByteArrayResource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -16,18 +14,21 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("api/xml")
 @CrossOrigin
 @Validated
-class XmlController(private val xmlService: XmlService) {
+class XmlController(
+	private val xmlService: XmlService,
+	private val mapper: ObjectMapper
+) {
 	@PostMapping("headers", produces = ["application/json"])
 	@ResponseBody
 	fun getHeaders(
-		@RequestParam("first-file")     @FileNotEmpty   @MustBeXlsx     firstFile: MultipartFile,
-		@RequestParam("second-file")    @FileNotEmpty   @MustBeXsdOrXml secondFile: MultipartFile
-	) = xmlService.getHeadersAndSchema(firstFile, secondFile)
+		@RequestParam("xlsx")   @FileNotEmpty   @MustBeXlsx     xlsx: MultipartFile,
+		@RequestParam("xsd")    @FileNotEmpty   @MustBeXsdOrXml xsd: MultipartFile
+	) = xmlService.getHeadersAndSchema(xlsx, xsd)
 
-
-	@PostMapping("convert", produces = ["application/xml"])
+	@PostMapping("convert", produces = ["application/xml"], consumes = ["multipart/form-data"])
 	fun convert(
-		@RequestParam("file")   @MustBeXlsx     @FileNotEmpty   file: MultipartFile,
-		@RequestParam("xsd")    @MustBeXsdOrXml @FileNotEmpty   xsd: MultipartFile
-	): String = xmlService.convert(file, xsd)
+		@RequestParam("xlsx")   @FileNotEmpty   @MustBeXlsx     xlsx: MultipartFile,
+		@RequestParam("schema")                                 schema: String,
+		@RequestParam("conversion", required = false)           conversion: String = ""
+	) = xmlService.convert(xlsx, mapper.readValue(schema))
 }

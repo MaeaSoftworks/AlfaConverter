@@ -1,6 +1,7 @@
 package com.maeasoftworks.alfaconverter.services
 
 import com.maeasoftworks.alfaconverter.core.XmlConverter
+import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XType
 import com.maeasoftworks.alfaconverter.dao.Log
 import com.maeasoftworks.alfaconverter.dto.XmlHeadersResponse
 import org.springframework.stereotype.Service
@@ -19,8 +20,8 @@ class XmlService(private val logger: Logger) {
 		return result
 	}
 
-	fun convert(file: MultipartFile, xsd: MultipartFile): String {
-		val xmlConverter = XmlConverter(file.bytes, xsd.bytes)
+	fun convert(file: MultipartFile, schema: List<XType>): String {
+		val xmlConverter = XmlConverter(file.bytes, schema)
 		val result = xmlConverter.convert()
 		logger.write(Log(LocalDateTime.now(), "", 0))
 		return result

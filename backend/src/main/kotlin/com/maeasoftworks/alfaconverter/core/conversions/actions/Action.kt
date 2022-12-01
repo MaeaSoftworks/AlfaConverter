@@ -1,11 +1,12 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
+import com.maeasoftworks.alfaconverter.core.conversions.Target
 import com.maeasoftworks.alfaconverter.core.model.Table
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class Action {
-	abstract fun run(initialTable: Table, resultTable: Table): Table
+	abstract fun run(initialTable: Table, resultTable: Table)
 
-	abstract fun isUsing(column: Int): Boolean
+	abstract fun isUsing(column: Target): Boolean
 }

@@ -2,26 +2,51 @@
 <xsd:schema
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified">
-    <xsd:element name="person">
+
+    <xsd:element name="root">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="firstName" type="xsd:string" />
-                <xsd:element name="lastName" type="xsd:string" />
-                <xsd:element name="middleName" type="xsd:string" />
-                <xsd:element name="age" type="xsd:decimal" />
-                <xsd:element name="city" type="xsd:string" />
-                <xsd:element name="otherPerson" type="person2" />
+                <xsd:element ref="person" />
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:complexType name="person2">
+    <xsd:element name="person">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="name" type="xsd:string" />
+                <xsd:element name="birthday" type="xsd:date" />
+                <xsd:element name="age" type="xsd:decimal" />
+                <xsd:element name="address" type="xsd:string" />
+                <xsd:element name="diagnosis" type="diagnosis" />
+                <xsd:element name="researchType" type="xsd:string" />
+                <xsd:element ref="lab" />
+                <xsd:element name="analysis" type="analysis" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="diagnosis">
         <xsd:sequence>
-            <xsd:element name="firstName" type="xsd:string" />
-            <xsd:element name="lastName" type="xsd:string" />
-            <xsd:element name="middleName" type="xsd:string" />
-            <xsd:element name="age" type="xsd:decimal" />
-            <xsd:element name="city" type="xsd:string" />
+            <xsd:element name="code" type="xsd:string" />
+            <xsd:element name="name" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="lab">
+        <xsd:complexType>
+            <xsd:attribute name="address" type="xsd:string" use="required" />
+            <xsd:attribute name="name" type="xsd:string" />
+            <xsd:attribute name="code" type="xsd:string" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="analysis">
+        <xsd:sequence>
+            <xsd:element name="dateStart" type="xsd:date" />
+            <xsd:element name="timeStart" type="xsd:time" />
+            <xsd:element name="dateComplete" type="xsd:date" />
+            <xsd:element name="timeComplete" type="xsd:time" />
         </xsd:sequence>
     </xsd:complexType>
 </xsd:schema>

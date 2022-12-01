@@ -34,6 +34,8 @@ dependencies {
 	runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.4.1")
 	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.1")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
+
+	// xml
 	implementation("org.jdom:jdom2:2.0.6.1")
 
 	// docx4j

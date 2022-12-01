@@ -5,17 +5,25 @@ import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XType
 import com.maeasoftworks.alfaconverter.core.model.Schema
 import com.maeasoftworks.alfaconverter.core.model.Spreadsheet
 
-class XmlConverter(
-	document: ByteArray,
-	private var xsd: ByteArray,
-	private var conversion: Conversion = Conversion.empty
-) {
+class XmlConverter {
 	private var document: Spreadsheet
-	private lateinit var schema: Schema
+	var schema: Schema
+	var conversion: Conversion = Conversion.empty
 
-	init {
+	constructor(document: ByteArray,
+	            schema: List<XType>,
+	            conversion: Conversion = Conversion.empty) {
 		this.document = Spreadsheet().open(document)
 		this.document.initializeTable()
+		this.schema = Schema(schema)
+		this.conversion = conversion
+		this.conversion.register(this.document.table, this.schema.table)
+	}
+
+	constructor(document: ByteArray, xsd: ByteArray) {
+		this.document = Spreadsheet().open(document)
+		this.document.initializeTable()
+		schema = Schema(String(xsd))
 	}
 
 	fun getHeadersAndFirstLine(): List<List<String?>> {
@@ -23,12 +31,10 @@ class XmlConverter(
 	}
 
 	fun getSchema(): List<XType> {
-		schema = Schema(String(xsd))
 		return schema.types.filter { it.dependent == 0 }
 	}
 
 	fun convert(): String {
-		schema = Schema(String(xsd))
 		return ""
 	}
 }
