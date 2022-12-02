@@ -3,19 +3,15 @@ package com.maeasoftworks.alfaconverter.core.conversions.actions
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.model.Table
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import com.maeasoftworks.alfaconverter.core.conversions.Target
 import com.maeasoftworks.alfaconverter.core.conversions.pos
 
 @Serializable
-@SerialName("split")
 class Split(
-	@SerialName("initial-column")
-	val initialColumn: Target,
-	@SerialName("target-columns")
-	val targetColumns: List<Target>,
+	private val initialColumn: Target,
+	private val targetColumns: List<Target>,
 	@Suppress("CanBeParameter")
 	private val pattern: String
 ) : Action() {

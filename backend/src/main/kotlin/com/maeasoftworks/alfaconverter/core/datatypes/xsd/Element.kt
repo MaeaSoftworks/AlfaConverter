@@ -3,4 +3,6 @@ package com.maeasoftworks.alfaconverter.core.datatypes.xsd
 import kotlinx.serialization.Serializable
 
 @Serializable
-class UnknownType(override val name: String) : Type()
+class Element(val name: String) {
+	lateinit var type: Type
+}

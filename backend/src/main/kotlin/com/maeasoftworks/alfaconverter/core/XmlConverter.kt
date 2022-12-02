@@ -1,9 +1,11 @@
 package com.maeasoftworks.alfaconverter.core
 
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XType
+import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
 import com.maeasoftworks.alfaconverter.core.model.Schema
 import com.maeasoftworks.alfaconverter.core.model.Spreadsheet
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class XmlConverter {
 	private var document: Spreadsheet
@@ -11,7 +13,7 @@ class XmlConverter {
 	var conversion: Conversion = Conversion.empty
 
 	constructor(document: ByteArray,
-	            schema: List<XType>,
+	            schema: List<Element>,
 	            conversion: Conversion = Conversion.empty) {
 		this.document = Spreadsheet().open(document)
 		this.document.initializeTable()
@@ -30,8 +32,8 @@ class XmlConverter {
 		return document.getHeadersAndExamples()
 	}
 
-	fun getSchema(): List<XType> {
-		return schema.types.filter { it.dependent == 0 }
+	fun getSchema(): String {
+		return Json.encodeToString(schema.elements.filter { it.type.dependent == 0 })
 	}
 
 	fun convert(): String {

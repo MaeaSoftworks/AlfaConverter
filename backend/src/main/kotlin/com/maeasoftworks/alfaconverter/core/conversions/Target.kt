@@ -1,15 +1,11 @@
 package com.maeasoftworks.alfaconverter.core.conversions
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Target(var type: Type) {
-	@SerialName("positional-target")
 	var positionalTarget = -1
-	@SerialName("type-name")
 	var typeName = ""
-	@SerialName("field-name")
 	var fieldName = ""
 
 	constructor(positionalTarget: Int) : this(Type.POSITIONAL) {

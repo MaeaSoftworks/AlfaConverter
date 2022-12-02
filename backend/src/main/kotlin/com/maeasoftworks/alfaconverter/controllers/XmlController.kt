@@ -1,11 +1,11 @@
 package com.maeasoftworks.alfaconverter.controllers
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.maeasoftworks.alfaconverter.services.XmlService
 import com.maeasoftworks.alfaconverter.validators.FileNotEmpty
 import com.maeasoftworks.alfaconverter.validators.MustBeXlsx
 import com.maeasoftworks.alfaconverter.validators.MustBeXsdOrXml
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -14,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("api/xml")
 @CrossOrigin
 @Validated
-class XmlController(
-	private val xmlService: XmlService,
-	private val mapper: ObjectMapper
-) {
+class XmlController(private val xmlService: XmlService) {
 	@PostMapping("headers", produces = ["application/json"])
 	@ResponseBody
 	fun getHeaders(
@@ -30,5 +27,5 @@ class XmlController(
 		@RequestParam("xlsx")   @FileNotEmpty   @MustBeXlsx     xlsx: MultipartFile,
 		@RequestParam("schema")                                 schema: String,
 		@RequestParam("conversion", required = false)           conversion: String = ""
-	) = xmlService.convert(xlsx, mapper.readValue(schema))
+	) = xmlService.convert(xlsx, Json.decodeFromString(schema))
 }

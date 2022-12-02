@@ -4,8 +4,9 @@ import com.maeasoftworks.alfaconverter.core.XmlConverter
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
 import com.maeasoftworks.alfaconverter.core.conversions.at
 import com.maeasoftworks.alfaconverter.core.conversions.pos
+import com.maeasoftworks.alfaconverter.core.datatypes.xsd.ComplexType
+import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XPrimitive
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XType
 import com.maeasoftworks.alfaconverter.core.model.Schema
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -17,26 +18,28 @@ class XmlTests {
 	private val converter = XmlConverter(
 		File("src/test/resources/from.xlsx").readBytes(),
 		listOf(
-			XType("person") {
-				"name" of XPrimitive.STRING
-				"birthday" of XPrimitive.DATE
-				"age" of XPrimitive.DECIMAL
-				"address" of XPrimitive.STRING
-				"diagnosis" of XType("diagnosis") {
-					"code" of XPrimitive.STRING
+			Element("person").also {
+				it.type = ComplexType("person").build {
 					"name" of XPrimitive.STRING
-				}
-				"researchType" of XPrimitive.STRING
-				"lab" of XType("lab") {
+					"birthday" of XPrimitive.DATE
+					"age" of XPrimitive.DECIMAL
 					"address" of XPrimitive.STRING
-					"name" of XPrimitive.STRING
-					"code" of XPrimitive.STRING
-				}
-				"analysis" of XType("analysis") {
-					"dateStart" of XPrimitive.DATE
-					"timeStart" of XPrimitive.TIME
-					"dateComplete" of XPrimitive.DATE
-					"timeComplete" of XPrimitive.TIME
+					"diagnosis" of ComplexType("diagnosis").build {
+						"code" of XPrimitive.STRING
+						"name" of XPrimitive.STRING
+					}
+					"researchType" of XPrimitive.STRING
+					"lab" of ComplexType("lab").build {
+						"address" of XPrimitive.STRING
+						"name" of XPrimitive.STRING
+						"code" of XPrimitive.STRING
+					}
+					"analysis" of ComplexType("analysis").build {
+						"dateStart" of XPrimitive.DATE
+						"timeStart" of XPrimitive.TIME
+						"dateComplete" of XPrimitive.DATE
+						"timeComplete" of XPrimitive.TIME
+					}
 				}
 			}
 		)

@@ -4,17 +4,12 @@ import com.maeasoftworks.alfaconverter.core.conversions.Target
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.model.Table
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@SerialName("merge")
 class Merge(
-	@SerialName("initial-columns")
 	private val initialColumns: List<Target>,
-	@SerialName("target-column")
 	private val targetColumn: Target,
-	@SerialName("pattern")
 	private val pattern: String
 ) : Action() {
 

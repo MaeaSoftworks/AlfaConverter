@@ -3,14 +3,12 @@ package com.maeasoftworks.alfaconverter.core.conversions
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Action
 import com.maeasoftworks.alfaconverter.core.model.Table
 import kotlinx.serialization.Contextual
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
 class Conversion(
 	private val actions: @Contextual MutableList<Action>,
-	@SerialName("type-conversions")
 	private val typeConversions: @Contextual MutableMap<Target, TypeConversion> = mutableMapOf()
 ) {
 	@Transient

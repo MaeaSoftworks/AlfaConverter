@@ -18,11 +18,11 @@
                 <xsd:element name="birthday" type="xsd:date" />
                 <xsd:element name="age" type="xsd:decimal" />
                 <xsd:element name="address" type="xsd:string" />
-                <xsd:element name="diagnosis" type="diagnosis" />
                 <xsd:element name="researchType" type="xsd:string" />
                 <xsd:element ref="lab" />
                 <xsd:element name="analysis" type="analysis" />
             </xsd:sequence>
+            <xsd:attribute name="diagnosis" type="diagnosis"/>
         </xsd:complexType>
     </xsd:element>
 

@@ -1,29 +1,29 @@
 package com.maeasoftworks.alfaconverter.core.datatypes.xsd
 
-enum class XPrimitive(val xType: () -> XType) {
-	ANY_URI         ({ XType("anyURI"      , Complexity.PRIMITIVE) }),
-	BASE_64_BINARY  ({ XType("base64Binary", Complexity.PRIMITIVE) }),
-	BOOLEAN         ({ XType("boolean"     , Complexity.PRIMITIVE) }),
-	DATE            ({ XType("date"        , Complexity.PRIMITIVE) }),
-	DATETIME        ({ XType("dateTime"    , Complexity.PRIMITIVE) }),
-	DECIMAL         ({ XType("decimal"     , Complexity.PRIMITIVE) }),
-	DOUBLE          ({ XType("double"      , Complexity.PRIMITIVE) }),
-	DURATION        ({ XType("duration"    , Complexity.PRIMITIVE) }),
-	FLOAT           ({ XType("float"       , Complexity.PRIMITIVE) }),
-	HEX_BINARY      ({ XType("hexBinary"   , Complexity.PRIMITIVE) }),
-	G_DAY           ({ XType("gDay"        , Complexity.PRIMITIVE) }),
-	G_MONTH         ({ XType("gMonth"      , Complexity.PRIMITIVE) }),
-	G_MONTH_DAY     ({ XType("gMonthDay"   , Complexity.PRIMITIVE) }),
-	G_YEAR          ({ XType("gYear"       , Complexity.PRIMITIVE) }),
-	G_YEAR_MONTH    ({ XType("gYearMonth"  , Complexity.PRIMITIVE) }),
-	NOTATION        ({ XType("NOTATION"    , Complexity.PRIMITIVE) }),
-	QNAME           ({ XType("QName"       , Complexity.PRIMITIVE) }),
-	STRING          ({ XType("string"      , Complexity.PRIMITIVE) }),
-	TIME            ({ XType("time"        , Complexity.PRIMITIVE) });
+enum class XPrimitive(val xsdName: String, val element: () -> SimpleType) {
+	ANY_URI         ("anyURI",         { SimpleType("anyURI") }),
+	BASE_64_BINARY  ("base64Binary",   { SimpleType("base64Binary") }),
+	BOOLEAN         ("boolean",        { SimpleType("boolean") }),
+	DATE            ("date",           { SimpleType("date") }),
+	DATETIME        ("dateTime",       { SimpleType("dateTime") }),
+	DECIMAL         ("decimal",        { SimpleType("decimal") }),
+	DOUBLE          ("double",         { SimpleType("double") }),
+	DURATION        ("duration",       { SimpleType("duration") }),
+	FLOAT           ("float",          { SimpleType("float") }),
+	HEX_BINARY      ("hexBinary",      { SimpleType("hexBinary") }),
+	G_DAY           ("gDay",           { SimpleType("gDay") }),
+	G_MONTH         ("gMonth",         { SimpleType("gMonth") }),
+	G_MONTH_DAY     ("gMonthDay",      { SimpleType("gMonthDay") }),
+	G_YEAR          ("gYear",          { SimpleType("gYear") }),
+	G_YEAR_MONTH    ("gYearMonth",     { SimpleType("gYearMonth") }),
+	NOTATION        ("NOTATION",       { SimpleType("NOTATION") }),
+	QNAME           ("QName",          { SimpleType("QName") }),
+	STRING          ("string",         { SimpleType("string") }),
+	TIME            ("time",           { SimpleType("time") });
 
 	companion object {
-		fun findPrimitive(name: String): XPrimitive? {
-			return XPrimitive.values().firstOrNull { it.name.replace("_", "").lowercase() == name.split(':').last().lowercase() }
+		fun findPrimitive(name: String, xsdPrefix: String): XPrimitive? {
+			return name.removePrefix("$xsdPrefix:").let { n -> XPrimitive.values().firstOrNull { it.xsdName == n } }
 		}
 	}
 }
