@@ -1,20 +1,12 @@
 <root>
   <person>
-    <name>John Smith</name>
+    <name>string</name>
     <birthday>2008-09-29</birthday>
-    <age>19</age>
-    <address>New-York</address>
-    <diagnosis>
-      <code>Clown</code>
-      <name>C01</name>
-    </diagnosis>
-    <researchType>Research</researchType>
-    <lab address="Las Vegas" name="SuperLab" code="00645"/>
-    <analysis>
-      <dateStart>2014-09-19</dateStart>
-      <timeStart>23:27:14+06:00</timeStart>
-      <dateComplete>2009-05-16</dateComplete>
-      <timeComplete>06:18:37+06:00</timeComplete>
-    </analysis>
+    <age>1000.00</age>
+    <address>string</address>
+    <diagnosis code="string" name="string"/>
+    <researchType>string</researchType>
+    <lab address="string" name="string" code="string"/>
+    <analysis dateStart="2014-09-19" timeStart="23:27:14+06:00" dateComplete="2009-05-16" timeComplete="06:18:37+06:00"/>
   </person>
 </root>

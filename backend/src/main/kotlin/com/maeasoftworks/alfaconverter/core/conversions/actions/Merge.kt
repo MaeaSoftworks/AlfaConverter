@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
-import com.maeasoftworks.alfaconverter.core.conversions.Target
+import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.model.Table
@@ -8,8 +8,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class Merge(
-	private val initialColumns: List<Target>,
-	private val targetColumn: Target,
+	private val initialColumns: List<Path>,
+	private val targetColumn: Path,
 	private val pattern: String
 ) : Action() {
 
@@ -28,5 +28,5 @@ class Merge(
 		}
 	}
 
-	override fun isUsing(column: Target) = initialColumns.any { it == column } || targetColumn == column
+	override fun isUsing(column: Path) = initialColumns.any { it == column } || targetColumn == column
 }

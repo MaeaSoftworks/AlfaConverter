@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
-import com.maeasoftworks.alfaconverter.core.conversions.Target
+import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.model.Table
 import kotlinx.serialization.Serializable
 
@@ -8,5 +8,5 @@ import kotlinx.serialization.Serializable
 sealed class Action {
 	abstract fun run(initialTable: Table, resultTable: Table)
 
-	abstract fun isUsing(column: Target): Boolean
+	abstract fun isUsing(column: Path): Boolean
 }

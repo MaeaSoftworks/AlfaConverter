@@ -1,13 +1,13 @@
 package com.maeasoftworks.alfaconverter.core.model
 
-import com.maeasoftworks.alfaconverter.core.conversions.Target
+import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.conversions.TypeConversion
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SFactory
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SObject
 
 class Table {
 	var isInitialized: Boolean = false
-	val columns: MutableMap<Target, Column> = HashMap()
+	val columns: MutableMap<Path, Column> = HashMap()
 
 	val headers: MutableList<Cell> = ArrayList()
 
@@ -16,23 +16,23 @@ class Table {
 	val rowsCount: Int
 		get() = columns.values.maxOf { it.cells.size }
 
-	operator fun get(column: Target, row: Int): Cell? {
+	operator fun get(column: Path, row: Int): Cell? {
 		return columns[column]?.get(row)
 	}
 
-	operator fun get(column: Target): Column? {
+	operator fun get(column: Path): Column? {
 		return columns[column]
 	}
 
-	operator fun get(columns: List<Target>): List<Column> {
+	operator fun get(columns: List<Path>): List<Column> {
 		return columns.map { this.columns[it]!! }
 	}
 
-	operator fun set(column: Target, cell: Int, value: Cell) {
+	operator fun set(column: Path, cell: Int, value: Cell) {
 		columns[column]?.set(cell, value)
 	}
 
-	internal fun append(column: Target, row: Int, cell: Cell) {
+	internal fun append(column: Path, row: Int, cell: Cell) {
 		if (!columns.values.any { it.pos == column }) {
 			columns[column] = Column(column)
 		}
@@ -73,7 +73,7 @@ class Table {
 		}
 	}
 
-	class Column(val pos: Target) {
+	class Column(val pos: Path) {
 		val cells: MutableMap<Int, Cell> = HashMap()
 
 		operator fun get(pos: Int): Cell? {
@@ -90,7 +90,7 @@ class Table {
 	}
 
 	class Cell(
-		var column: Target,
+		var column: Path,
 		var row: Int
 	) {
 		lateinit var value: SObject

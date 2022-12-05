@@ -1,14 +1,14 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
-import com.maeasoftworks.alfaconverter.core.conversions.Target
+import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.model.Table
 import kotlinx.serialization.Serializable
 
 @Serializable
 class Bind(
-	private val initialColumn: Target,
-	private val targetColumn: Target
+	private val initialColumn: Path,
+	private val targetColumn: Path
 ) : Action() {
 
 	override fun run(initialTable: Table, resultTable: Table) {
@@ -17,5 +17,5 @@ class Bind(
 		}
 	}
 
-	override fun isUsing(column: Target) = initialColumn == column
+	override fun isUsing(column: Path) = initialColumn == column
 }

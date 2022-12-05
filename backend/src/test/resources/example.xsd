@@ -18,19 +18,17 @@
                 <xsd:element name="birthday" type="xsd:date" />
                 <xsd:element name="age" type="xsd:decimal" />
                 <xsd:element name="address" type="xsd:string" />
+                <xsd:element name="diagnosis" type="diagnosis"/>
                 <xsd:element name="researchType" type="xsd:string" />
                 <xsd:element ref="lab" />
                 <xsd:element name="analysis" type="analysis" />
             </xsd:sequence>
-            <xsd:attribute name="diagnosis" type="diagnosis"/>
         </xsd:complexType>
     </xsd:element>
 
     <xsd:complexType name="diagnosis">
-        <xsd:sequence>
-            <xsd:element name="code" type="xsd:string" />
-            <xsd:element name="name" type="xsd:string" />
-        </xsd:sequence>
+        <xsd:attribute name="code" type="xsd:string" />
+        <xsd:attribute name="name" type="xsd:string" />
     </xsd:complexType>
 
     <xsd:element name="lab">
@@ -42,11 +40,9 @@
     </xsd:element>
 
     <xsd:complexType name="analysis">
-        <xsd:sequence>
-            <xsd:element name="dateStart" type="xsd:date" />
-            <xsd:element name="timeStart" type="xsd:time" />
-            <xsd:element name="dateComplete" type="xsd:date" />
-            <xsd:element name="timeComplete" type="xsd:time" />
-        </xsd:sequence>
+        <xsd:attribute name="dateStart" type="xsd:date" />
+        <xsd:attribute name="timeStart" type="xsd:time" />
+        <xsd:attribute name="dateComplete" type="xsd:date" />
+        <xsd:attribute name="timeComplete" type="xsd:time" />
     </xsd:complexType>
 </xsd:schema>

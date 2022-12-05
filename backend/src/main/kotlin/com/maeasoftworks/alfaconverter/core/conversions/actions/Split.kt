@@ -5,13 +5,12 @@ import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.model.Table
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import com.maeasoftworks.alfaconverter.core.conversions.Target
-import com.maeasoftworks.alfaconverter.core.conversions.pos
+import com.maeasoftworks.alfaconverter.core.conversions.Path
 
 @Serializable
 class Split(
-	private val initialColumn: Target,
-	private val targetColumns: List<Target>,
+	private val initialColumn: Path,
+	private val targetColumns: List<Path>,
 	@Suppress("CanBeParameter")
 	private val pattern: String
 ) : Action() {
@@ -24,7 +23,7 @@ class Split(
 			val results =
 				regex.matchEntire(initialColumn?.get(y)?.value!!.getString().trim())!!.groups.filterNotNull().drop(1)
 			for (col in results.indices) {
-				resultTable[targetColumns[col]]!![y] = Cell(col.pos, y).also {
+				resultTable[targetColumns[col]]!![y] = Cell(Path(col), y).also {
 					it.value = SString(results[col].value)
 					it.column = targetColumns[col]
 				}
@@ -32,5 +31,5 @@ class Split(
 		}
 	}
 
-	override fun isUsing(column: Target) = initialColumn == column || targetColumns.contains(column)
+	override fun isUsing(column: Path) = initialColumn == column || targetColumns.contains(column)
 }

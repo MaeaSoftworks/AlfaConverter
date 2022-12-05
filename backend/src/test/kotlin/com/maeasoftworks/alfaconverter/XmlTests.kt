@@ -1,9 +1,8 @@
 package com.maeasoftworks.alfaconverter
 
 import com.maeasoftworks.alfaconverter.core.XmlConverter
+import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
-import com.maeasoftworks.alfaconverter.core.conversions.at
-import com.maeasoftworks.alfaconverter.core.conversions.pos
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.ComplexType
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XPrimitive
@@ -53,24 +52,24 @@ class XmlTests {
 	@Test
 	fun `binding test`() {
 		converter.conversion.addActions(
-			Bind(0.pos, "name" at "person"),
-			Bind(1.pos, "birthday" at "person"),
-			Bind(2.pos, "age" at "person"),
-			Bind(3.pos, "address" at "person"),
-			Bind(4.pos, "code" at "diagnosis"),
-			Bind(5.pos, "name" at "diagnosis"),
-			Bind(6.pos, "researchType" at "person"),
-			Bind(7.pos, "address" at "lab"),
-			Bind(8.pos, "name" at "lab"),
-			Bind(9.pos, "code" at "lab"),
-			Bind(10.pos, "dateStart" at "analysis"),
-			Bind(11.pos, "timeStart" at "analysis"),
-			Bind(12.pos, "dateComplete" at "analysis"),
-			Bind(13.pos, "timeComplete" at "analysis")
+			Bind(Path( 0), Path("person.name")),
+			Bind(Path( 1), Path("person.birthday")),
+			Bind(Path( 2), Path("person.age")),
+			Bind(Path( 3), Path("person.address")),
+			Bind(Path( 4), Path("person.diagnosis.code")),
+			Bind(Path( 5), Path("person.diagnosis.name")),
+			Bind(Path( 6), Path("person.person.researchType")),
+			Bind(Path( 7), Path("person.lab.address")),
+			Bind(Path( 8), Path("person.lab.name")),
+			Bind(Path( 9), Path("person.lab.code")),
+			Bind(Path(10), Path("person.analysis.dateStart")),
+			Bind(Path(11), Path("person.analysis.timeStart")),
+			Bind(Path(12), Path("person.analysis.dateComplete")),
+			Bind(Path(13), Path("person.analysis.timeComplete"))
 		)
 		converter.conversion.start()
-		assertEquals("Иванов Иван Иванович", converter.schema.table["name" at "person", 1]!!.value.getString())
-		assertEquals("21.06.1963", converter.schema.table["birthday" at "person", 1]!!.value.getString())
-		assertEquals("13:53", converter.schema.table["timeComplete" at "analysis", 1]!!.value.getString())
+		assertEquals("Иванов Иван Иванович", converter.schema.table[Path("person.name"), 1]!!.value.getString())
+		assertEquals("21.06.1963", converter.schema.table[Path("person.birthday"), 1]!!.value.getString())
+		assertEquals("13:53", converter.schema.table[Path("person.analysis.timeComplete"), 1]!!.value.getString())
 	}
 }

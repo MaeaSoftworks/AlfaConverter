@@ -9,18 +9,16 @@ import kotlinx.serialization.Transient
 @Serializable
 class Conversion(
 	private val actions: @Contextual MutableList<Action>,
-	private val typeConversions: @Contextual MutableMap<Target, TypeConversion> = mutableMapOf()
+	private val typeConversions: @Contextual MutableMap<Path, TypeConversion> = mutableMapOf()
 ) {
-	@Transient
-	lateinit var source: Table
-	@Transient
-	lateinit var target: Table
+	@Transient lateinit var source: Table
+	@Transient lateinit var target: Table
 
 	internal fun addAction(action: Action) = actions.add(action)
 
 	internal fun addActions(vararg action: Action) = actions.addAll(action)
 
-	internal fun addTypeConversion(column: Target, conversion: TypeConversion) = typeConversions.set(column, conversion)
+	internal fun addTypeConversion(column: Path, conversion: TypeConversion) = typeConversions.set(column, conversion)
 
 	fun register(source: Table, target: Table) {
 		this.source = source

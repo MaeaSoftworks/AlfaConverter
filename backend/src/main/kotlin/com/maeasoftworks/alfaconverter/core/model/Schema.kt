@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.model
 
-import com.maeasoftworks.alfaconverter.core.conversions.at
+import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.*
 import org.jdom2.Document
@@ -33,7 +33,7 @@ class Schema {
 		elements = schema.toMutableList()
 		table = Table().fill {
 			for (header in convertElementsToHeaders()) {
-				header(Table.Cell(header[1] at header[0], 0) with SString("${header[0]}\$${header[1]}"))
+				header(Table.Cell(Path(header), 0) with SString("${header[0]}\$${header[1]}"))
 			}
 		}
 	}
@@ -68,9 +68,15 @@ class Schema {
 
 	private fun createComplexType(typeDeclaration: XsdElement, name: String): ComplexType {
 		val type = ComplexType(name, ::register)
-		typeDeclaration.children.firstOrNull { it.name == "sequence" }?.let { type.sequenceToFields(it, prefix) }
-		if (typeDeclaration.children.any { it.name == "attribute" }) {
-			type.collectAttributes(typeDeclaration, prefix)
+		var isSequenceBody = false
+		typeDeclaration.children.firstOrNull { it.name == "sequence" }?.let {
+			type.sequenceToFields(it, prefix)
+			isSequenceBody = true
+		}
+		if (!isSequenceBody) {
+			if (typeDeclaration.children.any { it.name == "attribute" }) {
+				type.collectAttributes(typeDeclaration, prefix)
+			}
 		}
 		types += type
 		return type
@@ -96,28 +102,25 @@ class Schema {
 		}
 	}
 
-	private fun convertElementsToHeaders(): List<List<String>> {
-		val result = mutableListOf<List<String>>()
-		for (type in types) {
-			convertElementToHeaders(type, result)
+	private fun convertElementsToHeaders(): List<String> {
+		val result = mutableListOf<String>()
+		for (element in elements) {
+			convertElementToHeaders(element.type, result)
 		}
 		return result
 	}
 
-	private fun convertElementToHeaders(type: Type, result: MutableList<List<String>>) {
+	private fun convertElementToHeaders(type: Type, result: MutableList<String>, prefix: String? = null) {
+		val pref = prefix ?: type.name
 		for (field in (type as ComplexType).fields) {
 			if (field.value !is ComplexType) {
-				result.add(listOf(type.name, field.key))
+				result.add("${pref}.${field.key}")
 			} else {
-				convertElementToHeaders(field.value, result)
+				convertElementToHeaders(field.value, result, "${pref}.${field.key}")
 			}
 		}
 		for (attribute in (type).attributes) {
-			if (attribute.value !is ComplexType) {
-				result.add(listOf(type.name, attribute.key))
-			} else {
-				convertElementToHeaders(attribute.value, result)
-			}
+			result.add("${pref}.${attribute.key}")
 		}
 	}
 
