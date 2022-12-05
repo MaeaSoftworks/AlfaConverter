@@ -1,9 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="AlfaConverter [backend]" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="AlfaConverter.backend.main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="com.maeasoftworks.alfaconverter.AlfaConverterApplication" />
-    <method v="2">
-      <option name="Make" enabled="true" />
-    </method>
-  </configuration>
-</component>

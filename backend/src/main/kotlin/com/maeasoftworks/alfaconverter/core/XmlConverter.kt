@@ -4,8 +4,6 @@ import com.maeasoftworks.alfaconverter.core.conversions.Conversion
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
 import com.maeasoftworks.alfaconverter.core.model.Schema
 import com.maeasoftworks.alfaconverter.core.model.Spreadsheet
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 class XmlConverter {
 	private var document: Spreadsheet
@@ -32,8 +30,8 @@ class XmlConverter {
 		return document.getHeadersAndExamples()
 	}
 
-	fun getSchema(): String {
-		return Json.encodeToString(schema.elements.filter { it.type.dependent == 0 })
+	fun getSchema(): Element {
+		return schema.elements.first { it.type.dependent == 0 }
 	}
 
 	fun convert(): String {

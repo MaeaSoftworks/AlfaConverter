@@ -7,7 +7,7 @@ import com.maeasoftworks.alfaconverter.core.datatypes.xsd.ComplexType
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XPrimitive
 import com.maeasoftworks.alfaconverter.core.model.Schema
-import org.junit.jupiter.api.Test
+import org.junit.Test
 import java.io.File
 import kotlin.test.assertEquals
 

@@ -11,7 +11,7 @@ import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SNumber
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.STypeName
 import com.maeasoftworks.alfaconverter.core.model.Table
-import org.junit.jupiter.api.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 
 class ConversionTests {

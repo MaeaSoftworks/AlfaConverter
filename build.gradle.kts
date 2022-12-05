@@ -1,6 +1,5 @@
 plugins {
-	id("java")
-	kotlin("jvm") version "1.7.20" apply false
+	kotlin("jvm") version "1.7.22" apply false
 }
 
 allprojects {
@@ -9,7 +8,7 @@ allprojects {
 	}
 
 	group = "com.maeasoftworks"
-	version = "1"
+	version = "2"
 }
 
 val finalize by tasks.registering {

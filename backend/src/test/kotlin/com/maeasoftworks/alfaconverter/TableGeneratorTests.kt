@@ -3,7 +3,7 @@ package com.maeasoftworks.alfaconverter
 import com.maeasoftworks.alfaconverter.core.XlsxConverter
 import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.model.Table
-import org.junit.jupiter.api.Test
+import org.junit.Test
 import java.nio.file.Files
 import kotlin.test.assertEquals
 
