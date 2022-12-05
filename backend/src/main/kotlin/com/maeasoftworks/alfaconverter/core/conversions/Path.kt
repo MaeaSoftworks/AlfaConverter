@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 class Path {
 	var position: Int = -1
-	lateinit var path: String
+	var path: String = ""
 	val type: Type
 
 	constructor(position: Int) {

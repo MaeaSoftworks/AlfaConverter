@@ -1,9 +1,8 @@
 package com.maeasoftworks.alfaconverter.utils
 
+import com.maeasoftworks.alfaconverter.plugins.serializer
 import io.ktor.http.content.*
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-
 
 suspend fun MultiPartData.extractParts(vararg parts: String): Map<String, PartData?> {
 	val result = mutableMapOf<String, PartData?>()
@@ -22,5 +21,5 @@ fun PartData?.tryGetBytes(): ByteArray {
 }
 
 inline fun <reified T> PartData?.deserialize(): T? {
-	return (this as? PartData.FormItem)?.value?.let { Json.decodeFromString(it) }
+	return (this as? PartData.FormItem)?.value?.let { serializer.decodeFromString(it) }
 }

@@ -3,9 +3,11 @@ package com.maeasoftworks.alfaconverter.core.conversions.actions
 import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.model.Table
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@SerialName("bind")
 class Bind(
 	private val initialColumn: Path,
 	private val targetColumn: Path

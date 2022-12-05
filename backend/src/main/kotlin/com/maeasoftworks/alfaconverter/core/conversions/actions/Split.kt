@@ -6,8 +6,10 @@ import com.maeasoftworks.alfaconverter.core.model.Table
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import com.maeasoftworks.alfaconverter.core.conversions.Path
+import kotlinx.serialization.SerialName
 
 @Serializable
+@SerialName("split")
 class Split(
 	private val initialColumn: Path,
 	private val targetColumns: List<Path>,
