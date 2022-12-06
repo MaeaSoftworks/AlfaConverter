@@ -10,7 +10,6 @@ plugins {
 }
 
 group = "com.maeasoftworks"
-version = "0.0.1"
 application {
 	mainClass.set("io.ktor.server.netty.EngineMain")
 	val isDevelopment: Boolean = project.ext.has("development")
@@ -35,13 +34,13 @@ dependencies {
 	testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
 
-
 	// docx4j
 	implementation("org.docx4j:docx4j-JAXB-ReferenceImpl:11.4.8")
-	implementation("org.glassfish.jaxb:jaxb-runtime:4.0.0")
-	implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.0")
-	implementation("jakarta.activation:jakarta.activation-api:2.1.0")
-	implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
+	implementation("commons-codec:commons-codec:1.15") // override vulnerable docx4j dependency
+	//implementation("org.glassfish.jaxb:jaxb-runtime:4.0.0")
+	//implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.0")
+	//implementation("jakarta.activation:jakarta.activation-api:2.1.0")
+	//implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
 
 	implementation("org.jdom:jdom2:2.0.6.1")
 	implementation("org.apache.tika:tika-core:2.6.0")
