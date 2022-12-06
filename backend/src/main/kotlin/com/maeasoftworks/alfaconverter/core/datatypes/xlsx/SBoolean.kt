@@ -25,7 +25,7 @@ class SBoolean : SObject {
 		return value.toString()
 	}
 
-	override fun getXmlRepresentation(): Any? {
+	override fun getXmlRepresentation(): Any {
 		return value.toString()
 	}
 

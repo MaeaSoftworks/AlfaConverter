@@ -13,7 +13,6 @@ group = "com.maeasoftworks"
 version = "0.0.1"
 application {
 	mainClass.set("io.ktor.server.netty.EngineMain")
-
 	val isDevelopment: Boolean = project.ext.has("development")
 	applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
@@ -46,4 +45,8 @@ dependencies {
 
 	implementation("org.jdom:jdom2:2.0.6.1")
 	implementation("org.apache.tika:tika-core:2.6.0")
+}
+
+val start by tasks.registering {
+	dependsOn("run")
 }

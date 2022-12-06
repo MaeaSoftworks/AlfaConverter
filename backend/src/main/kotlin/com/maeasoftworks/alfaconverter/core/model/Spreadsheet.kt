@@ -1,10 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.model
 
-import com.maeasoftworks.alfaconverter.core.conversions.Path
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SBoolean
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SNull
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SNumber
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
+import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.*
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage
 import org.docx4j.openpackaging.parts.PartName
@@ -32,28 +28,36 @@ class Spreadsheet {
 			return
 		}
 		table = Table()
-		for (row in worksheet.sheetData.row.indices) {
-			for (cell in worksheet.sheetData.row[row].c.indices) {
-				Path(cell).let { table.append(it, row, extractValue(worksheet.sheetData.row[row].c[cell], row, it)) }
+		for (columnPos in worksheet.sheetData.row[0].c.indices) {
+			val sObj = extractValue(worksheet.sheetData.row[0].c[columnPos])
+			val column = Column(sObj.getString().trim())
+			table.columns.add(column)
+			table.headers.add(sObj)
+		}
+
+		for (row in 1 until worksheet.sheetData.row.size) {
+			for (column in worksheet.sheetData.row[row].c.indices) {
+				table.columns[column].also {
+					it.cells += extractValue(worksheet.sheetData.row[row].c[column])
+				}
 			}
 		}
-		extractHeaders(table)
 		table.isInitialized = true
 	}
 
 	fun getHeadersAndExamples(): List<List<String?>> {
-		val headers: MutableList<Cell> = mutableListOf()
-		val examples: MutableList<Cell> = mutableListOf()
+		val headers: MutableList<String> = mutableListOf()
+		val examples: MutableList<String> = mutableListOf()
 		if (worksheet.sheetData.row[0].c.isEmpty()) throw NoSuchElementException("First row of table was empty")
-		for (column in worksheet.sheetData.row[0].c.indices) {
-			headers.add(extractValue(worksheet.sheetData.row[0].c[column], 0, Path(column)))
+		for (cell in worksheet.sheetData.row[0].c.indices) {
+			headers.add(extractValue(worksheet.sheetData.row[0].c[cell]).getString())
 		}
 		if (worksheet.sheetData.row.count() > 1) {
-			for (column in worksheet.sheetData.row[1].c.indices) {
-				examples.add(extractValue(worksheet.sheetData.row[1].c[column], 1, Path(column)))
+			for (cell in worksheet.sheetData.row[1].c.indices) {
+				examples.add(extractValue(worksheet.sheetData.row[1].c[cell]).getString())
 			}
 		}
-		return listOf(headers.map { it.value.getString() }, examples.map { it.value.getString() })
+		return listOf(headers, examples)
 	}
 
 	fun save(): ByteArray {
@@ -63,7 +67,7 @@ class Spreadsheet {
 		val sheetData = sheet.contents.sheetData
 		val header = factory.createRow()
 		for (columnNumber in 0 until table.columns.size) {
-			val cell = table.headers[columnNumber].value.getXlsxRepresentation()
+			val cell = table.headers[columnNumber].getXlsxRepresentation()
 			cell.r = toExcel(columnNumber) + "1"
 			header.c.add(cell)
 		}
@@ -72,8 +76,8 @@ class Spreadsheet {
 		for (rowNumber in 1 until table.rowsCount + 1) {
 			val row = factory.createRow()
 			for (columnNumber in 0 until table.columns.size) {
-				val cell = table.columns[Path(columnNumber)]?.get(rowNumber)?.value?.getXlsxRepresentation() ?: factory.createCell()
-				cell?.r = toExcel(columnNumber) + (rowNumber + 1).toString()
+				val cell = table.columns[columnNumber][rowNumber].getXlsxRepresentation()
+				cell.r = toExcel(columnNumber) + (rowNumber + 1).toString()
 				row.c.add(cell)
 			}
 			sheetData.row.add(row)
@@ -85,53 +89,20 @@ class Spreadsheet {
 
 	fun clean() {
 		for (column in table.columns) {
-			column.value.cells.clear()
+			column.cells.clear()
 		}
 	}
 
-	private fun extractHeaders(table: Table): Table {
-		table.columns.forEach { (key, value) ->
-			table.headers.add(value.cells.values.first())
-			table.columns[key]!!.cells.remove(0)
+	private fun extractValue(docx4jCell: org.xlsx4j.sml.Cell): SObject {
+		return when (docx4jCell.t) {
+			STCellType.B -> SBoolean(docx4jCell)
+			STCellType.N -> SNumber(docx4jCell.v.toDouble(), (document.parts[stylesPart] as Styles).getXfByIndex(docx4jCell.s).numFmtId)
+			STCellType.E -> SNull()
+			STCellType.S -> SString(document, docx4jCell)
+			STCellType.STR -> SNull()
+			STCellType.INLINE_STR -> SString(document, docx4jCell)
+			null -> SNull()
 		}
-		return table
-	}
-
-	private fun extractValue(docx4jCell: org.xlsx4j.sml.Cell, row: Int, column: Path): Cell {
-		val cell = Cell(column, row)
-		when (docx4jCell.t) {
-			STCellType.B -> {
-				cell.value = SBoolean(docx4jCell)
-			}
-
-			STCellType.N -> {
-				cell.value = SNumber(
-					docx4jCell.v.toDouble(),
-					(document.parts[stylesPart] as Styles).getXfByIndex(docx4jCell.s).numFmtId
-				)
-			}
-
-			STCellType.E -> {
-				cell.value = SNull()
-			}
-
-			STCellType.S -> {
-				cell.value = SString(document, docx4jCell)
-			}
-
-			STCellType.STR -> {
-				cell.value = SNull()
-			}
-
-			STCellType.INLINE_STR -> {
-				cell.value = SString(document, docx4jCell)
-			}
-
-			null -> {
-				cell.value = SNull()
-			}
-		}
-		return cell
 	}
 
 	companion object {

@@ -1,12 +1,13 @@
 package com.maeasoftworks.alfaconverter
 
 import com.maeasoftworks.alfaconverter.core.XmlConverter
-import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.ComplexType
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XPrimitive
 import com.maeasoftworks.alfaconverter.core.model.Schema
+import com.maeasoftworks.alfaconverter.plugins.serializer
+import kotlinx.serialization.encodeToString
 import org.junit.Test
 import java.io.File
 import kotlin.test.assertEquals
@@ -52,24 +53,25 @@ class XmlTests {
 	@Test
 	fun `binding test`() {
 		converter.conversion.addActions(
-			Bind(Path( 0), Path("person.name")),
-			Bind(Path( 1), Path("person.birthday")),
-			Bind(Path( 2), Path("person.age")),
-			Bind(Path( 3), Path("person.address")),
-			Bind(Path( 4), Path("person.diagnosis.code")),
-			Bind(Path( 5), Path("person.diagnosis.name")),
-			Bind(Path( 6), Path("person.person.researchType")),
-			Bind(Path( 7), Path("person.lab.address")),
-			Bind(Path( 8), Path("person.lab.name")),
-			Bind(Path( 9), Path("person.lab.code")),
-			Bind(Path(10), Path("person.analysis.dateStart")),
-			Bind(Path(11), Path("person.analysis.timeStart")),
-			Bind(Path(12), Path("person.analysis.dateComplete")),
-			Bind(Path(13), Path("person.analysis.timeComplete"))
+			Bind("ФИО",  "person.name"),
+			Bind("Дата рождения",  "person.birthday"),
+			Bind("Возраст пациента",  "person.age"),
+			Bind("Адрес прописки пациента",  "person.address"),
+			Bind("Диагноз (код)",  "person.diagnosis.code"),
+			Bind("Диагноз (расшифровка)",  "person.diagnosis.name"),
+			Bind("Тип исследования",  "person.person.researchType"),
+			Bind("Адрес лаборатории",  "person.lab.address"),
+			Bind("Название лаборатории",  "person.lab.name"),
+			Bind("Код лаборатории",  "person.lab.code"),
+			Bind("Дата взятия анализа", "person.analysis.dateStart"),
+			Bind("Время взятия анализа", "person.analysis.timeStart"),
+			Bind("Дата выполнения", "person.analysis.dateComplete"),
+			Bind("Время выполнения анализа", "person.analysis.timeComplete")
 		)
+		println(serializer.encodeToString(converter.conversion))
 		converter.conversion.start()
-		assertEquals("Иванов Иван Иванович", converter.schema.table[Path("person.name"), 1]!!.value.getString())
-		assertEquals("21.06.1963", converter.schema.table[Path("person.birthday"), 1]!!.value.getString())
-		assertEquals("13:53", converter.schema.table[Path("person.analysis.timeComplete"), 1]!!.value.getString())
+		assertEquals("Иванов Иван Иванович", converter.schema.table["person.name", 0]!!.getString())
+		assertEquals("21.06.1963", converter.schema.table["person.birthday", 0]!!.getString())
+		assertEquals("13:53", converter.schema.table["person.analysis.timeComplete", 0]!!.getString())
 	}
 }

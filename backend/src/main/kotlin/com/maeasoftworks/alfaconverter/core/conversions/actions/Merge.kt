@@ -1,6 +1,5 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
-import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.model.Table
@@ -10,25 +9,25 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("merge")
 class Merge(
-	private val initialColumns: List<Path>,
-	private val targetColumn: Path,
+	private val initialColumns: List<String>,
+	private val targetColumn: String,
 	private val pattern: String
 ) : Action() {
 
 	override fun run(initialTable: Table, resultTable: Table) {
 		val sourceColumns = initialTable[initialColumns]
-		for (y in 1..initialTable.rowsCount) {
+		for (y in 0 until initialTable.rowsCount) {
 			var result = pattern
+			var pos = 0
 			Table.slice(sourceColumns, y).forEach { cell ->
-				result = result.replace("$${cell?.column?.toString()}", cell?.value!!.getString())
+				// it doesn't work when inlined
+				val oldValue = "\${${sourceColumns[pos++].name}}"
+				val newValue = cell!!.getString()
+				result = result.replace(oldValue, newValue)
 			}
-			resultTable[targetColumn, y] = Cell(targetColumn, y).also { z ->
-				z.value = SString(result)
-				z.column = targetColumn
-				z.row = y
-			}
+			resultTable[targetColumn, y] = SString(result)
 		}
 	}
 
-	override fun isUsing(column: Path) = initialColumns.any { it == column } || targetColumn == column
+	override fun isUsing(column: String) = initialColumns.any { it == column } || targetColumn == column
 }

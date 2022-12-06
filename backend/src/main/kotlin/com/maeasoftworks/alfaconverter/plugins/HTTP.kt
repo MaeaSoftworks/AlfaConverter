@@ -13,6 +13,6 @@ fun Application.configureHTTP() {
         allowMethod(HttpMethod.Options)
         allowMethod(HttpMethod.Delete)
         allowMethod(HttpMethod.Patch)
-        hostIsIp("localhost")
+        anyHost()
     }
 }

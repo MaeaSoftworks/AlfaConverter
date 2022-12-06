@@ -1,113 +1,90 @@
 package com.maeasoftworks.alfaconverter.core.model
 
-import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.conversions.TypeConversion
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SFactory
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SObject
 
 class Table {
 	var isInitialized: Boolean = false
-	val columns: MutableMap<Path, Column> = HashMap()
+	val columns: MutableList<Column> = mutableListOf()
 
-	val headers: MutableList<Cell> = ArrayList()
-
-	private val dsl = DSL()
+	val headers: MutableList<SObject> = mutableListOf()
 
 	val rowsCount: Int
-		get() = columns.values.maxOf { it.cells.size }
+		get() = columns.maxOf { it.cells.size }
 
-	operator fun get(column: Path, row: Int): Cell? {
-		return columns[column]?.get(row)
+	operator fun get(column: String, row: Int): SObject? {
+		return columns.firstOrNull { it.name == column }?.get(row)
 	}
 
-	operator fun get(column: Path): Column? {
-		return columns[column]
+	operator fun get(column: String): Column? {
+		return columns.firstOrNull { it.name == column }
 	}
 
-	operator fun get(columns: List<Path>): List<Column> {
-		return columns.map { this.columns[it]!! }
+	operator fun get(columns: List<String>): List<Column> {
+		return this.columns.filter { it.name in columns }
 	}
 
-	operator fun set(column: Path, cell: Int, value: Cell) {
-		columns[column]?.set(cell, value)
-	}
-
-	internal fun append(column: Path, row: Int, cell: Cell) {
-		if (!columns.values.any { it.pos == column }) {
-			columns[column] = Column(column)
+	operator fun set(column: String, row: Int, value: SObject) {
+		columns.firstOrNull { it.name == column }?.let {
+			if (it.cells.size == row) {
+				it.cells.add(value)
+			} else if (it.cells.size > row) {
+				it.set(row, value)
+			} else {
+				throw IndexOutOfBoundsException()
+			}
 		}
-		if (columns[column]?.cells?.values?.any { it.row == row && it.column == column } == false) {
-			columns[column]?.set(row, cell)
+	}
+
+	internal fun append(column: String, row: Int, value: SObject) {
+		if (!columns.any { it.name == column }) {
+			columns += Column(column)
+		}
+		if (columns.firstOrNull { it.name == column }?.cells?.any { it == value } == false) {
+			columns.first { it.name == column }[row] = value
 		}
 	}
 
-	fun fill(function: DSL.() -> Unit): Table {
+	fun fill(function: Builder.() -> Unit): Table {
 		isInitialized = true
-		dsl.function()
+		this.Builder().function()
 		return this
 	}
 
 	companion object {
-		internal fun slice(columns: List<Column>, pos: Int): List<Cell?> {
+		internal fun slice(columns: List<Column>, pos: Int): List<SObject?> {
 			return columns.map { it[pos] }
 		}
 	}
 
-	inner class DSL {
-		operator fun Column.unaryPlus() {
-			columns[this.pos] = this
+	inner class Builder {
+		fun column(name: SObject, function: (Builder.() -> Unit)? = null) {
+			columns += Column(name.getString())
+			headers += name
+			function?.invoke(this)
 		}
 
-		fun header(cell: Cell) {
-			columns[cell.column] = Column(cell.column)
-			headers.add(cell)
-		}
-
-		fun put(cell: Cell) {
-			append(cell.column, cell.row, cell)
-		}
-
-		infix fun Cell.with(obj: SObject): Cell {
-			this.value = obj
-			return this
+		operator fun SObject.unaryPlus() {
+			columns.last().cells += this
 		}
 	}
 
-	class Column(val pos: Path) {
-		val cells: MutableMap<Int, Cell> = HashMap()
+	open class Column(var name: String) {
+		val cells: MutableList<SObject> = mutableListOf()
 
-		operator fun get(pos: Int): Cell? {
+		operator fun get(pos: Int): SObject {
 			return cells[pos]
 		}
 
-		operator fun set(cell: Int, value: Cell) {
+		operator fun set(cell: Int, value: SObject) {
 			cells[cell] = value
 		}
 
 		fun changeType(conversion: TypeConversion) {
-			cells.forEach { (_, cell) -> cell.value = SFactory.create(conversion, cell.value) }
-		}
-	}
-
-	class Cell(
-		var column: Path,
-		var row: Int
-	) {
-		lateinit var value: SObject
-
-		override fun equals(other: Any?): Boolean {
-			return other != null
-					&& other is Cell
-					&& row == other.row
-					&& column == other.column
-					&& value == other.value
-		}
-
-		override fun hashCode(): Int {
-			var result = row
-			result = 31 * result + column.hashCode()
-			result = 31 * result + value.hashCode()
-			return result
+			for (cell in cells.indices) {
+				cells[cell] = SFactory.create(conversion, cells[cell])
+			}
 		}
 	}
 }

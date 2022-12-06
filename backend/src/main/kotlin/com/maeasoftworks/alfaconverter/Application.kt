@@ -5,12 +5,10 @@ import com.maeasoftworks.alfaconverter.plugins.configureLogging
 import com.maeasoftworks.alfaconverter.routes.configureRouting
 import com.maeasoftworks.alfaconverter.plugins.configureSerialization
 import io.ktor.server.application.*
-import com.maeasoftworks.alfaconverter.plugins.*
 import io.ktor.server.netty.*
 
-fun main(args: Array<String>): Unit = EngineMain.main(args)
+fun main(args: Array<String>) = EngineMain.main(args)
 
-@Suppress("unused")
 fun Application.module() {
     configureSerialization()
     configureLogging()

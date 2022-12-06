@@ -1,6 +1,5 @@
 package com.maeasoftworks.alfaconverter.core.model
 
-import com.maeasoftworks.alfaconverter.core.conversions.Path
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.*
 import org.jdom2.Document
@@ -33,7 +32,7 @@ class Schema {
 		elements = schema.toMutableList()
 		table = Table().fill {
 			for (header in convertElementsToHeaders()) {
-				header(Table.Cell(Path(header), 0) with SString("${header[0]}\$${header[1]}"))
+				column(SString(header))
 			}
 		}
 	}
@@ -127,5 +126,9 @@ class Schema {
 	private fun register(placeholder: TypePlaceholder): TypePlaceholder {
 		placeholders += placeholder
 		return placeholder
+	}
+
+	fun save(): String {
+		return "converted"
 	}
 }

@@ -35,6 +35,7 @@ class XmlConverter {
 	}
 
 	fun convert(): String {
-		return ""
+		conversion.start()
+		return schema.save()
 	}
 }
