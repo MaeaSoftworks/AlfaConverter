@@ -10,9 +10,11 @@ class XmlConverter {
 	var schema: Schema
 	var conversion: Conversion = Conversion.empty
 
-	constructor(document: ByteArray,
-	            schema: List<Element>,
-	            conversion: Conversion = Conversion.empty) {
+	constructor(
+		document: ByteArray,
+		schema: Element,
+		conversion: Conversion = Conversion.empty
+	) {
 		this.document = Spreadsheet().open(document)
 		this.document.initializeTable()
 		this.schema = Schema(schema)

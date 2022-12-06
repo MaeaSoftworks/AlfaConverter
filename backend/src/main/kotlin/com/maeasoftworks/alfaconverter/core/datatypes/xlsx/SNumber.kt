@@ -20,11 +20,13 @@ class SNumber(value: Number, dataFormat: Long = 0) : SObject() {
 			0L -> {
 				string = this.value.toString()
 			}
+
 			14L -> {
 				val date = convertFromOADate(rawValue.toDouble())
 				this.value = date
 				string = SimpleDateFormat("dd.MM.yyyy").format(date)
 			}
+
 			20L -> {
 				val date = convertFromOADate(rawValue.toDouble())
 				this.value = date
@@ -34,16 +36,19 @@ class SNumber(value: Number, dataFormat: Long = 0) : SObject() {
 				}.time
 				string = SimpleDateFormat("HH:mm").format(c)
 			}
+
 			21L -> {
 				val date = convertFromOADate(rawValue.toDouble())
 				this.value = date
 				string = SimpleDateFormat("H:mm:ss").format(date)
 			}
+
 			22L -> {
 				val date = convertFromOADate(rawValue.toDouble())
 				this.value = date
 				string = SimpleDateFormat("dd.MM.yyyy H:mm").format(date)
 			}
+
 			else -> throw InvalidClassException("Unknown number format")
 		}
 	}
@@ -60,8 +65,8 @@ class SNumber(value: Number, dataFormat: Long = 0) : SObject() {
 		return string
 	}
 
-	override fun getXmlRepresentation(): Any {
-		return string
+	override fun getXmlRepresentation(): String {
+		return if (numFormat == 0L) string else "\"$string\""
 	}
 
 	override fun getString(): String {

@@ -9,6 +9,7 @@ import com.maeasoftworks.alfaconverter.services.FileValidator
 import com.maeasoftworks.alfaconverter.utils.deserialize
 import com.maeasoftworks.alfaconverter.utils.extractParts
 import com.maeasoftworks.alfaconverter.utils.tryGetBytes
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -34,9 +35,9 @@ fun Route.xmlRouting() {
 			val formParameters = call.receiveMultipart()
 			val params = formParameters.extractParts("xlsx", "schema", "conversion")
 			val xlsx = params["xlsx"].tryGetBytes().also { FileValidator.validate(it, FileType.XLSX) }
-			val schema = params["schema"].deserialize<List<Element>>()!!
+			val schema = params["schema"].deserialize<Element>()!!
 			val conversion = params["conversion"].deserialize<Conversion>()
-			call.respond(XmlConverter(xlsx, schema, conversion = conversion!!).convert())
+			call.respondText(XmlConverter(xlsx, schema, conversion = conversion!!).convert(), ContentType.Text.Xml)
 		}
 	}
 }

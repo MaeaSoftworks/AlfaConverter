@@ -36,8 +36,8 @@ class SString : SObject {
 		return value
 	}
 
-	override fun getXmlRepresentation(): Any {
-		return value
+	override fun getXmlRepresentation(): String {
+		return "\"$value\""
 	}
 
 	override fun getString(): String {

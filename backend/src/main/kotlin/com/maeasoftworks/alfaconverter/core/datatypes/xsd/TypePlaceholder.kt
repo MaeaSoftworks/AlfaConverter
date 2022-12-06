@@ -7,4 +7,7 @@ class TypePlaceholder(
 	val fieldName: String? = null
 ) : Type() {
 	override val name = "\$\$placeholder\$\$"
+	override fun createInstance(): SerializableInstance {
+		throw Exception("How?")
+	}
 }

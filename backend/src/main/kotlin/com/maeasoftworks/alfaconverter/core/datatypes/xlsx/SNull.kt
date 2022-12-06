@@ -14,8 +14,8 @@ class SNull : SObject() {
 		return "null"
 	}
 
-	override fun getXmlRepresentation(): Any? {
-		return null
+	override fun getXmlRepresentation(): String {
+		return "null"
 	}
 
 	override fun getString(): String {

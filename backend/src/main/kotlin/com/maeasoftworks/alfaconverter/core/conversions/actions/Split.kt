@@ -1,11 +1,11 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
-import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.model.Table
+import com.maeasoftworks.alfaconverter.core.model.Table.*
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.SerialName
 
 @Serializable
 @SerialName("split")

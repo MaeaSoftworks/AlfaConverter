@@ -1,7 +1,7 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
-import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.model.Table
+import com.maeasoftworks.alfaconverter.core.model.Table.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

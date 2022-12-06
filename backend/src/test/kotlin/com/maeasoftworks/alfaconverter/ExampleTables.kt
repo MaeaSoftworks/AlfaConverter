@@ -87,13 +87,15 @@ internal object ExampleTables {
 		}
 	}
 
-	val tableTo: Table by lazy { Table().fill {
-		column(SString("Column to bind 1"))
-		column(SString("Column to bind 2"))
-		column(SString("Will be merged"))
-		column(SString("Will"))
-		column(SString("be"))
-		column(SString("split"))
-		column(SString("who?"))
-	} }
+	val tableTo: Table by lazy {
+		Table().fill {
+			column(SString("Column to bind 1"))
+			column(SString("Column to bind 2"))
+			column(SString("Will be merged"))
+			column(SString("Will"))
+			column(SString("be"))
+			column(SString("split"))
+			column(SString("who?"))
+		}
+	}
 }

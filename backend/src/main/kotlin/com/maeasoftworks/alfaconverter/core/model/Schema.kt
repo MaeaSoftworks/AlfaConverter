@@ -14,22 +14,23 @@ class Schema {
 	private val builder = SAXBuilder()
 	private var document: Document? = null
 	private lateinit var prefix: String
-	private val root : XsdElement?
-		get () = document?.rootElement
+	private val root: XsdElement?
+		get() = document?.rootElement
 
 	private val placeholders = mutableListOf<TypePlaceholder>()
 
 	constructor(data: String) {
 		document = builder.build(data.byteInputStream())
-		prefix = root!!.namespacesInScope.firstOrNull { it.uri == "http://www.w3.org/2001/XMLSchema" }?.prefix ?: throw Exception("Invalid markup")
+		prefix = root!!.namespacesInScope.firstOrNull { it.uri == "http://www.w3.org/2001/XMLSchema" }?.prefix
+			?: throw Exception("Invalid markup")
 		for (element in root!!.children) {
 			handleXsdElement(element)
 		}
 		setPlaceholders()
 	}
 
-	constructor(schema: List<Element>) {
-		elements = schema.toMutableList()
+	constructor(schema: Element) {
+		elements = mutableListOf(schema)
 		table = Table().fill {
 			for (header in convertElementsToHeaders()) {
 				column(SString(header))
@@ -58,9 +59,11 @@ class Schema {
 			"simpleType" -> {
 				TODO()
 			}
+
 			"complexType" -> {
 				createComplexType(typeDeclaration, name)
 			}
+
 			else -> throw Exception("Invalid schema")
 		}
 	}
@@ -113,13 +116,13 @@ class Schema {
 		val pref = prefix ?: type.name
 		for (field in (type as ComplexType).fields) {
 			if (field.value !is ComplexType) {
-				result.add("${pref}.${field.key}")
+				result += "${pref}.${field.key}"
 			} else {
 				convertElementToHeaders(field.value, result, "${pref}.${field.key}")
 			}
 		}
 		for (attribute in (type).attributes) {
-			result.add("${pref}.${attribute.key}")
+			result += "${pref}.${attribute.key}"
 		}
 	}
 
@@ -129,6 +132,23 @@ class Schema {
 	}
 
 	fun save(): String {
-		return "converted"
+		val root = elements.first().createInstance()
+		val example = root.fields.values.first()
+		val instances = mutableListOf<SerializableInstance>()
+		for (y in 0 until table.rowsCount) {
+			val instance = example.clone()
+			instances += instance
+
+			for (x in table.columns.indices) {
+				val path = table.columns[x].name.split('.').drop(2)
+				var endpoint = instance
+				for (f in path) {
+					endpoint = endpoint[f]
+				}
+				endpoint.value = table.columns[x].cells[y]
+			}
+		}
+		root.collection = instances
+		return root.toXml()
 	}
 }

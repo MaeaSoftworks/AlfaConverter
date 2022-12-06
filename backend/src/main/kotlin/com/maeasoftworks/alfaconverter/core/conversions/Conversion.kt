@@ -11,8 +11,11 @@ class Conversion(
 	private val actions: @Contextual MutableList<Action>,
 	private val typeConversions: @Contextual MutableMap<String, TypeConversion> = mutableMapOf()
 ) {
-	@Transient lateinit var source: Table
-	@Transient lateinit var target: Table
+	@Transient
+	lateinit var source: Table
+
+	@Transient
+	lateinit var target: Table
 
 	internal fun addAction(action: Action) {
 		actions.add(action)

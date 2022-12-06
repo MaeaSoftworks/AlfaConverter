@@ -4,7 +4,7 @@ import com.maeasoftworks.alfaconverter.core.XmlConverter
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.ComplexType
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.XPrimitive
+import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Primitive
 import com.maeasoftworks.alfaconverter.core.model.Schema
 import com.maeasoftworks.alfaconverter.plugins.serializer
 import kotlinx.serialization.encodeToString
@@ -17,32 +17,30 @@ class XmlTests {
 
 	private val converter = XmlConverter(
 		File("src/test/resources/from.xlsx").readBytes(),
-		listOf(
-			Element("person").also {
-				it.type = ComplexType("person").build {
-					"name" of XPrimitive.STRING
-					"birthday" of XPrimitive.DATE
-					"age" of XPrimitive.DECIMAL
-					"address" of XPrimitive.STRING
-					"diagnosis" of ComplexType("diagnosis").build {
-						"code" of XPrimitive.STRING
-						"name" of XPrimitive.STRING
-					}
-					"researchType" of XPrimitive.STRING
-					"lab" of ComplexType("lab").build {
-						"address" of XPrimitive.STRING
-						"name" of XPrimitive.STRING
-						"code" of XPrimitive.STRING
-					}
-					"analysis" of ComplexType("analysis").build {
-						"dateStart" of XPrimitive.DATE
-						"timeStart" of XPrimitive.TIME
-						"dateComplete" of XPrimitive.DATE
-						"timeComplete" of XPrimitive.TIME
-					}
+		Element("person").also {
+			it.type = ComplexType("person").build {
+				"name" of Primitive.STRING
+				"birthday" of Primitive.DATE
+				"age" of Primitive.DECIMAL
+				"address" of Primitive.STRING
+				"diagnosis" of ComplexType("diagnosis").build {
+					"code" of Primitive.STRING
+					"name" of Primitive.STRING
+				}
+				"researchType" of Primitive.STRING
+				"lab" of ComplexType("lab").build {
+					"address" of Primitive.STRING
+					"name" of Primitive.STRING
+					"code" of Primitive.STRING
+				}
+				"analysis" of ComplexType("analysis").build {
+					"dateStart" of Primitive.DATE
+					"timeStart" of Primitive.TIME
+					"dateComplete" of Primitive.DATE
+					"timeComplete" of Primitive.TIME
 				}
 			}
-		)
+		}
 	)
 
 	@Test
@@ -53,16 +51,16 @@ class XmlTests {
 	@Test
 	fun `binding test`() {
 		converter.conversion.addActions(
-			Bind("ФИО",  "person.name"),
-			Bind("Дата рождения",  "person.birthday"),
-			Bind("Возраст пациента",  "person.age"),
-			Bind("Адрес прописки пациента",  "person.address"),
-			Bind("Диагноз (код)",  "person.diagnosis.code"),
-			Bind("Диагноз (расшифровка)",  "person.diagnosis.name"),
-			Bind("Тип исследования",  "person.person.researchType"),
-			Bind("Адрес лаборатории",  "person.lab.address"),
-			Bind("Название лаборатории",  "person.lab.name"),
-			Bind("Код лаборатории",  "person.lab.code"),
+			Bind("ФИО", "person.name"),
+			Bind("Дата рождения", "person.birthday"),
+			Bind("Возраст пациента", "person.age"),
+			Bind("Адрес прописки пациента", "person.address"),
+			Bind("Диагноз (код)", "person.diagnosis.code"),
+			Bind("Диагноз (расшифровка)", "person.diagnosis.name"),
+			Bind("Тип исследования", "person.person.researchType"),
+			Bind("Адрес лаборатории", "person.lab.address"),
+			Bind("Название лаборатории", "person.lab.name"),
+			Bind("Код лаборатории", "person.lab.code"),
 			Bind("Дата взятия анализа", "person.analysis.dateStart"),
 			Bind("Время взятия анализа", "person.analysis.timeStart"),
 			Bind("Дата выполнения", "person.analysis.dateComplete"),

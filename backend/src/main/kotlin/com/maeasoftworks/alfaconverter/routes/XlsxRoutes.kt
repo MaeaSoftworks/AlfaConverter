@@ -21,10 +21,12 @@ fun Route.xlsxRouting() {
 			val firstFile = files["first-file"].tryGetBytes().also { FileValidator.validate(it, FileType.XLSX) }
 			val secondFile = files["second-file"].tryGetBytes().also { FileValidator.validate(it, FileType.XLSX) }
 			val result = XlsxConverter(firstFile, secondFile).getHeaders()
-			call.respond(listOf(
-				Lines(result[0], result[1]),
-				Lines(result[2], result[3])
-			))
+			call.respond(
+				listOf(
+					Lines(result[0], result[1]),
+					Lines(result[2], result[3])
+				)
+			)
 		}
 
 		post("/convert") {

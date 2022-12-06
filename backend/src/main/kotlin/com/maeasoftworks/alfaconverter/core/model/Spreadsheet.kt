@@ -1,7 +1,7 @@
 package com.maeasoftworks.alfaconverter.core.model
 
 import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.*
-import com.maeasoftworks.alfaconverter.core.model.Table.*
+import com.maeasoftworks.alfaconverter.core.model.Table.Column
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage
 import org.docx4j.openpackaging.parts.PartName
 import org.docx4j.openpackaging.parts.SpreadsheetML.Styles
@@ -96,7 +96,11 @@ class Spreadsheet {
 	private fun extractValue(docx4jCell: org.xlsx4j.sml.Cell): SObject {
 		return when (docx4jCell.t) {
 			STCellType.B -> SBoolean(docx4jCell)
-			STCellType.N -> SNumber(docx4jCell.v.toDouble(), (document.parts[stylesPart] as Styles).getXfByIndex(docx4jCell.s).numFmtId)
+			STCellType.N -> SNumber(
+				docx4jCell.v.toDouble(),
+				(document.parts[stylesPart] as Styles).getXfByIndex(docx4jCell.s).numFmtId
+			)
+
 			STCellType.E -> SNull()
 			STCellType.S -> SString(document, docx4jCell)
 			STCellType.STR -> SNull()

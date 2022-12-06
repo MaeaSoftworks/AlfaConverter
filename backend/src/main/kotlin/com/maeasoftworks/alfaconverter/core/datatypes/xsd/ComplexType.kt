@@ -12,9 +12,19 @@ class ComplexType(
 	@Transient
 	private val registration: ((TypePlaceholder) -> TypePlaceholder)? = null
 ) : Type() {
-
 	val fields = mutableMapOf<String, Type>()
 	val attributes = mutableMapOf<String, Type>()
+
+	override fun createInstance(): SerializableInstance {
+		val instance = SerializableInstance(name).also { it.type = this }
+		for (field in fields) {
+			instance.fields[field.key] = field.value.createInstance()
+		}
+		for (attribute in attributes) {
+			instance.attributes[attribute.key] = attribute.value.createInstance()
+		}
+		return instance
+	}
 
 	fun sequenceToFields(sequence: XsdElement, prefix: String) {
 		for (field in sequence.children) {
@@ -22,7 +32,7 @@ class ComplexType(
 			val fieldType: String? = field.getAttributeValue("type")
 			val refField: String? = field.getAttributeValue("ref")
 			if (fieldName != null && fieldType != null) {
-				fields[fieldName] = XPrimitive.findPrimitive(fieldType, prefix)?.element?.invoke()
+				fields[fieldName] = Primitive.findPrimitive(fieldType, prefix)?.element?.invoke()
 					?: registration!!(TypePlaceholder(name, fieldType, fieldName = fieldName))
 			} else if (refField != null) {
 				fields[refField] = registration!!(TypePlaceholder(name, refField, true))
@@ -35,7 +45,7 @@ class ComplexType(
 		for (attribute in attributes) {
 			val attributeName = attribute.getAttributeValue("name")
 			val attributeType = attribute.getAttributeValue("type")
-			this.attributes[attributeName] = XPrimitive.findPrimitive(attributeType, prefix)?.element?.invoke()
+			this.attributes[attributeName] = Primitive.findPrimitive(attributeType, prefix)?.element?.invoke()
 				?: registration!!(TypePlaceholder(name, attributeName, true))
 		}
 	}
@@ -45,13 +55,14 @@ class ComplexType(
 		return this
 	}
 
+
 	inner class DSL(private val type: ComplexType) {
 
 		infix fun String.of(type: Type) {
 			this@DSL.type.fields[this] = type
 		}
 
-		infix fun String.of(type: XPrimitive) {
+		infix fun String.of(type: Primitive) {
 			this@DSL.type.fields[this] = type.element()
 		}
 	}

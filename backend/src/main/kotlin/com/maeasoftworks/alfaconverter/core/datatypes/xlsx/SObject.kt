@@ -7,7 +7,7 @@ abstract class SObject {
 
 	abstract fun getJsonRepresentation(): String
 
-	abstract fun getXmlRepresentation(): Any?
+	abstract fun getXmlRepresentation(): String
 
 	abstract fun getString(): String
 
