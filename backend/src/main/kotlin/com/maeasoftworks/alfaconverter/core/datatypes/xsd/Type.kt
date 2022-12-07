@@ -12,8 +12,8 @@ sealed class Type {
 	@Transient
 	var dependent = 0
 
-	abstract fun createInstance(): SerializableInstance
-
 	val isPrimitive: Boolean
 		get() = Primitive.findPrimitive(name, ":") != null
+
+	abstract fun createInstance(): SerializableInstance
 }

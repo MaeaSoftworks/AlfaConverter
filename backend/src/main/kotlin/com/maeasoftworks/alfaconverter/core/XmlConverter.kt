@@ -10,11 +10,13 @@ class XmlConverter {
 	var schema: Schema
 	var conversion: Conversion = Conversion.empty
 
-	constructor(
-		document: ByteArray,
-		schema: Element,
-		conversion: Conversion = Conversion.empty
-	) {
+	constructor(document: ByteArray, xsd: ByteArray) {
+		this.document = Spreadsheet().open(document)
+		this.document.initializeTable()
+		schema = Schema(String(xsd))
+	}
+
+	constructor(document: ByteArray, schema: Element, conversion: Conversion = Conversion.empty) {
 		this.document = Spreadsheet().open(document)
 		this.document.initializeTable()
 		this.schema = Schema(schema)
@@ -22,26 +24,16 @@ class XmlConverter {
 		this.conversion.register(this.document.table, this.schema.table)
 	}
 
-	constructor(document: ByteArray, xsd: ByteArray) {
-		this.document = Spreadsheet().open(document)
-		this.document.initializeTable()
-		schema = Schema(String(xsd))
-	}
+	fun getHeaders() = document.getHeaders()
 
-	fun getHeadersAndFirstLine(): List<List<String?>> {
-		return document.getHeadersAndExamples()
-	}
+	fun getExamples() = document.getExamples()
 
-	fun getSchema(): Element {
-		return schema.elements.first { it.type.dependent == 0 }
-	}
+	fun getSchema() = schema.elements.first { it.type.dependent == 0 }
+
+	fun getEndpoints() = schema.convertElementsToHeaders()
 
 	fun convert(): String {
 		conversion.start()
 		return schema.save()
-	}
-
-	fun getEndpoints(): List<String> {
-		return schema.convertElementsToHeaders()
 	}
 }

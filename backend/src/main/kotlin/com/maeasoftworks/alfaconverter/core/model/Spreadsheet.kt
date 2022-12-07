@@ -45,19 +45,23 @@ class Spreadsheet {
 		table.isInitialized = true
 	}
 
-	fun getHeadersAndExamples(): List<List<String?>> {
+	fun getHeaders(): List<String> {
 		val headers: MutableList<String> = mutableListOf()
-		val examples: MutableList<String> = mutableListOf()
 		if (worksheet.sheetData.row[0].c.isEmpty()) throw NoSuchElementException("First row of table was empty")
 		for (cell in worksheet.sheetData.row[0].c.indices) {
 			headers.add(extractValue(worksheet.sheetData.row[0].c[cell]).getString())
 		}
+		return headers
+	}
+
+	fun getExamples(): List<String> {
+		val examples: MutableList<String> = mutableListOf()
 		if (worksheet.sheetData.row.count() > 1) {
 			for (cell in worksheet.sheetData.row[1].c.indices) {
 				examples.add(extractValue(worksheet.sheetData.row[1].c[cell]).getString())
 			}
 		}
-		return listOf(headers, examples)
+		return examples
 	}
 
 	fun save(): ByteArray {

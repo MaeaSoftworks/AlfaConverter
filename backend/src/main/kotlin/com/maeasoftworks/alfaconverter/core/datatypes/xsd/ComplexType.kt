@@ -50,20 +50,18 @@ class ComplexType(
 		}
 	}
 
-	fun build(builder: DSL.() -> Unit): ComplexType {
-		builder(this.DSL(this))
+	fun build(builder: Builder.() -> Unit): ComplexType {
+		builder(this.Builder())
 		return this
 	}
 
-
-	inner class DSL(private val type: ComplexType) {
-
+	inner class Builder {
 		infix fun String.of(type: Type) {
-			this@DSL.type.fields[this] = type
+			this@ComplexType.fields[this] = type
 		}
 
 		infix fun String.of(type: Primitive) {
-			this@DSL.type.fields[this] = type.element()
+			this@ComplexType.fields[this] = type.element()
 		}
 	}
 }

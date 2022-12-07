@@ -2,9 +2,8 @@ package com.maeasoftworks.alfaconverter.routes
 
 import com.maeasoftworks.alfaconverter.core.XlsxConverter
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.models.FileType
-import com.maeasoftworks.alfaconverter.models.Lines
-import com.maeasoftworks.alfaconverter.services.FileValidator
+import com.maeasoftworks.alfaconverter.models.XlsxPreviewResponse
+import com.maeasoftworks.alfaconverter.services.FileType
 import com.maeasoftworks.alfaconverter.utils.deserialize
 import com.maeasoftworks.alfaconverter.utils.extractParts
 import com.maeasoftworks.alfaconverter.utils.tryGetBytes
@@ -15,27 +14,25 @@ import io.ktor.server.routing.*
 
 fun Route.xlsxRouting() {
 	route("/api/xlsx") {
-		post("headers") {
-			val formParameters = call.receiveMultipart()
-			val files = formParameters.extractParts("first-file", "second-file")
-			val firstFile = files["first-file"].tryGetBytes().also { FileValidator.validate(it, FileType.XLSX) }
-			val secondFile = files["second-file"].tryGetBytes().also { FileValidator.validate(it, FileType.XLSX) }
-			val result = XlsxConverter(firstFile, secondFile).getHeaders()
-			call.respond(
-				listOf(
-					Lines(result[0], result[1]),
-					Lines(result[2], result[3])
-				)
-			)
+		post("preview") {
+			val params = call.receiveMultipart().extractParts("source", "target")
+			val source = params["source"].tryGetBytes().also { FileType.validate(it, FileType.XLSX) }
+			val target = params["target"].tryGetBytes().also { FileType.validate(it, FileType.XLSX) }
+			val converter = XlsxConverter(source, target)
+			val headers = converter.getHeaders()
+			val examples = converter.getExamples()
+			call.respond(listOf(
+				XlsxPreviewResponse(headers.first, examples.first),
+				XlsxPreviewResponse(headers.second, examples.second)
+			))
 		}
 
 		post("/convert") {
-			val formParameters = call.receiveMultipart()
-			val params = formParameters.extractParts("first-file", "second-file", "conversion")
-			val firstFile = params["first-file"].tryGetBytes().also { FileValidator.validate(it, FileType.XLSX) }
-			val secondFile = params["second-file"].tryGetBytes().also { FileValidator.validate(it, FileType.XLSX) }
-			val conversion = params["conversion"].deserialize<Conversion>()
-			call.respond(XlsxConverter(firstFile, secondFile, conversion = conversion!!).convert())
+			val params = call.receiveMultipart().extractParts("source", "target", "conversion")
+			val source = params["source"].tryGetBytes().also { FileType.validate(it, FileType.XLSX) }
+			val target = params["target"].tryGetBytes().also { FileType.validate(it, FileType.XLSX) }
+			val conversion = params["conversion"].deserialize<Conversion>()!!
+			call.respond(XlsxConverter(source, target, conversion).convert())
 		}
 	}
 }

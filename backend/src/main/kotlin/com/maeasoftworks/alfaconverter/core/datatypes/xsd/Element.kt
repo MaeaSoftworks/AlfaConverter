@@ -6,7 +6,5 @@ import kotlinx.serialization.Serializable
 class Element(val name: String) {
 	lateinit var type: Type
 
-	fun createInstance(): SerializableInstance {
-		return type.createInstance()
-	}
+	fun createInstance() = type.createInstance()
 }

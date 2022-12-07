@@ -6,8 +6,14 @@ import com.maeasoftworks.alfaconverter.core.model.Table
 
 class XlsxConverter {
 	private val source: Spreadsheet = Spreadsheet()
-	internal val target: Spreadsheet = Spreadsheet()
-	internal var conversion: Conversion = Conversion.empty
+	val target: Spreadsheet = Spreadsheet()
+	var conversion: Conversion = Conversion.empty
+
+	constructor(source: Table, target: Table) {
+		this.source.table = source
+		this.target.table = target
+		this.conversion.register(this.source.table, this.target.table)
+	}
 
 	constructor(source: ByteArray, target: ByteArray, conversion: Conversion = Conversion.empty) {
 		this.source.open(source)
@@ -18,15 +24,9 @@ class XlsxConverter {
 		this.conversion.register(this.source.table, this.target.table)
 	}
 
-	constructor(source: Table, target: Table) {
-		this.source.table = source
-		this.target.table = target
-		this.conversion.register(this.source.table, this.target.table)
-	}
+	fun getHeaders() = Pair(source.getHeaders(), target.getHeaders())
 
-	fun getHeaders(): List<List<String?>> {
-		return source.getHeadersAndExamples() + target.getHeadersAndExamples()
-	}
+	fun getExamples() = Pair(source.getExamples(), target.getExamples())
 
 	fun convert(): ByteArray {
 		target.clean()

@@ -15,7 +15,7 @@ class SerializableInstance(val name: String) : Cloneable {
 		} else if (attributes.contains(path)) {
 			attributes[path]!!
 		} else {
-			throw IndexOutOfBoundsException()
+			throw IndexOutOfBoundsException("Endpoint $path was not found in instance $name")
 		}
 	}
 
