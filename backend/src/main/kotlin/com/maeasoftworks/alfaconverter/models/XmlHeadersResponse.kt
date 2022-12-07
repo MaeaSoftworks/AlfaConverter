@@ -8,4 +8,5 @@ class XmlHeadersResponse {
 	lateinit var headers: List<String?>
 	lateinit var firstLine: List<String?>
 	lateinit var schema: Element
+	lateinit var endpoints: List<String>
 }

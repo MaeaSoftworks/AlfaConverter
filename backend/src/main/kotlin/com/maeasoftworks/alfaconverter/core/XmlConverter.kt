@@ -40,4 +40,8 @@ class XmlConverter {
 		conversion.start()
 		return schema.save()
 	}
+
+	fun getEndpoints(): List<String> {
+		return schema.convertElementsToHeaders()
+	}
 }

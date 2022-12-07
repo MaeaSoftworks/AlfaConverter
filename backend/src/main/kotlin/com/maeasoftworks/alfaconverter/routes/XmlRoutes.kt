@@ -28,6 +28,7 @@ fun Route.xmlRouting() {
 			result.headers = data[0]
 			result.firstLine = data[1]
 			result.schema = xmlConverter.getSchema()
+			result.endpoints = xmlConverter.getEndpoints()
 			call.respond(result)
 		}
 

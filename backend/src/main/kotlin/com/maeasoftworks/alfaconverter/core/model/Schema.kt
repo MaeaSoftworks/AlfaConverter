@@ -104,11 +104,9 @@ class Schema {
 		}
 	}
 
-	private fun convertElementsToHeaders(): List<String> {
+	fun convertElementsToHeaders(): List<String> {
 		val result = mutableListOf<String>()
-		for (element in elements) {
-			convertElementToHeaders(element.type, result)
-		}
+		convertElementToHeaders(elements.first { it.type.dependent == 0 }.type, result)
 		return result
 	}
 
