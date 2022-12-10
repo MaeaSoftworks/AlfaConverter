@@ -1,13 +1,19 @@
 package com.maeasoftworks.alfaconverter.core.xml
 
+import com.maeasoftworks.alfaconverter.core.Converter
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
+import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.xlsx.Spreadsheet
 import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 
-class XmlConverter {
+class XmlConverter: Converter {
 	private var document: Spreadsheet
 	var schema: Schema
-	var conversion: Conversion = Conversion.empty
+
+	override val source: Table
+		get() = document.table
+	override val target: Table
+		get() = schema.table
 
 	constructor(document: ByteArray, xsd: ByteArray) {
 		this.document = Spreadsheet().open(document)
@@ -15,12 +21,11 @@ class XmlConverter {
 		schema = Schema(String(xsd))
 	}
 
-	constructor(document: ByteArray, schema: Element, conversion: Conversion = Conversion.empty) {
+	constructor(document: ByteArray, schema: Element, conversion: Conversion = Conversion()) {
 		this.document = Spreadsheet().open(document)
 		this.document.initializeTable()
 		this.schema = Schema(schema)
 		this.conversion = conversion
-		this.conversion.register(this.document.table, this.schema.table)
 	}
 
 	fun getHeaders() = document.getHeaders()
@@ -32,7 +37,7 @@ class XmlConverter {
 	fun getEndpoints() = schema.convertElementsToHeaders()
 
 	fun convert(): String {
-		conversion.start()
+		executeActions()
 		return schema.save()
 	}
 }

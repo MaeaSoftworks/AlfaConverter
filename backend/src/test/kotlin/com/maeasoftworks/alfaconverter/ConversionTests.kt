@@ -17,16 +17,16 @@ class ConversionTests {
 	private val xlsxConverter = XlsxConverter(ExampleTables.tableFrom, ExampleTables.tableTo)
 
 	private val result: Table
-		get() = xlsxConverter.target.table
+		get() = xlsxConverter.targetSpreadsheet.table
 
 	private val conversion: Conversion
 		get() = xlsxConverter.conversion
 
 	@Test
 	fun `binding test`() {
-		conversion.addAction(Bind("Column to bind 1", "Column to bind 2"))
-		conversion.addAction(Cast("Column to bind 2", STypeName.SNumber, 0))
-		conversion.start()
+		conversion.actions += Bind("Column to bind 1", "Column to bind 2")
+		conversion.actions += Cast("Column to bind 2", STypeName.SNumber, 0)
+		xlsxConverter.executeActions()
 		for (row in result["Column to bind 2"]!!.cells.indices) {
 			val expected = SNumber((row + 1) * 10, 0)
 			assertEquals(
@@ -44,8 +44,8 @@ class ConversionTests {
 				0 -> "a"; 1 -> "b"; 2 -> "c"; else -> "d"
 			}
 		}
-		conversion.addAction(Split("Will be split", listOf("Will", "be", "split"), "(\\S+) (\\S+) (\\S+)"))
-		conversion.start()
+		conversion.actions += Split("Will be split", listOf("Will", "be", "split"), "(\\S+) (\\S+) (\\S+)")
+		xlsxConverter.executeActions()
 		var pos = 0
 		for (columnPos in 3..5) {
 			val column = result.columns[columnPos].cells
@@ -68,8 +68,8 @@ class ConversionTests {
 			}
 		}
 
-		conversion.addAction(Merge(listOf("Will", "be", "merged"), "Will be merged", "\${Will} \${be} \${merged}"))
-		conversion.start()
+		conversion.actions += Merge(listOf("Will", "be", "merged"), "Will be merged", "\${Will} \${be} \${merged}")
+		xlsxConverter.executeActions()
 		var pos = 0
 		for (cell in result["Will be merged"]!!.cells) {
 			assertEquals(

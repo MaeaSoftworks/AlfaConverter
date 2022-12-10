@@ -1,35 +1,37 @@
 package com.maeasoftworks.alfaconverter.core.xlsx
 
+import com.maeasoftworks.alfaconverter.core.Converter
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
 import com.maeasoftworks.alfaconverter.core.model.Table
 
-class XlsxConverter {
-	private val source: Spreadsheet = Spreadsheet()
-	val target: Spreadsheet = Spreadsheet()
-	var conversion: Conversion = Conversion.empty
+class XlsxConverter: Converter {
+	private val sourceSpreadsheet: Spreadsheet = Spreadsheet()
+	val targetSpreadsheet: Spreadsheet = Spreadsheet()
+	override val source: Table
+		get() = sourceSpreadsheet.table
+	override val target: Table
+		get() = targetSpreadsheet.table
 
 	constructor(source: Table, target: Table) {
-		this.source.table = source
-		this.target.table = target
-		this.conversion.register(this.source.table, this.target.table)
+		this.sourceSpreadsheet.table = source
+		this.targetSpreadsheet.table = target
 	}
 
-	constructor(source: ByteArray, target: ByteArray, conversion: Conversion = Conversion.empty) {
-		this.source.open(source)
-		this.target.open(target)
-		this.source.initializeTable()
-		this.target.initializeTable()
+	constructor(source: ByteArray, target: ByteArray, conversion: Conversion = Conversion()) {
+		this.sourceSpreadsheet.open(source)
+		this.targetSpreadsheet.open(target)
+		this.sourceSpreadsheet.initializeTable()
+		this.targetSpreadsheet.initializeTable()
 		this.conversion = conversion
-		this.conversion.register(this.source.table, this.target.table)
 	}
 
-	fun getHeaders() = Pair(source.getHeaders(), target.getHeaders())
+	fun getHeaders() = Pair(sourceSpreadsheet.getHeaders(), targetSpreadsheet.getHeaders())
 
-	fun getExamples() = Pair(source.getExamples(), target.getExamples())
+	fun getExamples() = Pair(sourceSpreadsheet.getExamples(), targetSpreadsheet.getExamples())
 
 	fun convert(): ByteArray {
-		target.clean()
-		conversion.start()
-		return target.save()
+		targetSpreadsheet.clean()
+		executeActions()
+		return targetSpreadsheet.save()
 	}
 }

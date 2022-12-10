@@ -50,7 +50,7 @@ class XmlTests {
 
 	@Test
 	fun `binding test`() {
-		converter.conversion.addActions(
+		converter.conversion.actions += listOf(
 			Bind("ФИО", "person.name"),
 			Bind("Дата рождения", "person.birthday"),
 			Bind("Возраст пациента", "person.age"),
@@ -67,7 +67,7 @@ class XmlTests {
 			Bind("Время выполнения анализа", "person.analysis.timeComplete")
 		)
 		println(serializer.encodeToString(converter.conversion))
-		converter.conversion.start()
+		converter.executeActions()
 		assertEquals("Иванов Иван Иванович", converter.schema.table["person.name", 0]!!.getString())
 		assertEquals("21.06.1963", converter.schema.table["person.birthday", 0]!!.getString())
 		assertEquals("13:53", converter.schema.table["person.analysis.timeComplete", 0]!!.getString())

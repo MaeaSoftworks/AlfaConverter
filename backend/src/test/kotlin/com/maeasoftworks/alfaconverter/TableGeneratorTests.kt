@@ -14,7 +14,7 @@ class TableGeneratorTests {
 	)
 
 	private val initial: Table
-		get() = xlsxConverter.target.table
+		get() = xlsxConverter.targetSpreadsheet.table
 
 	@Test
 	fun `size detection`() {
