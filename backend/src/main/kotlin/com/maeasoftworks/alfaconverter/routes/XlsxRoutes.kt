@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverter.routes
 
-import com.maeasoftworks.alfaconverter.core.XlsxConverter
+import com.maeasoftworks.alfaconverter.core.xlsx.XlsxConverter
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
 import com.maeasoftworks.alfaconverter.models.XlsxPreviewResponse
 import com.maeasoftworks.alfaconverter.services.Extension

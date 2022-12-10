@@ -1,4 +1,4 @@
-package com.maeasoftworks.alfaconverter.core.datatypes.xsd
+package com.maeasoftworks.alfaconverter.core.xml.structure
 
 import kotlinx.serialization.Serializable
 

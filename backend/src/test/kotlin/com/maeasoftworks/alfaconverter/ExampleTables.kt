@@ -1,7 +1,7 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SNumber
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.SNumber
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.SString
 import com.maeasoftworks.alfaconverter.core.model.Table
 
 internal object ExampleTables {

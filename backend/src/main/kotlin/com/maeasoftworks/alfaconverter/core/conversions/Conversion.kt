@@ -8,8 +8,7 @@ import kotlinx.serialization.Transient
 
 @Serializable
 class Conversion(
-	private val actions: @Contextual MutableList<Action>,
-	private val typeConversions: @Contextual MutableMap<String, TypeConversion> = mutableMapOf()
+	private val actions: @Contextual MutableList<Action>
 ) {
 	@Transient
 	lateinit var source: Table
@@ -25,8 +24,6 @@ class Conversion(
 		actions.addAll(action)
 	}
 
-	internal fun addTypeConversion(column: String, conversion: TypeConversion) = typeConversions.set(column, conversion)
-
 	fun register(source: Table, target: Table) {
 		this.source = source
 		this.target = target
@@ -36,10 +33,6 @@ class Conversion(
 		for (action in actions.indices) {
 			actions[0].run(source, target)
 			actions.removeAt(0)
-		}
-
-		typeConversions.forEach { (key, conversion) ->
-			target[key]!!.changeType(conversion)
 		}
 	}
 

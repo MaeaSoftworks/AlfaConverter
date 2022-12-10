@@ -1,8 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.model
 
-import com.maeasoftworks.alfaconverter.core.conversions.TypeConversion
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SFactory
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SObject
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.SObject
 
 class Table {
 	var isInitialized: Boolean = false
@@ -79,12 +77,6 @@ class Table {
 
 		operator fun set(cell: Int, value: SObject) {
 			cells[cell] = value
-		}
-
-		fun changeType(conversion: TypeConversion) {
-			for (cell in cells.indices) {
-				cells[cell] = SFactory.create(conversion, cells[cell])
-			}
 		}
 	}
 }

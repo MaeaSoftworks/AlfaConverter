@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.SString
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import kotlinx.serialization.SerialName
@@ -28,6 +28,4 @@ class Merge(
 			resultTable[targetColumn, y] = SString(result)
 		}
 	}
-
-	override fun isUsing(column: String) = initialColumns.any { it == column } || targetColumn == column
 }

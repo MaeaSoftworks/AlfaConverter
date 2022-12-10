@@ -1,8 +1,8 @@
 package com.maeasoftworks.alfaconverter.routes
 
-import com.maeasoftworks.alfaconverter.core.XmlConverter
+import com.maeasoftworks.alfaconverter.core.xml.XmlConverter
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
+import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 import com.maeasoftworks.alfaconverter.models.XmlPreviewResponse
 import com.maeasoftworks.alfaconverter.services.Extension
 import com.maeasoftworks.alfaconverter.services.require

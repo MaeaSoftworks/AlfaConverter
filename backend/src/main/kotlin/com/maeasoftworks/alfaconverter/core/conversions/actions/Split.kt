@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.SString
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import kotlinx.serialization.SerialName
@@ -27,6 +27,4 @@ class Split(
 			}
 		}
 	}
-
-	override fun isUsing(column: String) = initialColumn == column || targetColumns.contains(column)
 }

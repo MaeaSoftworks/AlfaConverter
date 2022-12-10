@@ -1,11 +1,11 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.core.XmlConverter
+import com.maeasoftworks.alfaconverter.core.xml.XmlConverter
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.ComplexType
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Primitive
-import com.maeasoftworks.alfaconverter.core.model.Schema
+import com.maeasoftworks.alfaconverter.core.xml.structure.ComplexType
+import com.maeasoftworks.alfaconverter.core.xml.structure.Element
+import com.maeasoftworks.alfaconverter.core.xml.structure.Primitive
+import com.maeasoftworks.alfaconverter.core.xml.Schema
 import com.maeasoftworks.alfaconverter.plugins.serializer
 import kotlinx.serialization.encodeToString
 import org.junit.Test

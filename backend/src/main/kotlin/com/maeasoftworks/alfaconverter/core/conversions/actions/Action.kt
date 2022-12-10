@@ -6,6 +6,4 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class Action {
 	abstract fun run(initialTable: Table, resultTable: Table)
-
-	abstract fun isUsing(column: String): Boolean
 }

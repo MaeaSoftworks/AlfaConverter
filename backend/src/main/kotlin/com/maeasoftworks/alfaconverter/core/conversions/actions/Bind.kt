@@ -17,6 +17,4 @@ class Bind(
 			resultTable[targetColumn]?.cells?.add(cell)
 		}
 	}
-
-	override fun isUsing(column: String) = initialColumn == column
 }

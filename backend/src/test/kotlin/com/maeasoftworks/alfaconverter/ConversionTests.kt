@@ -1,14 +1,14 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.core.XlsxConverter
+import com.maeasoftworks.alfaconverter.core.xlsx.XlsxConverter
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.core.conversions.TypeConversion
+import com.maeasoftworks.alfaconverter.core.conversions.actions.Cast
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Merge
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Split
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SNumber
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.STypeName
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.SNumber
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.SString
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.STypeName
 import com.maeasoftworks.alfaconverter.core.model.Table
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -25,7 +25,7 @@ class ConversionTests {
 	@Test
 	fun `binding test`() {
 		conversion.addAction(Bind("Column to bind 1", "Column to bind 2"))
-		conversion.addTypeConversion("Column to bind 2", TypeConversion(STypeName.SNumber, 0))
+		conversion.addAction(Cast("Column to bind 2", STypeName.SNumber, 0))
 		conversion.start()
 		for (row in result["Column to bind 2"]!!.cells.indices) {
 			val expected = SNumber((row + 1) * 10, 0)

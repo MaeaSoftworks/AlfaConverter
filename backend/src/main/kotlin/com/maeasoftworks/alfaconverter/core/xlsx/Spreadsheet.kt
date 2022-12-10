@@ -1,7 +1,8 @@
-package com.maeasoftworks.alfaconverter.core.model
+package com.maeasoftworks.alfaconverter.core.xlsx
 
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.*
+import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.model.Table.Column
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.*
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage
 import org.docx4j.openpackaging.parts.PartName
 import org.docx4j.openpackaging.parts.SpreadsheetML.Styles

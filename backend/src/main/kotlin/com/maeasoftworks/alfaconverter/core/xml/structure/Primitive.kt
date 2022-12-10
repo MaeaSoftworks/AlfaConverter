@@ -1,4 +1,4 @@
-package com.maeasoftworks.alfaconverter.core.datatypes.xsd
+package com.maeasoftworks.alfaconverter.core.xml.structure
 
 enum class Primitive(val xsdName: String, val element: () -> SimpleType) {
 	ANY_URI("anyURI", { SimpleType("anyURI") }),

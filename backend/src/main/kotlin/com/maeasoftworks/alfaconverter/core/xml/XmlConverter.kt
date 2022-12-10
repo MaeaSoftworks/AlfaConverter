@@ -1,9 +1,8 @@
-package com.maeasoftworks.alfaconverter.core
+package com.maeasoftworks.alfaconverter.core.xml
 
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
-import com.maeasoftworks.alfaconverter.core.model.Schema
-import com.maeasoftworks.alfaconverter.core.model.Spreadsheet
+import com.maeasoftworks.alfaconverter.core.xlsx.Spreadsheet
+import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 
 class XmlConverter {
 	private var document: Spreadsheet

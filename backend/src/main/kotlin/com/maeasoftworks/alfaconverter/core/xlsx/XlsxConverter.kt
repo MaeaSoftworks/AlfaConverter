@@ -1,7 +1,6 @@
-package com.maeasoftworks.alfaconverter.core
+package com.maeasoftworks.alfaconverter.core.xlsx
 
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.core.model.Spreadsheet
 import com.maeasoftworks.alfaconverter.core.model.Table
 
 class XlsxConverter {

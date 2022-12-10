@@ -1,6 +1,6 @@
-package com.maeasoftworks.alfaconverter.core.datatypes.xsd
+package com.maeasoftworks.alfaconverter.core.xml.structure
 
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SObject
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.SObject
 
 class SerializableInstance(val name: String) : Cloneable {
 	lateinit var type: Type

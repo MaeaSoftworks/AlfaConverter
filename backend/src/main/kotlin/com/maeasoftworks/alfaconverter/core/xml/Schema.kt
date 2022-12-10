@@ -1,7 +1,8 @@
-package com.maeasoftworks.alfaconverter.core.model
+package com.maeasoftworks.alfaconverter.core.xml
 
-import com.maeasoftworks.alfaconverter.core.datatypes.xlsx.SString
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.*
+import com.maeasoftworks.alfaconverter.core.model.Table
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.SString
+import com.maeasoftworks.alfaconverter.core.xml.structure.*
 import org.jdom2.Document
 import org.jdom2.input.SAXBuilder
 import org.jdom2.Element as XsdElement

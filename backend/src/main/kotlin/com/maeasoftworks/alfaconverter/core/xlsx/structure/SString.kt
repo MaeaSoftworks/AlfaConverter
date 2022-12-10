@@ -1,4 +1,4 @@
-package com.maeasoftworks.alfaconverter.core.datatypes.xlsx
+package com.maeasoftworks.alfaconverter.core.xlsx.structure
 
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage
 import org.docx4j.openpackaging.parts.PartName

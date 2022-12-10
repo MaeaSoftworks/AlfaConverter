@@ -1,15 +1,16 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.core.XlsxConverter
+import com.maeasoftworks.alfaconverter.core.xlsx.XlsxConverter
 import com.maeasoftworks.alfaconverter.core.model.Table
 import org.junit.Test
 import java.nio.file.Files
+import java.nio.file.Path
 import kotlin.test.assertEquals
 
 class TableGeneratorTests {
 	private val xlsxConverter = XlsxConverter(
-		Files.readAllBytes(java.nio.file.Path.of("src/test/resources/table generator tests.xlsx")),
-		Files.readAllBytes(java.nio.file.Path.of("src/test/resources/table generator tests.xlsx"))
+		Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx")),
+		Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx"))
 	)
 
 	private val initial: Table

@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverter.models
 
-import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
+import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 import kotlinx.serialization.Serializable
 
 @Serializable

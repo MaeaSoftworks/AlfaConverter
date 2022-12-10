@@ -1,4 +1,4 @@
-package com.maeasoftworks.alfaconverter.core.datatypes.xlsx
+package com.maeasoftworks.alfaconverter.core.xlsx.structure
 
 enum class STypeName {
 	SString,
