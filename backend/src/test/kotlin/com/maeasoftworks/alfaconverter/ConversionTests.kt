@@ -1,38 +1,48 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.core.xlsx.XlsxConverter
+import com.maeasoftworks.alfaconverter.core.Converter
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Cast
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
+import com.maeasoftworks.alfaconverter.core.conversions.actions.Cast
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Merge
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Split
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.SNumber
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.SString
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.STypeName
 import com.maeasoftworks.alfaconverter.core.model.Table
+import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.NumberData
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.TypeName
 import org.junit.Test
+import java.io.File
 import kotlin.test.assertEquals
 
 class ConversionTests {
-	private val xlsxConverter = XlsxConverter(ExampleTables.tableFrom, ExampleTables.tableTo)
+	private val converter = Converter(
+		source = Xlsx(File("src/test/resources/conversions_from.xlsx").readBytes()),
+		modifier = Xlsx(File("src/test/resources/conversions_to.xlsx").readBytes()),
+		result = Xlsx()
+	)
+
+	init {
+		converter.initializeResultTable()
+	}
 
 	private val result: Table
-		get() = xlsxConverter.targetSpreadsheet.table
+		get() = converter.result.table
 
 	private val conversion: Conversion
-		get() = xlsxConverter.conversion
+		get() = converter.conversion
 
 	@Test
 	fun `binding test`() {
-		conversion.actions += Bind("Column to bind 1", "Column to bind 2")
-		conversion.actions += Cast("Column to bind 2", STypeName.SNumber, 0)
-		xlsxConverter.executeActions()
-		for (row in result["Column to bind 2"]!!.cells.indices) {
-			val expected = SNumber((row + 1) * 10, 0)
+		conversion.actions += Bind("Column to bind 1", "bind 1 here")
+		conversion.actions += Cast("bind 1 here", TypeName.Number, 0)
+		converter.executeActions()
+		for (row in result["bind 1 here"]!!.cells.indices) {
+			val expected = NumberData((row + 1) * 10, 0)
 			assertEquals(
 				expected,
-				result["Column to bind 2"]!!.cells[row],
-				"E: ${expected.getString()}; A: ${result["Column to bind 2"]!!.cells[row].getString()}"
+				result["bind 1 here"]!!.cells[row],
+				"E: ${expected.getString()}; A: ${result["bind 1 here"]!!.cells[row].getString()}"
 			)
 		}
 	}
@@ -44,13 +54,13 @@ class ConversionTests {
 				0 -> "a"; 1 -> "b"; 2 -> "c"; else -> "d"
 			}
 		}
-		conversion.actions += Split("Will be split", listOf("Will", "be", "split"), "(\\S+) (\\S+) (\\S+)")
-		xlsxConverter.executeActions()
+		conversion.actions += Split("Will be split", listOf("was", "split", "!!!"), "(\\S+) (\\S+) (\\S+)")
+		converter.executeActions()
 		var pos = 0
-		for (columnPos in 3..5) {
+		for (columnPos in 2..4) {
 			val column = result.columns[columnPos].cells
 			for (cell in column.indices) {
-				val expected = SString(getString(pos++ + columnPos - 3))
+				val expected = StringData(getString(pos++ + columnPos - 2))
 				assertEquals(
 					expected,
 					column[cell],
@@ -68,12 +78,12 @@ class ConversionTests {
 			}
 		}
 
-		conversion.actions += Merge(listOf("Will", "be", "merged"), "Will be merged", "\${Will} \${be} \${merged}")
-		xlsxConverter.executeActions()
+		conversion.actions += Merge(listOf("Will", "be", "merged"), "merged", "\${Will} \${be} \${merged}")
+		converter.executeActions()
 		var pos = 0
-		for (cell in result["Will be merged"]!!.cells) {
+		for (cell in result["merged"]!!.cells) {
 			assertEquals(
-				SString(getString(pos++)),
+				StringData(getString(pos++)),
 				cell
 			)
 		}

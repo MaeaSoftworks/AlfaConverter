@@ -1,7 +1,7 @@
 package com.maeasoftworks.alfaconverter.core.xml
 
 import com.maeasoftworks.alfaconverter.core.model.Table
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.SString
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
 import com.maeasoftworks.alfaconverter.core.xml.structure.*
 import org.jdom2.Document
 import org.jdom2.input.SAXBuilder
@@ -34,7 +34,7 @@ class Schema {
 		elements = mutableListOf(schema)
 		table = Table().fill {
 			for (header in convertElementsToHeaders()) {
-				column(SString(header))
+				column(StringData(header))
 			}
 		}
 	}

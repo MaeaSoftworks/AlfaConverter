@@ -1,17 +1,16 @@
 package com.maeasoftworks.alfaconverter.core.model
 
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.SObject
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.Data
 
 class Table {
-	var isInitialized: Boolean = false
 	val columns: MutableList<Column> = mutableListOf()
 
-	val headers: MutableList<SObject> = mutableListOf()
+	val headers: MutableList<Data> = mutableListOf()
 
 	val rowsCount: Int
 		get() = columns.maxOf { it.cells.size }
 
-	operator fun get(column: String, row: Int): SObject? {
+	operator fun get(column: String, row: Int): Data? {
 		return columns.firstOrNull { it.name == column }?.get(row)
 	}
 
@@ -23,7 +22,7 @@ class Table {
 		return this.columns.filter { it.name in columns }
 	}
 
-	operator fun set(column: String, row: Int, value: SObject) {
+	operator fun set(column: String, row: Int, value: Data) {
 		columns.firstOrNull { it.name == column }?.let {
 			if (it.cells.size == row) {
 				it.cells.add(value)
@@ -35,7 +34,7 @@ class Table {
 		}
 	}
 
-	internal fun append(column: String, row: Int, value: SObject) {
+	internal fun append(column: String, row: Int, value: Data) {
 		if (!columns.any { it.name == column }) {
 			columns += Column(column)
 		}
@@ -45,37 +44,36 @@ class Table {
 	}
 
 	fun fill(function: Builder.() -> Unit): Table {
-		isInitialized = true
 		this.Builder().function()
 		return this
 	}
 
 	companion object {
-		internal fun slice(columns: List<Column>, pos: Int): List<SObject?> {
+		internal fun slice(columns: List<Column>, pos: Int): List<Data?> {
 			return columns.map { it[pos] }
 		}
 	}
 
 	inner class Builder {
-		fun column(name: SObject, function: (Builder.() -> Unit)? = null) {
+		fun column(name: Data, function: (Builder.() -> Unit)? = null) {
 			columns += Column(name.getString())
 			headers += name
 			function?.invoke(this)
 		}
 
-		operator fun SObject.unaryPlus() {
+		operator fun Data.unaryPlus() {
 			columns.last().cells += this
 		}
 	}
 
 	open class Column(var name: String) {
-		val cells: MutableList<SObject> = mutableListOf()
+		val cells: MutableList<Data> = mutableListOf()
 
-		operator fun get(pos: Int): SObject {
+		operator fun get(pos: Int): Data {
 			return cells[pos]
 		}
 
-		operator fun set(cell: Int, value: SObject) {
+		operator fun set(cell: Int, value: Data) {
 			cells[cell] = value
 		}
 	}

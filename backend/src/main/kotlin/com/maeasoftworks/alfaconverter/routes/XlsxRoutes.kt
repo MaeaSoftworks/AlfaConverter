@@ -1,13 +1,15 @@
 package com.maeasoftworks.alfaconverter.routes
 
-import com.maeasoftworks.alfaconverter.core.xlsx.XlsxConverter
+import com.maeasoftworks.alfaconverter.core.Converter
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
+import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx
 import com.maeasoftworks.alfaconverter.models.XlsxPreviewResponse
 import com.maeasoftworks.alfaconverter.services.Extension
 import com.maeasoftworks.alfaconverter.services.require
 import com.maeasoftworks.alfaconverter.utils.asByteArray
 import com.maeasoftworks.alfaconverter.utils.deserializeTo
 import com.maeasoftworks.alfaconverter.utils.extractParts
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -19,13 +21,11 @@ fun Route.xlsxRouting() {
 			val params = call.receiveMultipart().extractParts("source", "target")
 			val source = params["source"].asByteArray() require Extension.XLSX
 			val target = params["target"].asByteArray() require Extension.XLSX
-			val converter = XlsxConverter(source, target)
-			val headers = converter.getHeaders()
-			val examples = converter.getExamples()
+			val converter = Converter(source = Xlsx(source), modifier = Xlsx(target))
 			call.respond(
 				listOf(
-					XlsxPreviewResponse(headers.first, examples.first),
-					XlsxPreviewResponse(headers.second, examples.second)
+					XlsxPreviewResponse(converter.source.getHeaders(), converter.source.getExamples()),
+					XlsxPreviewResponse(converter.modifier!!.getHeaders())
 				)
 			)
 		}
@@ -35,7 +35,8 @@ fun Route.xlsxRouting() {
 			val source = params["source"].asByteArray() require Extension.XLSX
 			val target = params["target"].asByteArray() require Extension.XLSX
 			val conversion = params["conversion"].deserializeTo<Conversion>()
-			call.respond(XlsxConverter(source, target, conversion).convert())
+			val response = Converter(Xlsx(source), Xlsx(target), Xlsx(), conversion).convert()
+			call.respondBytes(response, ContentType.Application.Xlsx)
 		}
 	}
 }

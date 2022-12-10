@@ -1,7 +1,10 @@
 package com.maeasoftworks.alfaconverter.routes
 
-import com.maeasoftworks.alfaconverter.core.xml.XmlConverter
+import com.maeasoftworks.alfaconverter.core.Converter
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
+import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx
+import com.maeasoftworks.alfaconverter.core.xml.Xml
+import com.maeasoftworks.alfaconverter.core.xml.Xsd
 import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 import com.maeasoftworks.alfaconverter.models.XmlPreviewResponse
 import com.maeasoftworks.alfaconverter.services.Extension
@@ -21,12 +24,12 @@ fun Route.xmlRouting() {
 			val params = call.receiveMultipart().extractParts("xlsx", "xsd")
 			val firstFile = params["xlsx"].asByteArray() require Extension.XLSX
 			val secondFile = params["xsd"].asByteArray() require Extension.XML
-			val xmlConverter = XmlConverter(firstFile, secondFile)
+			val xmlConverter = Converter(Xlsx(firstFile), Xsd(secondFile), null)
 			val response = XmlPreviewResponse(
-				xmlConverter.getHeaders(),
-				xmlConverter.getExamples(),
-				xmlConverter.getSchema(),
-				xmlConverter.getEndpoints()
+				xmlConverter.source.getHeaders(),
+				xmlConverter.source.getExamples(),
+				xmlConverter.modifier.getAdditionalData(),
+				xmlConverter.modifier.getHeaders()
 			)
 			call.respond(response)
 		}
@@ -36,8 +39,12 @@ fun Route.xmlRouting() {
 			val xlsx = params["xlsx"].asByteArray() require Extension.XLSX
 			val schema = params["schema"].deserializeTo<Element>()
 			val conversion = params["conversion"].deserializeTo<Conversion>()
-			val response = XmlConverter(xlsx, schema, conversion).convert()
-			call.respondText(response, ContentType.Text.Xml)
+			val response = Converter(
+				source = Xlsx(xlsx),
+				result = Xml(schema),
+				conversion = conversion
+			).convert()
+			call.respondText(String(response), ContentType.Text.Xml)
 		}
 	}
 }

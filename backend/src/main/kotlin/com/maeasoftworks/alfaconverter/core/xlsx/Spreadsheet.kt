@@ -16,18 +16,11 @@ import java.io.ByteArrayOutputStream
 class Spreadsheet {
 	private lateinit var document: SpreadsheetMLPackage
 	private lateinit var worksheet: Worksheet
-	internal lateinit var table: Table
+	var table: Table
 
-	fun open(file: ByteArray): Spreadsheet {
+	constructor(file: ByteArray) {
 		document = SpreadsheetMLPackage.load(ByteArrayInputStream(file))
 		worksheet = (document.parts[sheet] as WorksheetPart).jaxbElement
-		return this
-	}
-
-	fun initializeTable() {
-		if (::table.isInitialized && table.isInitialized) {
-			return
-		}
 		table = Table()
 		for (columnPos in worksheet.sheetData.row[0].c.indices) {
 			val sObj = extractValue(worksheet.sheetData.row[0].c[columnPos])
@@ -43,7 +36,10 @@ class Spreadsheet {
 				}
 			}
 		}
-		table.isInitialized = true
+	}
+
+	constructor(table: Table) {
+		this.table = table
 	}
 
 	fun getHeaders(): List<String> {
@@ -78,7 +74,7 @@ class Spreadsheet {
 		}
 		sheetData.row.add(header)
 
-		for (rowNumber in 1 until table.rowsCount + 1) {
+		for (rowNumber in 0 until table.rowsCount) {
 			val row = factory.createRow()
 			for (columnNumber in 0 until table.columns.size) {
 				val cell = table.columns[columnNumber][rowNumber].getXlsxRepresentation()
@@ -92,25 +88,19 @@ class Spreadsheet {
 		return stream.toByteArray()
 	}
 
-	fun clean() {
-		for (column in table.columns) {
-			column.cells.clear()
-		}
-	}
-
-	private fun extractValue(docx4jCell: org.xlsx4j.sml.Cell): SObject {
+	private fun extractValue(docx4jCell: org.xlsx4j.sml.Cell): Data {
 		return when (docx4jCell.t) {
-			STCellType.B -> SBoolean(docx4jCell)
-			STCellType.N -> SNumber(
+			STCellType.B -> BooleanData(docx4jCell)
+			STCellType.N -> NumberData(
 				docx4jCell.v.toDouble(),
 				(document.parts[stylesPart] as Styles).getXfByIndex(docx4jCell.s).numFmtId
 			)
 
-			STCellType.E -> SNull()
-			STCellType.S -> SString(document, docx4jCell)
-			STCellType.STR -> SNull()
-			STCellType.INLINE_STR -> SString(document, docx4jCell)
-			null -> SNull()
+			STCellType.E -> NullData()
+			STCellType.S -> StringData(document, docx4jCell)
+			STCellType.STR -> NullData()
+			STCellType.INLINE_STR -> StringData(document, docx4jCell)
+			null -> NullData()
 		}
 	}
 

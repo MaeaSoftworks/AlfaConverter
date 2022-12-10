@@ -8,7 +8,7 @@ import org.xlsx4j.sml.CTXstringWhitespace
 import org.xlsx4j.sml.Cell
 import org.xlsx4j.sml.STCellType
 
-class SString : SObject {
+class StringData : Data {
 	private lateinit var sharedStrings: SharedStrings
 	private val value: String
 
@@ -45,7 +45,7 @@ class SString : SObject {
 	}
 
 	override fun equals(other: Any?): Boolean {
-		return other != null && other is SString && value == other.value
+		return other != null && other is StringData && value == other.value
 	}
 
 	override fun hashCode(): Int {

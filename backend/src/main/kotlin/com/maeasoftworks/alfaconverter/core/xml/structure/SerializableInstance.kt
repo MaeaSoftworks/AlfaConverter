@@ -1,10 +1,10 @@
 package com.maeasoftworks.alfaconverter.core.xml.structure
 
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.SObject
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.Data
 
 class SerializableInstance(val name: String) : Cloneable {
 	lateinit var type: Type
-	var value: SObject? = null
+	var value: Data? = null
 	var collection: List<SerializableInstance>? = null
 	val fields = mutableMapOf<String, SerializableInstance>()
 	val attributes = mutableMapOf<String, SerializableInstance>()

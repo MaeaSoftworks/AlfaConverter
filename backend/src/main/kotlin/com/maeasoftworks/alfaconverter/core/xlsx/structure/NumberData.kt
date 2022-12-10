@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
 
-class SNumber(value: Number, dataFormat: Long = 0) : SObject() {
+class NumberData(value: Number, dataFormat: Long = 0) : Data() {
 	private var value: Any
 	private var rawValue: Number = 0
 	private var numFormat: Long? = dataFormat
@@ -75,7 +75,7 @@ class SNumber(value: Number, dataFormat: Long = 0) : SObject() {
 
 	override fun equals(other: Any?): Boolean {
 		return other != null
-				&& other is SNumber
+				&& other is NumberData
 				&& rawValue == other.rawValue
 				&& numFormat == other.numFormat
 	}

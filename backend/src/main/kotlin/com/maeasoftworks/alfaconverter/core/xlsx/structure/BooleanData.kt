@@ -3,7 +3,7 @@ package com.maeasoftworks.alfaconverter.core.xlsx.structure
 import org.xlsx4j.sml.Cell
 import org.xlsx4j.sml.STCellType
 
-class SBoolean : SObject {
+class BooleanData : Data {
 	private var value: Boolean = false
 
 	constructor(value: Boolean) {
@@ -34,9 +34,7 @@ class SBoolean : SObject {
 	}
 
 	override fun equals(other: Any?): Boolean {
-		return other != null
-				&& other is SBoolean
-				&& value == other.value
+		return other != null && other is BooleanData && value == other.value
 	}
 
 	override fun hashCode(): Int {

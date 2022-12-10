@@ -1,8 +1,8 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.SString
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.model.Table.*
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,7 +25,7 @@ class Merge(
 				val newValue = cell!!.getString()
 				result = result.replace(oldValue, newValue)
 			}
-			resultTable[targetColumn, y] = SString(result)
+			resultTable[targetColumn, y] = StringData(result)
 		}
 	}
 }

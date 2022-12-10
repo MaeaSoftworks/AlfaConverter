@@ -2,7 +2,7 @@ package com.maeasoftworks.alfaconverter.core.xlsx.structure
 
 import org.xlsx4j.sml.Cell
 
-class SNull : SObject() {
+class NullData : Data() {
 	override fun getXlsxRepresentation(): Cell {
 		return Cell().also {
 			it.t = null
@@ -23,7 +23,7 @@ class SNull : SObject() {
 	}
 
 	override fun equals(other: Any?): Boolean {
-		return other != null && other is SNull
+		return other != null && other is NullData
 	}
 
 	override fun hashCode(): Int {

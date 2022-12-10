@@ -1,20 +1,26 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.core.xlsx.XlsxConverter
+import com.maeasoftworks.alfaconverter.core.Converter
 import com.maeasoftworks.alfaconverter.core.model.Table
+import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx
 import org.junit.Test
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.test.assertEquals
 
 class TableGeneratorTests {
-	private val xlsxConverter = XlsxConverter(
-		Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx")),
-		Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx"))
+	private val converter = Converter(
+		source = Xlsx(Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx"))),
+		modifier = Xlsx(Files.readAllBytes(Path.of("src/test/resources/table generator tests.xlsx"))),
+		result = Xlsx()
 	)
 
+	init {
+		converter.initializeResultTable()
+	}
+
 	private val initial: Table
-		get() = xlsxConverter.targetSpreadsheet.table
+		get() = converter.source.table
 
 	@Test
 	fun `size detection`() {

@@ -1,8 +1,8 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.SString
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.model.Table.*
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -23,7 +23,7 @@ class Split(
 		for (row in 0 until initialTable.rowsCount) {
 			val results = regex.matchEntire(initialColumn[row].getString())!!.groups.filterNotNull().drop(1)
 			for (column in results.indices) {
-				resultTable[targetColumns[column], row] = SString(results[column].value)
+				resultTable[targetColumns[column], row] = StringData(results[column].value)
 			}
 		}
 	}
