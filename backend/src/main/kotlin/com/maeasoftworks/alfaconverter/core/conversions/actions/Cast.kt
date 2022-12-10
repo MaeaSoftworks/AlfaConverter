@@ -3,9 +3,11 @@ package com.maeasoftworks.alfaconverter.core.conversions.actions
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.SFactory
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.STypeName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@SerialName("cast")
 class Cast(
 	private val targetColumn: String,
 	private val targetType: STypeName,
