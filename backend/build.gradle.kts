@@ -21,17 +21,16 @@ repositories {
 }
 
 dependencies {
-	implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
-	implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
-	implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
-	implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
-	implementation("io.ktor:ktor-server-default-headers-jvm:$ktorVersion")
-	implementation("io.ktor:ktor-server-cors-jvm:$ktorVersion")
-	implementation("io.ktor:ktor-server-host-common-jvm:$ktorVersion")
-	implementation("io.ktor:ktor-server-status-pages-jvm:$ktorVersion")
-	implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
 	implementation("ch.qos.logback:logback-classic:$logbackVersion")
-	testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
+	implementation("io.ktor:ktor-server-content-negotiation-jvm:2.2.1")
+	implementation("io.ktor:ktor-server-core-jvm:2.2.1")
+	implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.2.1")
+	implementation("io.ktor:ktor-server-call-logging-jvm:2.2.1")
+	implementation("io.ktor:ktor-server-default-headers-jvm:2.2.1")
+	implementation("io.ktor:ktor-server-cors-jvm:2.2.1")
+	implementation("io.ktor:ktor-server-host-common-jvm:2.2.1")
+	implementation("io.ktor:ktor-server-status-pages-jvm:2.2.1")
+	implementation("io.ktor:ktor-server-netty-jvm:2.2.1")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
 
 	// docx4j
@@ -44,6 +43,7 @@ dependencies {
 
 	implementation("org.jdom:jdom2:2.0.6.1")
 	implementation("org.apache.tika:tika-core:2.6.0")
+	testImplementation("io.ktor:ktor-server-tests-jvm:2.2.1")
 }
 
 val start by tasks.registering {

@@ -8,11 +8,7 @@ import io.ktor.server.plugins.defaultheaders.*
 fun Application.configureHTTP() {
 	install(DefaultHeaders)
 	install(CORS) {
-		allowMethod(HttpMethod.Get)
 		allowMethod(HttpMethod.Put)
-		allowMethod(HttpMethod.Options)
-		allowMethod(HttpMethod.Delete)
-		allowMethod(HttpMethod.Patch)
 		anyHost()
 	}
 }

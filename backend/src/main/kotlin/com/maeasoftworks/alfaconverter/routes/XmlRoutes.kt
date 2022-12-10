@@ -4,10 +4,11 @@ import com.maeasoftworks.alfaconverter.core.XmlConverter
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
 import com.maeasoftworks.alfaconverter.core.datatypes.xsd.Element
 import com.maeasoftworks.alfaconverter.models.XmlPreviewResponse
-import com.maeasoftworks.alfaconverter.services.FileType
-import com.maeasoftworks.alfaconverter.utils.deserialize
+import com.maeasoftworks.alfaconverter.services.Extension
+import com.maeasoftworks.alfaconverter.services.require
+import com.maeasoftworks.alfaconverter.utils.asByteArray
+import com.maeasoftworks.alfaconverter.utils.deserializeTo
 import com.maeasoftworks.alfaconverter.utils.extractParts
-import com.maeasoftworks.alfaconverter.utils.tryGetBytes
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -18,8 +19,8 @@ fun Route.xmlRouting() {
 	route("/api/xml") {
 		post("preview") {
 			val params = call.receiveMultipart().extractParts("xlsx", "xsd")
-			val firstFile = params["xlsx"].tryGetBytes().also { FileType.validate(it, FileType.XLSX) }
-			val secondFile = params["xsd"].tryGetBytes().also { FileType.validate(it, FileType.XML) }
+			val firstFile = params["xlsx"].asByteArray() require Extension.XLSX
+			val secondFile = params["xsd"].asByteArray() require Extension.XML
 			val xmlConverter = XmlConverter(firstFile, secondFile)
 			val response = XmlPreviewResponse(
 				xmlConverter.getHeaders(),
@@ -32,10 +33,10 @@ fun Route.xmlRouting() {
 
 		post("/convert") {
 			val params = call.receiveMultipart().extractParts("xlsx", "schema", "conversion")
-			val xlsx = params["xlsx"].tryGetBytes().also { FileType.validate(it, FileType.XLSX) }
-			val schema = params["schema"].deserialize<Element>()!!
-			val conversion = params["conversion"].deserialize<Conversion>()
-			val response = XmlConverter(xlsx, schema, conversion = conversion!!).convert()
+			val xlsx = params["xlsx"].asByteArray() require Extension.XLSX
+			val schema = params["schema"].deserializeTo<Element>()
+			val conversion = params["conversion"].deserializeTo<Conversion>()
+			val response = XmlConverter(xlsx, schema, conversion).convert()
 			call.respondText(response, ContentType.Text.Xml)
 		}
 	}
