@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
-<xsd:schema
-        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        elementFormDefault="qualified">
-
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xsd:element name="root">
         <xsd:complexType>
             <xsd:sequence>
@@ -18,7 +15,7 @@
                 <xsd:element name="lastname" type="xsd:string"/>
                 <xsd:element name="middleName" type="xsd:string"/>
                 <xsd:element name="birthday" type="xsd:date"/>
-                <xsd:element name="age" type="xsd:decimal"/>
+                <xsd:element name="age" type="age"/>
                 <xsd:element name="address" type="xsd:string"/>
                 <xsd:element name="diagnosis" type="xsd:string"/>
                 <xsd:element name="researchType" type="xsd:string"/>
@@ -27,6 +24,17 @@
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
+
+    <xsd:simpleType name="age">
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="100"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="diagnosis">
+        <xsd:list itemType="xsd:string"/>
+    </xsd:simpleType>
 
     <xsd:element name="lab">
         <xsd:complexType>

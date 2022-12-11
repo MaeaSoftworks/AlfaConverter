@@ -13,13 +13,11 @@ suspend fun MultiPartData.extractParts(vararg parts: String): NotNullableMap<Str
 		if (part.name in parts) {
 			result[part.name!!] = part
 		} else {
-			throw RequiredPartNotFoundException(part.name!!)
+			throw RequiredPartNotFoundException(parts.joinToString(", "), result.keys.joinToString(", "))
 		}
 	}
-	for (part in parts) {
-		if (part !in result.keys) {
-			throw RequiredPartNotFoundException(part)
-		}
+	if (parts.toList() != result.keys.toList()) {
+		throw RequiredPartNotFoundException(parts.joinToString(", "), result.keys.joinToString(", "))
 	}
 	return NotNullableMap(result)
 }
