@@ -4,6 +4,7 @@ import com.maeasoftworks.alfaconverter.core.conversions.Conversion
 import com.maeasoftworks.alfaconverter.core.model.Modifier
 import com.maeasoftworks.alfaconverter.core.model.Result
 import com.maeasoftworks.alfaconverter.core.model.Source
+import org.jetbrains.annotations.TestOnly
 
 class Converter<S : Source, M : Modifier?, R : Result?>(
 	val source: S,
@@ -26,6 +27,12 @@ class Converter<S : Source, M : Modifier?, R : Result?>(
 		return result!!.convert()
 	}
 }
+
+@TestOnly
+fun <S : Source> Converter(
+	source: S,
+	conversion: Conversion = Conversion()
+) = Converter(source, null, null, conversion)
 
 fun <S : Source, R : Result?> Converter(
 	source: S,

@@ -17,8 +17,8 @@ import kotlin.test.assertEquals
 
 class ConversionTests {
 	private val converter = Converter(
-		source = Xlsx(File("src/test/resources/conversions_from.xlsx").readBytes()),
-		modifier = Xlsx(File("src/test/resources/conversions_to.xlsx").readBytes()),
+		source = Xlsx(File("src/test/resources/conversion/source.xlsx").readBytes()),
+		modifier = Xlsx(File("src/test/resources/conversion/modifier.xlsx").readBytes()),
 		result = Xlsx()
 	)
 

@@ -27,3 +27,7 @@ enum class Primitive(val xsdName: String, val element: () -> SimpleType) {
 		}
 	}
 }
+
+operator fun Primitive.invoke(): SimpleType {
+	return this.element()
+}

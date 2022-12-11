@@ -1,15 +1,13 @@
-package com.maeasoftworks.alfaconverter.routes
+package com.maeasoftworks.alfaconverter.plugins
 
 import com.maeasoftworks.alfaconverter.exceptions.*
-import com.maeasoftworks.alfaconverter.plugins.serializer
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
-import io.ktor.server.routing.*
 import kotlinx.serialization.encodeToString
 
-fun Application.configureRouting() {
+fun Application.configureStatusPages() {
 	install(StatusPages) {
 		register<InvalidPartDataTypeException>(HttpStatusCode.BadRequest)
 		register<RequiredPartNotFoundException>(HttpStatusCode.BadRequest)
@@ -21,10 +19,5 @@ fun Application.configureRouting() {
 				code
 			)
 		}
-	}
-
-	routing {
-		xlsxRouting()
-		xmlRouting()
 	}
 }

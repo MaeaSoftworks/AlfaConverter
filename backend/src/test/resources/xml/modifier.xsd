@@ -14,22 +14,19 @@
     <xsd:element name="person">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="name" type="xsd:string"/>
+                <xsd:element name="firstname" type="xsd:string"/>
+                <xsd:element name="lastname" type="xsd:string"/>
+                <xsd:element name="middleName" type="xsd:string"/>
                 <xsd:element name="birthday" type="xsd:date"/>
                 <xsd:element name="age" type="xsd:decimal"/>
                 <xsd:element name="address" type="xsd:string"/>
-                <xsd:element name="diagnosis" type="diagnosis"/>
+                <xsd:element name="diagnosis" type="xsd:string"/>
                 <xsd:element name="researchType" type="xsd:string"/>
                 <xsd:element ref="lab"/>
                 <xsd:element name="analysis" type="analysis"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
-
-    <xsd:complexType name="diagnosis">
-        <xsd:attribute name="code" type="xsd:string"/>
-        <xsd:attribute name="name" type="xsd:string"/>
-    </xsd:complexType>
 
     <xsd:element name="lab">
         <xsd:complexType>

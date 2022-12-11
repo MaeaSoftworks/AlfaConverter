@@ -44,6 +44,7 @@ dependencies {
 	implementation("org.jdom:jdom2:2.0.6.1")
 	implementation("org.apache.tika:tika-core:2.6.0")
 	testImplementation("io.ktor:ktor-server-tests-jvm:2.2.1")
+	testImplementation("io.ktor:ktor-server-test-host-jvm:2.2.1")
 }
 
 val start by tasks.registering {
