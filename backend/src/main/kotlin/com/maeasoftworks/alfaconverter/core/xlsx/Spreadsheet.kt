@@ -77,9 +77,11 @@ class Spreadsheet {
 		for (rowNumber in 0 until table.rowsCount) {
 			val row = factory.createRow()
 			for (columnNumber in 0 until table.columns.size) {
-				val cell = table.columns[columnNumber][rowNumber].getXlsxRepresentation()
-				cell.r = toExcel(columnNumber) + (rowNumber + 2).toString()
-				row.c.add(cell)
+				val cell = table.columns[columnNumber][rowNumber]?.getXlsxRepresentation()
+				cell?.r = toExcel(columnNumber) + (rowNumber + 2).toString()
+				if (cell != null) {
+					row.c.add(cell)
+				}
 			}
 			sheetData.row.add(row)
 		}

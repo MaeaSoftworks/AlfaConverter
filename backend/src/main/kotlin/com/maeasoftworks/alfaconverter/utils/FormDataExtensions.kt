@@ -16,7 +16,7 @@ suspend fun MultiPartData.extractParts(vararg parts: String): NotNullableMap<Str
 			throw RequiredPartNotFoundException(parts.joinToString(", "), result.keys.joinToString(", "))
 		}
 	}
-	if (parts.toList() != result.keys.toList()) {
+	if (!equalsIgnoreOrder(parts.toList(), result.keys.toList())) {
 		throw RequiredPartNotFoundException(parts.joinToString(", "), result.keys.joinToString(", "))
 	}
 	return NotNullableMap(result)

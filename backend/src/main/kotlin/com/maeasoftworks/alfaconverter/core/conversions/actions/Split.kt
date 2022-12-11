@@ -21,7 +21,7 @@ class Split(
 	override fun run(initialTable: Table, resultTable: Table) {
 		val initialColumn = initialTable[initialColumn]!!
 		for (row in 0 until initialTable.rowsCount) {
-			val results = regex.matchEntire(initialColumn[row].getString())!!.groups.filterNotNull().drop(1)
+			val results = regex.matchEntire(initialColumn[row]!!.getString())!!.groups.filterNotNull().drop(1)
 			for (column in results.indices) {
 				resultTable[targetColumns[column], row] = StringData(results[column].value)
 			}

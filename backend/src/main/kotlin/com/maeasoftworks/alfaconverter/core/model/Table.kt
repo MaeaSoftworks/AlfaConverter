@@ -69,8 +69,8 @@ class Table {
 	open class Column(var name: String) {
 		val cells: MutableList<Data> = mutableListOf()
 
-		operator fun get(pos: Int): Data {
-			return cells[pos]
+		operator fun get(pos: Int): Data? {
+			return if (pos < cells.size) cells[pos] else null
 		}
 
 		operator fun set(cell: Int, value: Data) {
