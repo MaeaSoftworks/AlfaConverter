@@ -5,24 +5,24 @@ import com.maeasoftworks.alfaconverter.core.xlsx.structure.Data
 class Table {
 	val columns: MutableList<Column> = mutableListOf()
 
-	val headers: MutableList<Data> = mutableListOf()
+	val headers: MutableList<ColumnAddress> = mutableListOf()
 
 	val rowsCount: Int
 		get() = columns.maxOf { it.cells.size }
 
-	operator fun get(column: String, row: Int): Data? {
+	operator fun get(column: ColumnAddress, row: Int): Data? {
 		return columns.firstOrNull { it.name == column }?.get(row)
 	}
 
-	operator fun get(column: String): Column? {
+	operator fun get(column: ColumnAddress): Column? {
 		return columns.firstOrNull { it.name == column }
 	}
 
-	operator fun get(columns: List<String>): List<Column> {
+	operator fun get(columns: List<ColumnAddress>): List<Column> {
 		return this.columns.filter { it.name in columns }
 	}
 
-	operator fun set(column: String, row: Int, value: Data) {
+	operator fun set(column: ColumnAddress, row: Int, value: Data) {
 		columns.firstOrNull { it.name == column }?.let {
 			if (it.cells.size == row) {
 				it.cells.add(value)
@@ -34,7 +34,7 @@ class Table {
 		}
 	}
 
-	internal fun append(column: String, row: Int, value: Data) {
+	internal fun append(column: ColumnAddress, row: Int, value: Data) {
 		if (!columns.any { it.name == column }) {
 			columns += Column(column)
 		}
@@ -55,8 +55,8 @@ class Table {
 	}
 
 	inner class Builder {
-		fun column(name: Data, function: (Builder.() -> Unit)? = null) {
-			columns += Column(name.getString())
+		fun column(name: ColumnAddress, function: (Builder.() -> Unit)? = null) {
+			columns += Column(name)
 			headers += name
 			function?.invoke(this)
 		}
@@ -66,7 +66,7 @@ class Table {
 		}
 	}
 
-	open class Column(var name: String) {
+	open class Column(var name: ColumnAddress) {
 		val cells: MutableList<Data> = mutableListOf()
 
 		operator fun get(pos: Int): Data? {

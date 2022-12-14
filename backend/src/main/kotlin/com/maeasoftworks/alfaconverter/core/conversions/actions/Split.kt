@@ -1,5 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
+import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
@@ -10,8 +11,8 @@ import kotlinx.serialization.Transient
 @Serializable
 @SerialName("split")
 class Split(
-	private val initialColumn: String,
-	private val targetColumns: List<String>,
+	private val initialColumn: ColumnAddress,
+	private val targetColumns: List<ColumnAddress>,
 	@Suppress("CanBeParameter")
 	private val pattern: String
 ) : Action() {

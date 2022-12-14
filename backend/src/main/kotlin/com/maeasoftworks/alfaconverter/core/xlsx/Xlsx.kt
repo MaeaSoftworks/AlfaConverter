@@ -4,7 +4,6 @@ import com.maeasoftworks.alfaconverter.core.model.Modifier
 import com.maeasoftworks.alfaconverter.core.model.Result
 import com.maeasoftworks.alfaconverter.core.model.Source
 import com.maeasoftworks.alfaconverter.core.model.Table
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
 
 class Xlsx : Source, Modifier, Result {
 
@@ -36,7 +35,7 @@ class Xlsx : Source, Modifier, Result {
 	override fun initialize(modifier: Modifier?) {
 		table = Table().fill {
 			for (column in modifier!!.getHeaders()) {
-				column(StringData(column))
+				column(column)
 			}
 		}
 	}

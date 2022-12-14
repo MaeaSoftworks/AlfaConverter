@@ -34,15 +34,15 @@ class ConversionTests {
 
 	@Test
 	fun `binding test`() {
-		conversion.actions += Bind("Column to bind 1", "bind 1 here")
-		conversion.actions += Cast("bind 1 here", TypeName.Number, 0)
+		conversion.actions += Bind(listOf("Column to bind 1"), listOf("bind 1 here"))
+		conversion.actions += Cast(listOf("bind 1 here"), TypeName.Number, 0)
 		converter.executeActions()
-		for (row in result["bind 1 here"]!!.cells.indices) {
+		for (row in result[listOf("bind 1 here")]!!.cells.indices) {
 			val expected = NumberData((row + 1) * 10, 0)
 			assertEquals(
 				expected,
-				result["bind 1 here"]!!.cells[row],
-				"E: ${expected.getString()}; A: ${result["bind 1 here"]!!.cells[row].getString()}"
+				result[listOf("bind 1 here")]!!.cells[row],
+				"E: ${expected.getString()}; A: ${result[listOf("bind 1 here")]!!.cells[row].getString()}"
 			)
 		}
 	}
@@ -54,7 +54,11 @@ class ConversionTests {
 				0 -> "a"; 1 -> "b"; 2 -> "c"; else -> "d"
 			}
 		}
-		conversion.actions += Split("Will be split", listOf("was", "split", "!!!"), "(\\S+) (\\S+) (\\S+)")
+		conversion.actions += Split(
+			listOf("Will be split"),
+			listOf(listOf("was"), listOf("split"), listOf("!!!")),
+			"(\\S+) (\\S+) (\\S+)"
+		)
 		converter.executeActions()
 		var pos = 0
 		for (columnPos in 2..4) {
@@ -78,10 +82,14 @@ class ConversionTests {
 			}
 		}
 
-		conversion.actions += Merge(listOf("Will", "be", "merged"), "merged", "\${Will} \${be} \${merged}")
+		conversion.actions += Merge(
+			listOf(listOf("Will"), listOf("be"), listOf("merged")),
+			listOf("merged"),
+			"\${0} \${1} \${2}"
+		)
 		converter.executeActions()
 		var pos = 0
-		for (cell in result["merged"]!!.cells) {
+		for (cell in result[listOf("merged")]!!.cells) {
 			assertEquals(
 				StringData(getString(pos++)),
 				cell

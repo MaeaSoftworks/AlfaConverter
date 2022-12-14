@@ -58,10 +58,28 @@ class XlsxModuleTest {
 			val body = serializer.decodeFromString<List<XlsxPreviewResponse>>(bodyAsText())
 			val expected = listOf(
 				XlsxPreviewResponse(
-					listOf("Column to bind 1", "Column to bind 2", "Will be split", "Will", "be", "merged", "who?"),
+					listOf(
+						listOf("Column to bind 1"),
+						listOf("Column to bind 2"),
+						listOf("Will be split"),
+						listOf("Will"),
+						listOf("be"),
+						listOf("merged"),
+						listOf("who?"),
+					),
 					listOf("10", "100", "a b c", "1", "2", "3", "me")
 				),
-				XlsxPreviewResponse(listOf("bind 2 here", "bind 1 here", "was", "split", "!!!", "merged", "whoooo?"))
+				XlsxPreviewResponse(
+					listOf(
+						listOf("bind 2 here"),
+						listOf("bind 1 here"),
+						listOf("was"),
+						listOf("split"),
+						listOf("!!!"),
+						listOf("merged"),
+						listOf("whoooo?"),
+					)
+				)
 			)
 			assertContentEquals(expected, body)
 		}
@@ -95,12 +113,20 @@ class XlsxModuleTest {
 							serializer.encodeToString(
 								Conversion(
 									mutableListOf(
-										Bind("Column to bind 1", "bind 1 here"),
-										Bind("Column to bind 2", "bind 2 here"),
-										Split("Will be split", listOf("was", "split", "!!!"), "(\\S+) (\\S+) (\\S+)"),
-										Merge(listOf("Will", "be", "merged"), "merged", "\${Will} \${be} \${merged}"),
-										Bind("who?", "whoooo?"),
-										Cast("bind 1 here", TypeName.Number, 0)
+										Bind(listOf("Column to bind 1"), listOf("bind 1 here")),
+										Bind(listOf("Column to bind 2"), listOf("bind 2 here")),
+										Split(
+											listOf("Will be split"),
+											listOf(listOf("was"), listOf("split"), listOf("!!!")),
+											"(\\S+) (\\S+) (\\S+)"
+										),
+										Merge(
+											listOf(listOf("Will"), listOf("be"), listOf("merged")),
+											listOf("merged"),
+											"\${0} \${1} \${2}"
+										),
+										Bind(listOf("who?"), listOf("whoooo?")),
+										Cast(listOf("bind 1 here"), TypeName.Number, 0)
 									)
 								)
 							).also { println("\u001B[33mConversion from api/xlsx/convert as JSON:\n\u001B[33m${it}") }

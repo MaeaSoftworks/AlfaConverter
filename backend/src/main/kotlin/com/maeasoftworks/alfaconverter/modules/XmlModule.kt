@@ -18,14 +18,15 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.xmlModule()  {
+fun Application.xmlModule() {
 	routing {
 		route("/api/xml") {
 			post("preview") {
-				val params = call.receiveMultipart().extractParts("source", "modifier")
-				val source = params["source"].asByteArray() require Extension.XLSX
-				val modifier = params["modifier"].asByteArray() require Extension.XML
-				val xmlConverter = Converter(Xlsx(source), Xsd(modifier), null)
+				val (source, modifier) = call.receiveMultipart().extractParts(
+					"source" to { it.asByteArray() require Extension.XLSX },
+					"modifier" to { it.asByteArray() require Extension.XML }
+				)
+				val xmlConverter = Converter(Xlsx(source), Xsd(modifier))
 				val response = XmlPreviewResponse(
 					xmlConverter.source.getHeaders(),
 					xmlConverter.source.getExamples(),
@@ -36,15 +37,12 @@ fun Application.xmlModule()  {
 			}
 
 			post("/convert") {
-				val params = call.receiveMultipart().extractParts("source", "schema", "conversion")
-				val source = params["source"].asByteArray() require Extension.XLSX
-				val schema = params["schema"].deserializeTo<Element>()
-				val conversion = params["conversion"].deserializeTo<Conversion>()
-				val response = Converter(
-					source = Xlsx(source),
-					result = Xml(schema),
-					conversion = conversion
-				).convert()
+				val (source, schema, conversion) = call.receiveMultipart().extractParts(
+					"source" to { it.asByteArray() require Extension.XLSX },
+					"schema" to { it.deserializeTo<Element>() },
+					"conversion" to { it.deserializeTo<Conversion>() }
+				)
+				val response = Converter(source = Xlsx(source), result = Xml(schema), conversion = conversion).convert()
 				call.respondText(String(response), ContentType.Text.Xml)
 			}
 		}

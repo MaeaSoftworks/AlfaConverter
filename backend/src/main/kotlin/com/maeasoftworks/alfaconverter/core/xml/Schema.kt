@@ -1,7 +1,7 @@
 package com.maeasoftworks.alfaconverter.core.xml
 
+import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
 import com.maeasoftworks.alfaconverter.core.model.Table
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
 import com.maeasoftworks.alfaconverter.core.xml.structure.*
 import org.jdom2.Document
 import org.jdom2.input.SAXBuilder
@@ -34,7 +34,7 @@ class Schema {
 		elements = mutableListOf(schema)
 		table = Table().fill {
 			for (header in convertElementsToHeaders()) {
-				column(StringData(header))
+				column(header)
 			}
 		}
 	}
@@ -105,23 +105,27 @@ class Schema {
 		}
 	}
 
-	fun convertElementsToHeaders(): List<String> {
-		val result = mutableListOf<String>()
+	fun convertElementsToHeaders(): List<ColumnAddress> {
+		val result = mutableListOf<ColumnAddress>()
 		convertElementToHeaders(elements.first { it.type.dependent == 0 }.type, result)
 		return result
 	}
 
-	private fun convertElementToHeaders(type: Type, result: MutableList<String>, prefix: String? = null) {
-		val pref = prefix ?: type.name
+	private fun convertElementToHeaders(
+		type: Type,
+		result: MutableList<ColumnAddress>,
+		current: ColumnAddress? = null
+	) {
+		val pref = current ?: mutableListOf(type.name)
 		for (field in (type as ComplexType).fields) {
 			if (field.value !is ComplexType) {
-				result += "${pref}.${field.key}"
+				result += pref + field.key
 			} else {
-				convertElementToHeaders(field.value, result, "${pref}.${field.key}")
+				convertElementToHeaders(field.value, result, pref + field.key)
 			}
 		}
 		for (attribute in (type).attributes) {
-			result += "${pref}.${attribute.key}"
+			result += pref + attribute.key
 		}
 	}
 
@@ -139,7 +143,7 @@ class Schema {
 			instances += instance
 
 			for (x in table.columns.indices) {
-				val path = table.columns[x].name.split('.').drop(2)
+				val path = table.columns[x].name.drop(2)
 				var endpoint = instance
 				for (f in path) {
 					endpoint = endpoint[f]

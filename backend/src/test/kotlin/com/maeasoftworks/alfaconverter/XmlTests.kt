@@ -60,37 +60,40 @@ class XmlTests {
 
 	@Test
 	fun `conversion test`() {
-		converter.conversion.actions += listOf(
+		converter.conversion.actions += mutableListOf(
 			Split(
-				"ФИО",
+				listOf("ФИО"),
 				listOf(
-					"root.person.lastname",
-					"root.person.firstname",
-					"root.person.middleName"
+					listOf("root", "person", "lastname"),
+					listOf("root", "person", "firstname"),
+					listOf("root", "person", "middleName")
 				),
 				"(\\S+) (\\S+) (\\S+)"
 			),
-			Bind("Дата рождения", "root.person.birthday"),
-			Bind("Возраст пациента", "root.person.age"),
-			Bind("Адрес прописки пациента", "root.person.address"),
+			Bind(listOf("Дата рождения"), listOf("root", "person", "birthday")),
+			Bind(listOf("Возраст пациента"), listOf("root", "person", "age")),
+			Bind(listOf("Адрес прописки пациента"), listOf("root", "person", "address")),
 			Merge(
-				listOf("Диагноз (код)", "Диагноз (расшифровка)"),
-				"root.person.diagnosis",
+				listOf(listOf("Диагноз (код)"), listOf("Диагноз (расшифровка)")),
+				listOf("root", "person", "diagnosis"),
 				"[\${Диагноз (код)}] \${Диагноз (расшифровка)}"
 			),
-			Bind("Тип исследования", "root.person.researchType"),
-			Bind("Адрес лаборатории", "root.person.lab.address"),
-			Bind("Название лаборатории", "root.person.lab.name"),
-			Bind("Код лаборатории", "root.person.lab.code"),
-			Bind("Дата взятия анализа", "root.person.analysis.dateStart"),
-			Bind("Время взятия анализа", "root.person.analysis.timeStart"),
-			Bind("Дата выполнения", "root.person.analysis.dateComplete"),
-			Bind("Время выполнения анализа", "root.person.analysis.timeComplete")
+			Bind(listOf("Тип исследования"), listOf("root", "person", "researchType")),
+			Bind(listOf("Адрес лаборатории"), listOf("root", "person", "lab", "address")),
+			Bind(listOf("Название лаборатории"), listOf("root", "person", "lab", "name")),
+			Bind(listOf("Код лаборатории"), listOf("root", "person", "lab", "code")),
+			Bind(listOf("Дата взятия анализа"), listOf("root", "person", "analysis", "dateStart")),
+			Bind(listOf("Время взятия анализа"), listOf("root", "person", "analysis", "timeStart")),
+			Bind(listOf("Дата выполнения"), listOf("root", "person", "analysis", "dateComplete")),
+			Bind(listOf("Время выполнения анализа"), listOf("root", "person", "analysis", "timeComplete"))
 		)
 		println(serializer.encodeToString(converter.conversion))
 		converter.executeActions()
-		assertEquals("Иван", converter.result!!.table["root.person.firstname", 0]!!.getString())
-		assertEquals("21.06.1963", converter.result!!.table["root.person.birthday", 0]!!.getString())
-		assertEquals("13:53", converter.result!!.table["root.person.analysis.timeComplete", 0]!!.getString())
+		assertEquals("Иван", converter.result.table[listOf("root", "person", "firstname"), 0]!!.getString())
+		assertEquals("21.06.1963", converter.result.table[listOf("root", "person", "birthday"), 0]!!.getString())
+		assertEquals(
+			"13:53",
+			converter.result.table[listOf("root", "person", "analysis", "timeComplete"), 0]!!.getString()
+		)
 	}
 }

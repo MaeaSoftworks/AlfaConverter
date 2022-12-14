@@ -34,14 +34,14 @@ fun <S : Source> Converter(
 	conversion: Conversion = Conversion()
 ) = Converter(source, null, null, conversion)
 
-fun <S : Source, R : Result?> Converter(
+fun <S : Source, R : Result> Converter(
 	source: S,
-	result: R? = null,
+	result: R,
 	conversion: Conversion = Conversion()
 ) = Converter(source, null, result, conversion)
 
-fun <S : Source, M : Modifier?> Converter(
+fun <S : Source, M : Modifier> Converter(
 	source: S,
-	modifier: M? = null,
+	modifier: M,
 	conversion: Conversion = Conversion()
 ) = Converter(source, modifier, null, conversion)

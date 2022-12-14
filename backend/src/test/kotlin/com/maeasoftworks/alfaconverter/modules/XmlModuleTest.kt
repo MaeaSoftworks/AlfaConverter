@@ -79,20 +79,20 @@ class XmlModuleTest {
 			val expected = serializer.encodeToString(
 				XmlPreviewResponse(
 					listOf(
-						"ФИО",
-						"Дата рождения",
-						"Возраст пациента",
-						"Адрес прописки пациента",
-						"Диагноз (код)",
-						"Диагноз (расшифровка)",
-						"Тип исследования",
-						"Адрес лаборатории",
-						"Название лаборатории",
-						"Код лаборатории",
-						"Дата взятия анализа",
-						"Время взятия анализа",
-						"Дата выполнения",
-						"Время выполнения анализа"
+						listOf("ФИО"),
+						listOf("Дата рождения"),
+						listOf("Возраст пациента"),
+						listOf("Адрес прописки пациента"),
+						listOf("Диагноз (код)"),
+						listOf("Диагноз (расшифровка)"),
+						listOf("Тип исследования"),
+						listOf("Адрес лаборатории"),
+						listOf("Название лаборатории"),
+						listOf("Код лаборатории"),
+						listOf("Дата взятия анализа"),
+						listOf("Время взятия анализа"),
+						listOf("Дата выполнения"),
+						listOf("Время выполнения анализа")
 					),
 					listOf(
 						"Иванов Иван Иванович",
@@ -112,21 +112,21 @@ class XmlModuleTest {
 					),
 					element,
 					listOf(
-						"root.person.firstname",
-						"root.person.lastname",
-						"root.person.middleName",
-						"root.person.birthday",
-						"root.person.age",
-						"root.person.address",
-						"root.person.diagnosis",
-						"root.person.researchType",
-						"root.person.lab.address",
-						"root.person.lab.name",
-						"root.person.lab.code",
-						"root.person.analysis.dateStart",
-						"root.person.analysis.timeStart",
-						"root.person.analysis.dateComplete",
-						"root.person.analysis.timeComplete"
+						listOf("root", "person", "firstname"),
+						listOf("root", "person", "lastname"),
+						listOf("root", "person", "middleName"),
+						listOf("root", "person", "birthday"),
+						listOf("root", "person", "age"),
+						listOf("root", "person", "address"),
+						listOf("root", "person", "diagnosis"),
+						listOf("root", "person", "researchType"),
+						listOf("root", "person", "lab", "address"),
+						listOf("root", "person", "lab", "name"),
+						listOf("root", "person", "lab", "code"),
+						listOf("root", "person", "analysis", "dateStart"),
+						listOf("root", "person", "analysis", "timeStart"),
+						listOf("root", "person", "analysis", "dateComplete"),
+						listOf("root", "person", "analysis", "timeComplete")
 					)
 				)
 			)
@@ -161,30 +161,42 @@ class XmlModuleTest {
 								Conversion(
 									mutableListOf(
 										Split(
-											"ФИО",
+											listOf("ФИО"),
 											listOf(
-												"root.person.lastname",
-												"root.person.firstname",
-												"root.person.middleName"
+												listOf("root", "person", "lastname"),
+												listOf("root", "person", "firstname"),
+												listOf("root", "person", "middleName")
 											),
 											"(\\S+) (\\S+) (\\S+)"
 										),
-										Bind("Дата рождения", "root.person.birthday"),
-										Bind("Возраст пациента", "root.person.age"),
-										Bind("Адрес прописки пациента", "root.person.address"),
+										Bind(listOf("Дата рождения"), listOf("root", "person", "birthday")),
+										Bind(listOf("Возраст пациента"), listOf("root", "person", "age")),
+										Bind(listOf("Адрес прописки пациента"), listOf("root", "person", "address")),
 										Merge(
-											listOf("Диагноз (код)", "Диагноз (расшифровка)"),
-											"root.person.diagnosis",
-											"[\${Диагноз (код)}] \${Диагноз (расшифровка)}"
+											listOf(listOf("Диагноз (код)"), listOf("Диагноз (расшифровка)")),
+											listOf("root", "person", "diagnosis"),
+											"[\${0}] \${1}"
 										),
-										Bind("Тип исследования", "root.person.researchType"),
-										Bind("Адрес лаборатории", "root.person.lab.address"),
-										Bind("Название лаборатории", "root.person.lab.name"),
-										Bind("Код лаборатории", "root.person.lab.code"),
-										Bind("Дата взятия анализа", "root.person.analysis.dateStart"),
-										Bind("Время взятия анализа", "root.person.analysis.timeStart"),
-										Bind("Дата выполнения", "root.person.analysis.dateComplete"),
-										Bind("Время выполнения анализа", "root.person.analysis.timeComplete")
+										Bind(listOf("Тип исследования"), listOf("root", "person", "researchType")),
+										Bind(listOf("Адрес лаборатории"), listOf("root", "person", "lab", "address")),
+										Bind(listOf("Название лаборатории"), listOf("root", "person", "lab", "name")),
+										Bind(listOf("Код лаборатории"), listOf("root", "person", "lab", "code")),
+										Bind(
+											listOf("Дата взятия анализа"),
+											listOf("root", "person", "analysis", "dateStart")
+										),
+										Bind(
+											listOf("Время взятия анализа"),
+											listOf("root", "person", "analysis", "timeStart")
+										),
+										Bind(
+											listOf("Дата выполнения"),
+											listOf("root", "person", "analysis", "dateComplete")
+										),
+										Bind(
+											listOf("Время выполнения анализа"),
+											listOf("root", "person", "analysis", "timeComplete")
+										)
 									)
 								)
 							).also { println("\u001B[33mConversion from api/xml/convert as JSON:\n\u001B[33m${it}") },

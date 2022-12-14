@@ -1,5 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
+import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
@@ -9,8 +10,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("merge")
 class Merge(
-	private val initialColumns: List<String>,
-	private val targetColumn: String,
+	private val initialColumns: List<ColumnAddress>,
+	private val targetColumn: ColumnAddress,
 	private val pattern: String
 ) : Action() {
 
@@ -21,7 +22,7 @@ class Merge(
 			var pos = 0
 			Table.slice(sourceColumns, y).forEach { cell ->
 				// it doesn't work when inlined
-				val oldValue = "\${${sourceColumns[pos++].name}}"
+				val oldValue = "\${${pos++}}"
 				val newValue = cell!!.getString()
 				result = result.replace(oldValue, newValue)
 			}

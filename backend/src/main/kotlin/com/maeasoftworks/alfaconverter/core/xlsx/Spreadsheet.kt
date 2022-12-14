@@ -1,5 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.xlsx
 
+import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.model.Table.Column
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.*
@@ -24,9 +25,9 @@ class Spreadsheet {
 		table = Table()
 		for (columnPos in worksheet.sheetData.row[0].c.indices) {
 			val sObj = extractValue(worksheet.sheetData.row[0].c[columnPos])
-			val column = Column(sObj.getString().trim())
+			val column = Column(listOf(sObj.getString().trim()))
 			table.columns.add(column)
-			table.headers.add(sObj)
+			table.headers.add(column.name)
 		}
 
 		for (row in 1 until worksheet.sheetData.row.size) {
@@ -42,13 +43,13 @@ class Spreadsheet {
 		this.table = table
 	}
 
-	fun getHeaders(): List<String> {
+	fun getHeaders(): List<ColumnAddress> {
 		val headers: MutableList<String> = mutableListOf()
 		if (worksheet.sheetData.row[0].c.isEmpty()) throw NoSuchElementException("First row of table was empty")
 		for (cell in worksheet.sheetData.row[0].c.indices) {
 			headers.add(extractValue(worksheet.sheetData.row[0].c[cell]).getString())
 		}
-		return headers
+		return headers.map { listOf(it) }
 	}
 
 	fun getExamples(): List<String> {
@@ -68,7 +69,7 @@ class Spreadsheet {
 		val sheetData = sheet.contents.sheetData
 		val header = factory.createRow()
 		for (columnNumber in 0 until table.columns.size) {
-			val cell = table.headers[columnNumber].getXlsxRepresentation()
+			val cell = StringData(table.headers[columnNumber][0]).getXlsxRepresentation()
 			cell.r = toExcel(columnNumber) + "1"
 			header.c.add(cell)
 		}
