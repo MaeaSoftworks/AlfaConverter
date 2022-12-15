@@ -4,7 +4,7 @@ Supported file formats to conversion:
 - [x] `.xlsx` to `.xlsx` using second `.xlsx` as map
 - [x] `.xlsx` to `.xml` using `.xsd` scheme of expected `.xml` format
 
-Developed by Mæa Softworks special for Alfa Bank ❤
+Developed by Mæa Softworks special for Alfa-Bank ❤
 
 ## `.xlsx` recognizable data types and formats:
 |     Name      |  Type code   |        Format        | Format Code | Status |
