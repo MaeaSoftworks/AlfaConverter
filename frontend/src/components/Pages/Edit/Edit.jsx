@@ -1,5 +1,5 @@
 import css from './Edit.module.css';
-import upload_image from './upload_image.png';
+import upload_image from './upload_header_laptop_img.png';
 import connection_light from './connection_light_bg.png';
 import split_light from './split_light_bg.png';
 import merge_light from './merge_light_bg.png';
@@ -7,18 +7,22 @@ import delete_light from './delete.png';
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import Xarrow, {Xwrapper} from "react-xarrows";
 import React, {useEffect, useId, useState} from "react";
+import SplitParametersSetupPopup from "./SplitPopup/SplitParametersSetupPopup";
+import MergeParametersSetupPopup from "./MergePopup/MergeParametersSetupPopup";
 
 const Edit = () => {
 
     const {state} = useLocation();
     const columns = state.columns;
-    const columnsFromFile = state.columns[0];
-    const columnsToFile = state.columns[1];
+    const columnsFromFile = columns[0];
+    const columnsToFile = columns[1];
     const fileFrom = state.fileFrom;
     const fileTo = state.fileTo;
+    const zipped = state.zipped;
 
     const [shouldRedirect, setShouldRedirect] = useState(false);
     const [requestBody, setRequestBody] = useState("");
+
     const navigate = useNavigate();
 
     React.useEffect(() => {
@@ -60,6 +64,8 @@ const Edit = () => {
       ]
     };
 
+    const [outerActions, setOuterActions] = useState({});
+
     const connections = {
 
     };
@@ -68,13 +74,16 @@ const Edit = () => {
     const [currentStatus, setCurrentStatus] = useState(status.default);
     const [pendingBlockId, setPendingBlockId] = useState('');
     const [clickedButton, setClickedButton] = useState('');
-
     const [arrows, setArrows] = useState([]);
+    const [activeSplitIndex, setActiveSplitIndex] = useState(-1);
+    const [activeMergeIndex, setActiveMergeIndex] = useState(-1);
+
 
     const [arrowMoved, setArrowMoved] = useState(false);
 
     const structBlockOutArrowHandler = (event) => {
         console.log(event.target.id);
+        console.log(event.target.children);
         let target = event.target;
         console.log(currentStatus);
         if (currentAction.type !== action.default.type) {
@@ -82,15 +91,23 @@ const Edit = () => {
                 setPendingBlockId(target.id);
                 setCurrentStatus(status.pending);
                 // let arrow = <Xarrow key={startId+endId} start={startId} end={endId}/>;
+                if(currentAction.type === 'split') {
+                    event.target.children[1].visibility='visible';
+                    console.log('splitus');
+                }
                 arrows.push([target.id, 'dynamic_arrow_endpoint', currentAction, 'temporary_arrow']);
                 setArrows(arrows);
             }
+            console.log('target');
+            console.log(target);
+            console.log('arrows');
             console.log(arrows);
         }
     };
 
     const structBlockInArrowHandler = (event) => {
         console.log(event.target.id);
+        console.log(event.target.children);
         let target = event.target;
         console.log(currentStatus);
         if (currentAction.type !== action.default.type) {
@@ -115,6 +132,20 @@ const Edit = () => {
         if (currentAction.type === action.delete.type) {
             setArrows(arrows.filter(arrow => !arrow.includes(event.target.id)));
         }
+    };
+
+    const splitPopupClickHandler = (event) => {
+        setActiveSplitIndex(Number(event.target.parentNode.dataset.index));
+        setActive(true);
+    };
+
+    const mergePopupClickHandler = (event) => {
+        setActiveMergeIndex(Number(event.target.parentNode.dataset.index));
+        setActive(true);
+    };
+
+    const datatypePopupClickHandler = (event) => {
+        setActive(true);
     };
 
     const connectOnClick = (event) => {
@@ -168,28 +199,6 @@ const Edit = () => {
         let splits = {};
         let merges = {};
 
-        // arrows.forEach(arrow => {
-        //     let arrowStartId = arrow[0];
-        //     let arrowEndId = arrow[1];
-        //
-        //     if(arrow[2].type === 'connect') {
-        //         if (!(arrowStartId in binds)) {
-        //             binds[arrowStartId] = [];
-        //         }
-        //         binds[arrowStartId].push(arrowEndId);
-        //     }else if(arrow[2].type === 'split'){
-        //         if (!(arrowStartId in splits)) {
-        //             splits[arrowStartId] = [];
-        //         }
-        //         splits[arrowStartId].push(arrowEndId);
-        //     }else{
-        //         if (!(arrowEndId in merges)) {
-        //             merges[arrowEndId] = [];
-        //         }
-        //         merges[arrowEndId].push(arrowStartId);
-        //     }
-        // });
-
         arrows.forEach(arrow => {
             let arrowStartId = arrow[0];
             let arrowEndId = arrow[1];
@@ -222,8 +231,8 @@ const Edit = () => {
         Object.keys(binds).forEach(bind => {
             let res = {
                 "type": "bind",
-                "initial-column": Number(bind),
-                "target-column": binds[bind][0]
+                "initialColumn": Number(bind),
+                "targetColumn": binds[bind][0]
             };
             console.log(res);
             actionObj.actions.push(res);
@@ -232,10 +241,18 @@ const Edit = () => {
         Object.keys(splits).forEach(split => {
             let res = {
                 "type": "split",
-                "initial-column": Number(split),
-                "target-columns": splits[split],
-                "pattern": Array(splits[split].length).fill("(\\S+)").join(" ")
+                "initialColumn": Number(split),
+                "targetColumns": splits[split],
+                // "pattern": Array(splits[split].length).fill("(\\S+)").join(" ")
             };
+
+            if (('from-' + split) in outerActions) {
+                console.log('aboba');
+                res['pattern'] = outerActions['from-' + split].pattern;
+            }else {
+                res['pattern'] = Array(splits[split].length).fill("(\\S+)").join(" ");
+            }
+
             console.log(res);
             actionObj.actions.push(res);
         });
@@ -243,122 +260,25 @@ const Edit = () => {
         Object.keys(merges).forEach(merge => {
             let res = {
                 "type": "merge",
-                "initial-columns": merges[merge],
-                "target-column": Number(merge),
-                "pattern": merges[merge].map(number => "$" + number).join(' ')
+                "initialColumns": merges[merge],
+                "targetColumn": Number(merge),
+                // "pattern": merges[merge].map(number => "$" + number).join(' ')
             };
+
+            if (('to-' + merge) in outerActions) {
+                console.log('bebra');
+                res['pattern'] = outerActions['to-' + merge].pattern;
+            }else {
+                res['pattern'] = merges[merge].map(number => "$" + number).join(' ');
+            }
+
             console.log(res);
             actionObj.actions.push(res);
         });
 
         console.log(JSON.stringify(actionObj));
-        setRequestBody(JSON.stringify(actionObj));
-        setShouldRedirect(true);
-
-
-
-        // Object.keys(binds).forEach(bind => {
-        //    let res = {
-        //        "type": "bind",
-        //        "initial-column": findIndexOfXByIdOfY(columnsFromFile, bind)[0],
-        //        "target-column": findIndexOfXByIdOfY(columnsToFile, binds[bind][0])[0]
-        //    };
-        //    console.log(res);
-        // });
-        //
-        // Object.keys(splits).forEach(split => {
-        //     let res = {
-        //         "type": "split",
-        //         "initial-column": findIndexOfXByIdOfY(columnsFromFile, split)[0],
-        //         "target-columns": findIndexOfXByIdOfY(columnsToFile, splits[split]),
-        //         "pattern": Array(findIndexOfXByIdOfY(columnsToFile, splits[split][0]).length).fill("(\\S+)").join(" ")
-        //     };
-        //     console.log(res);
-        // });
-
-        // arrows.forEach(arrow => {
-        //
-        //     let arrowStartId = arrow[0];
-        //     let arrowEndId = arrow[1];
-        //     if(arrow[2].type === 'connect') {
-        //         console.log('=================================');
-        //         console.log('arrow start:',arrow[0]);
-        //         console.log('arrow end:',arrow[1]);
-        //         console.log('arrow start index:', findIndexOfXByIdOfY(columnsFromFile, arrowStartId)[0]);
-        //         console.log('arrow end index:', findIndexOfXByIdOfY(columnsToFile, arrowEndId)[0]);
-        //     }
-        //
-        //     if(arrow[2].type === 'split') {
-        //         console.log('=================================');
-        //         console.log('arrow start:',arrow[0]);
-        //         console.log('arrow end:',arrow[1]);
-        //         console.log('arrow start index:', findIndexOfXByIdOfY(columnsFromFile, arrowStartId));
-        //         console.log('arrow end index:', findIndexOfXByIdOfY(columnsToFile, arrowEndId));
-        //     }
-        // });
-
-        // columnsFromFile.forEach(column => {
-        //     let colIndex = i++;
-        //     let colName = column[0];
-        //     let colId = column[1];
-        //
-        //     arrows.forEach(arrow => {
-        //         if(arrow[0] === colId) {
-        //             console.log('===================');
-        //             console.log('arrow obj:', arrow);
-        //             console.log('arrow start:',arrow[0]);
-        //             console.log('arrow end:',arrow[1]);
-        //             console.log('operation type:', arrow[2].type);
-        //             console.log('arrow target index:', findConnectTargetIndexByTargetId(arrow[1]));
-        //             console.log('arrow start index:', colIndex);
-        //             console.log('start column name:', colName);
-        //             console.log('start column id:', colId);
-        //
-        //             if(arrow[2].type === 'connect'){
-        //                 let res  = {
-        //                     "type": "bind",
-        //                     "initial-column": colIndex,
-        //                     "target-column": findConnectTargetIndexByTargetId(arrow[1])
-        //                 };
-        //             }
-        //
-        //             if(arrow[2].type === 'split'){
-        //                 let res  = {
-        //                     "type": "split",
-        //                     "initial-column": colIndex,
-        //                     "target-columns": findSplitTargetsIndexByTargetId(arrow[1]),
-        //                     "pattern": Array(findConnectTargetIndexByTargetId(arrow[1]).length).fill("(\\S+)").join(" ")
-        //                 };
-        //             }
-        //
-        //             if(arrow[2].type === 'merge'){
-        //                 let res  = {
-        //                     "type": "merge",
-        //                     "initial-columns": colIndex,
-        //                     "target-columns": findSplitTargetsIndexByTargetId(arrow[0])[0],
-        //                     "pattern": Array(findSplitTargetsIndexByTargetId(arrow[0]).length).fill("$3").join(" ")
-        //                 };
-        //             }
-        //         }
-        //     });
-        // });
-
-        // var formdata = new FormData();
-        // formdata.append("conversion", JSON.stringify(actionObj));
-        // formdata.append("master-file", "0");
-        // formdata.append("first-file", fileFrom, fileFrom.name);
-        // formdata.append("second-file", fileTo, fileTo.name);
-        //
-        // var requestOptions = {
-        //     method: 'POST',
-        //     body: formdata,
-        //     redirect: 'follow'
-        // };
-        //
-        // fetch("http://127.0.0.1:8080/api/convert", requestOptions)
-        //     .then(response => response.text())
-        //     .then(result => console.log(result))
-        //     .catch(error => console.log('error', error));
+        // setRequestBody(JSON.stringify(actionObj));
+        // setShouldRedirect(true);
     };
 
     const findIndexOfXByIdOfY = (columnsArr, Id) => {
@@ -387,6 +307,16 @@ const Edit = () => {
         return result;
     };
 
+    const findSplitTargetsBySourceId = (Id) => {
+        let result = [];
+        arrows.forEach(arrow => {
+            if (arrow[0] === Id) {
+                result.push(arrow);
+            }
+        });
+        return result;
+    };
+
     const findSplitTargetsIndexByTargetId = (Id) => {
         let colIndex = 0;
         let result = [];
@@ -400,42 +330,48 @@ const Edit = () => {
         return result;
     };
 
+    const [active, setActive] = useState(false);
+
     return (
-        <div className={css.page}>
+        <div className={css.page} onKeyDown={e => {
+            if (e.key === 'Escape') {
+                setActive(!active);
+                setActiveSplitIndex(-1);
+                setActiveMergeIndex(-1);
+            }
+        }}>
             <div className={css.header}>
                 <div className={css.header_text_block}>
                     <h1 className={css.header_header}>Изменение структуры</h1>
                     <p className={css.header_description}>Вам предстоит выбрать как будет выглядеть Ваш документ после
                         конвертации</p>
                 </div>
-                <img src={upload_image}/>
+                <img src={upload_image} className={css.header_img}/>
             </div>
             <div className={css.edit}>
+                {/*<Popup active={active} dataBundle={popupDataBundle}/>*/}
                 <div className={css.scheme_board} onMouseMove={mouseMoveHandler}>
                     <Xwrapper>
                         <div className={css.dynamic_arrow_endpoint} id='dynamic_arrow_endpoint'>
-
                         </div>
                         <div className={css.file_struct}>
                             <h1 className={css.struct_header}>Исходная структура</h1>
                             {/*<div className={css.struct_block} id={'init-' + useId()} onClick={structBlockOutArrowHandler}>*/}
                             {/*    <input className={css.struct_input} type='text' value='ФИО'/>*/}
                             {/*</div>*/}
-                            {/*<div className={css.struct_block} id={'init-' + useId()} onClick={structBlockOutArrowHandler}>*/}
-                            {/*    <input className={css.struct_input} type='text' value='Дата рождения'/>*/}
-                            {/*</div>*/}
-                            {/*<div className={css.struct_block} id={'init-' + useId()} onClick={structBlockOutArrowHandler}>*/}
-                            {/*    <input className={css.struct_input} type='text' value='Возраст'/>*/}
-                            {/*</div>*/}
-                            {/*<div className={css.struct_block} id={'init-' + useId()} onClick={structBlockOutArrowHandler}>*/}
-                            {/*    <input className={css.struct_input} type='text' value='Диагноз (название)'/>*/}
-                            {/*</div>*/}
-                            {/*<div className={css.struct_block} id={'init-' + useId()} onClick={structBlockOutArrowHandler}>*/}
-                            {/*    <input className={css.struct_input} type='text' value='Диагноз (код)'/>*/}
-                            {/*</div>*/}
-                            {columnsFromFile.map(columnName =>
-                                <div className={css.struct_block} id={columnName[1]} onClick={structBlockOutArrowHandler}>
+                            {columnsFromFile.map((columnName, index) =>
+                                <div className={css.struct_block} id={columnName[1]} data-index={index} onClick={structBlockOutArrowHandler}>
+                                    {/*<Popup active={active} setActive={activesSplits[index]} initString = {columnsFromFile[0]} targets = {3} />*/}
+                                    <SplitParametersSetupPopup active={activeSplitIndex === index}
+                                                               setActive={setActive}
+                                                               setActiveIndex={setActiveSplitIndex}
+                                                               fromIndex={index}
+                                                               bundle={[columnsFromFile, columnsToFile, arrows, zipped]}
+                                                               outerActions={outerActions}
+                                                               setOuterActions={setOuterActions}/>
                                     <p className={css.struct_input}>{columnName[0]}</p>
+                                    <button onClick={splitPopupClickHandler}
+                                        className={css.popup_trigger + ' ' + css.split_popup_trigger + ' ' + (arrows.filter(arrow => arrow[2].type === 'split' && arrow.includes(columnName[1])).length === 0 ? css.popup_trigger_invisible: '')}></button>
                                 </div>
                             )}
                         </div>
@@ -445,29 +381,23 @@ const Edit = () => {
                             {/*     onClick={structBlockInArrowHandler}>*/}
                             {/*    <input className={css.struct_input} type='text' value='Фамилия'/>*/}
                             {/*</div>*/}
-                            {/*<div className={css.struct_block} id={'wanted-' + useId()}*/}
-                            {/*     onClick={structBlockInArrowHandler}>*/}
-                            {/*    <input className={css.struct_input} type='text' value='Имя'/>*/}
-                            {/*</div>*/}
-                            {/*<div className={css.struct_block} id={'wanted-' + useId()}*/}
-                            {/*     onClick={structBlockInArrowHandler}>*/}
-                            {/*    <input className={css.struct_input} type='text' value='Отчество'/>*/}
-                            {/*</div>*/}
-                            {/*<div className={css.struct_block} id={'wanted-' + useId()}*/}
-                            {/*     onClick={structBlockInArrowHandler}>*/}
-                            {/*    <input className={css.struct_input} type='text' value='Возраст'/>*/}
-                            {/*</div>*/}
-                            {/*<div className={css.struct_block} id={'wanted-' + useId()}*/}
-                            {/*     onClick={structBlockInArrowHandler}>*/}
-                            {/*    <input className={css.struct_input} type='text' value='Диагноз'/>*/}
-                            {/*</div>*/}
-                            {columnsToFile.map(columnName =>
-                                <div className={css.struct_block} id={columnName[1]} onClick={structBlockInArrowHandler}>
+                            {columnsToFile.map((columnName, index) =>
+                                <div className={css.struct_block} id={columnName[1]} data-index={index} onClick={structBlockInArrowHandler}>
+                                    <MergeParametersSetupPopup active={activeMergeIndex === index}
+                                                               setActive={setActive}
+                                                               setActiveIndex={setActiveMergeIndex}
+                                                               toIndex={index}
+                                                               bundle={[columnsFromFile, columnsToFile, arrows, zipped]}
+                                                               outerActions={outerActions}
+                                                               setOuterActions={setOuterActions}/>
                                     <p className={css.struct_input}>{columnName[0]}</p>
+                                    <button onClick={mergePopupClickHandler}
+                                        className={css.popup_trigger + ' ' + css.merge_popup_trigger + ' ' + ( arrows.filter(arrow => arrow[2].type === 'merge' && arrow.includes(columnName[1])).length === 0 ? css.popup_trigger_invisible: '')}></button>
                                 </div>
                             )}
                         </div>
-                        {arrows.map(startAndEnd => <Xarrow key={startAndEnd[3]} start={startAndEnd[0]}
+                        {
+                            arrows.map(startAndEnd => <Xarrow key={startAndEnd[3]} start={startAndEnd[0]}
                                                            id={startAndEnd[3]}
                                                            end={startAndEnd[1]}
                                                            color={startAndEnd[2].arrowColor}

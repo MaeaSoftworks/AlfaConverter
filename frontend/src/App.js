@@ -12,6 +12,7 @@ import Edit from "./components/Pages/Edit/Edit";
 import Upload from "./components/Pages/Upload/Upload";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
+import Main from "./components/Pages/Main/Main";
 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
             <div className='app-wrapper'>
                 <Header/>
                 <Routes>
-                    <Route path='/' element={<Navigate to='/upload'/>}/>
+                    <Route path='/' element={<Main/>}/>
                     <Route path='/upload' element={<Upload/>}/>
                     <Route path='/edit' element={<Edit/>}/>
                     <Route path='/result' element={<Result/>}/>

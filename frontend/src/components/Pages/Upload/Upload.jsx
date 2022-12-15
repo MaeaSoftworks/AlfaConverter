@@ -1,7 +1,7 @@
 import css from './Upload.module.css';
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import upload_img from './upload_image.png';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import result from "../Result/Result";
 
 const Upload = () => {
@@ -9,23 +9,82 @@ const Upload = () => {
     const [shouldRedirect, setShouldRedirect] = useState(false);
     let documentColumns = [];
     let [docColumns, setDocColumns] = useState([]);
+    let [zipped, setZipped] = useState([]);
     let [fileFrom, setFileFrom] = useState();
     let [fileTo, setFileTo] = useState();
 
+    const [fileFromErrorClass, setFileFromErrorClass] = useState([css.file_error_hidden, css.file_error_hidden]);
+    const [fileToErrorClass, setFileToErrorClass] = useState([css.file_error_hidden, css.file_error_hidden]);
+
+
+    const [isFileFromLegit, setIsFileFromLegit] = useState(false);
+    const [isFileToLegit, setIsFileToLegit] = useState(false);
+    const [isInputReady, setIsInputReady] = useState(false);
+    const [isResponseOk, setIsResponseOk] = useState(true);
+
     const navigate = useNavigate();
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (shouldRedirect) {
-            navigate('/edit', { state: { columns: docColumns, fileTo: fileTo, fileFrom: fileFrom} });
+            navigate('/edit', {state: {columns: docColumns, fileTo: fileTo, fileFrom: fileFrom, zipped: zipped}});
         }
     });
 
-    const onInput = (data) => {
+    useEffect(() => {
+        setIsInputReady(isFileFromLegit && isFileToLegit);
+    }, [isFileFromLegit, isFileToLegit]);
+
+    const onInputFileFrom = (data) => {
         // data.preventDefault();
-        // console.log(data.target.files);
+        handleFileInputErrors(data, fileFromErrorClass, setFileFromErrorClass, setIsFileFromLegit);
     };
 
-    const uniqueId = (prefix = 'id-') => prefix + Math.random().toString(16).slice(-12);
+    const onInputFileTo = (data) => {
+        // data.preventDefault()
+        handleFileInputErrors(data, fileToErrorClass, setFileToErrorClass, setIsFileToLegit);
+    };
+
+    const handleFileInputErrors = (inputData, fileErrorClass, setFileErrorClass, setIsFileLegit) => {
+        // console.log(inputData.target.files[0].name);
+        let fileExtension = inputData.target.files[0].name.split('.').pop();
+        let fileSize = inputData.target.files[0].size;
+        // console.log(fileExtension);
+
+        let isFileExtensionLegit;
+        let isFileSizeLegit;
+
+        if (fileExtension !== 'xlsx') {
+            let errorsClasses = fileErrorClass;
+            errorsClasses[0] = css.file_error_showed;
+            setFileErrorClass([...errorsClasses]);
+            isFileExtensionLegit = false;
+        } else {
+            let errorsClasses = fileErrorClass;
+            errorsClasses[0] = css.file_error_hidden;
+            setFileErrorClass([...errorsClasses]);
+            isFileExtensionLegit = true;
+        }
+
+        if (fileSize > 20971520) {
+            let errorsClasses = fileErrorClass;
+            errorsClasses[1] = css.file_error_showed;
+            setFileErrorClass([...errorsClasses]);
+            isFileSizeLegit = false;
+        } else {
+            let errorsClasses = fileErrorClass;
+            errorsClasses[1] = css.file_error_hidden;
+            setFileErrorClass([...errorsClasses]);
+            isFileSizeLegit = true;
+        }
+
+        setIsFileLegit(isFileExtensionLegit && isFileSizeLegit);
+    };
+
+    const zip = (keys, values) => {
+        let obj = {};
+        keys.forEach(key => obj[key] = values.shift());
+        return obj;
+    };
 
     // const onSubmit = async (data) => {
     //     data.preventDefault();
@@ -52,13 +111,14 @@ const Upload = () => {
 
     const onSubmit = async (data) => {
         data.preventDefault();
+        setIsResponseOk(true);
 
         const fileFrom = data.target[0].files[0];
         const fileTo = data.target[1].files[0];
 
         const formData = new FormData();
-        formData.append("first-file", fileFrom);
-        formData.append("second-file", fileTo);
+        formData.append("source", fileFrom);
+        formData.append("modifier", fileTo);
         setFileFrom(fileFrom);
         setFileTo(fileTo);
 
@@ -67,20 +127,40 @@ const Upload = () => {
             body: formData
         };
 
-        fetch("http://127.0.0.1:8080/api/headers", requestOptions)
-            .then(response => response.json())
+        let status = 200;
+
+        fetch("http://127.0.0.1:8080/api/xlsx/preview", requestOptions)
+            .then(response => {
+                status = response.status;
+                return response.json();
+            })
             .then(result => {
                 console.log('result:');
-                let firstFileColumns = result[0].headers;
-                let secondFileColumns = result[1].headers;
                 console.log(result);
-                console.log(firstFileColumns);
-                console.log(secondFileColumns);
-                firstFileColumns = firstFileColumns.map(columnFromName => [columnFromName, uniqueId('init-')]);
-                secondFileColumns = secondFileColumns.map(columnFromName => [columnFromName, uniqueId('wanted-')]);
-                console.log(result);
-                setDocColumns([firstFileColumns, secondFileColumns]);
-                setShouldRedirect(true);
+                if (status === 200) {
+                    let firstFileColumns = result[0].headers;
+                    let secondFileColumns = result[1].headers;
+                    console.log('result');
+                    console.log(result);
+                    console.log('zip');
+                    setZipped(zip(firstFileColumns, [...result[0]["examples"]]));
+                    console.log(zipped);
+                    console.log('firstFileColumns');
+                    console.log(firstFileColumns);
+                    console.log('vals');
+                    console.log(result[0]["examples"]);
+                    console.log('secondFileColumns');
+                    console.log(secondFileColumns);
+                    firstFileColumns = firstFileColumns.map((columnFromName, index) => [columnFromName, `from-${index}`]);
+                    secondFileColumns = secondFileColumns.map((columnFromName, index) => [columnFromName, `to-${index}`]);
+                    console.log(result);
+                    setDocColumns([firstFileColumns, secondFileColumns]);
+                    setIsResponseOk(true);
+                    setShouldRedirect(true);
+                    console.log(shouldRedirect);
+                } else if (status === 500) {
+                    setIsResponseOk(false);
+                }
             })
             .catch(error => console.log('error', error));
     };
@@ -88,33 +168,46 @@ const Upload = () => {
     return (
         <div className={css.page}>
             <div className={css.upload}>
-                <div>
+                <div className={css.textblock}>
                     <h1 className={css.header}>Конвертация</h1>
-                    <p className={css.description}>Сервис поддерживает файлы объемом до 20МБ</p>
-                    <form onSubmit={onSubmit} className={css.form}>
-
-                        <div className={css.file_upload_block}>
-                            <label htmlFor="source_file" className={css.file_input_label}>
-                                Выбрать файл
-                            </label>
-                            <p className={css.file_input_description}>Выберите исходный файл</p>
-                            {/*<input type="file" name="source_file" id="source_file" className={css.file_input}/>*/}
-                            <input type="file" id="source_file" className={css.file_input} onChange={onInput}/>
-                        </div>
-
-                        <div className={css.file_upload_block}>
-                            <label htmlFor="template_file" className={css.file_input_label}>
-                                Выбрать файл
-                            </label>
-                            <p className={css.file_input_description}>Выберите файл, с необходимой структурой</p>
-                            {/*<input type="file" name="template_file" id="template_file" className={css.file_input}/>*/}
-                            <input type="file" id="template_file" className={css.file_input} onChange={onInput}/>
-                        </div>
-
-                        <input type="submit" value="Отправить" className={css.send_button}/>
-                    </form>
+                    <p className={css.description}>Загрузите два файла: документ, который нужно конвертировать и
+                        документ с необходимой структурой. Сервис поддерживает файлы объемом до 20МБ</p>
                 </div>
-                <img src={upload_img} className={css.image}/>
+                <form onSubmit={onSubmit} className={css.form}>
+
+                    <div className={css.file_button_container}>
+                        <label htmlFor="source_file" className={css.file_input_label}>
+                            Выбрать исходный файл
+                        </label>
+                        <p className={css.file_input_description}>или перетащите файл сюда</p>
+                        {/*<input type="file" name="source_file" id="source_file" className={css.file_input}/>*/}
+                        <input type="file" id="source_file" className={css.file_input} onChange={onInputFileFrom}/>
+                    </div>
+                    <p className={fileFromErrorClass[0]}>Ошибка! Файл имеет неверное расширение. Необходимо
+                        .xlsx</p>
+                    <p className={fileFromErrorClass[1]}>Ошибка! Файл имеет слишком большой размер. Необходимо 20 МБ
+                        или меньше</p>
+
+                    <div className={css.file_button_container}>
+                        <label htmlFor="template_file" className={css.file_input_label}>
+                            Выбрать структуру
+                        </label>
+                        <p className={css.file_input_description}>или перетащите файл сюда</p>
+                        {/*<input type="file" name="template_file" id="template_file" className={css.file_input}/>*/}
+                        <input type="file" id="template_file" className={css.file_input} onChange={onInputFileTo}/>
+                    </div>
+                    <p className={fileToErrorClass[0]}>Ошибка! Файл имеет неверное расширение. Необходимо .xlsx</p>
+                    <p className={fileToErrorClass[1]}>Ошибка! Файл имеет слишком большой размер. Необходимо 20 МБ
+                        или меньше</p>
+
+                    <div className={css.file_button_container}>
+                        <input type="submit" value="Перейти к редактированию файлов "
+                               className={`${css.send_button} ${isInputReady ? css.button_active : css.button_inactive}`}
+                               disabled={!isInputReady}/>
+                    </div>
+                </form>
+                <p className={isResponseOk ? css.server_error_hidden : css.server_error_showed}>Произошла ошибка на
+                    сервере. Попробуйте снова</p>
             </div>
         </div>
     );

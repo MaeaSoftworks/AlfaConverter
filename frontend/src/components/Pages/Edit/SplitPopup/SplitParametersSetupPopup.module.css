@@ -1,0 +1,76 @@
+.popup {
+    z-index: 999;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0,0,0,0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.hide {
+    display: none;
+}
+
+.content {
+    padding: 20px;
+    border-radius: 12px;
+    background-color: white;
+    min-height: 400px;
+    height: fit-content;
+    /*min-width: 400px;*/
+    width: 550px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    cursor: default;
+}
+
+.header_top {
+    align-self: center;
+}
+
+.horizontal_ruler {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.splitters_group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.header_middle {
+    align-self: center;
+}
+
+.data_input_block {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.data_input_element {
+    /*white-space: nowrap;*/
+    width: 33%;
+    white-space: nowrap;
+}
+
+.data_input_element:disabled {
+    background-color: lightgray;
+}
+
+.example {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.apply_button {
+    cursor: pointer;
+}
