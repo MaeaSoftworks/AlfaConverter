@@ -7,8 +7,4 @@ import kotlinx.serialization.Serializable
 @SerialName("SimpleType")
 class SimpleType : Type {
 	constructor(name: String) : super(name)
-
-	override fun createInstance(): SerializableInstance {
-		return SerializableInstance(name).also { it.type = this }
-	}
 }

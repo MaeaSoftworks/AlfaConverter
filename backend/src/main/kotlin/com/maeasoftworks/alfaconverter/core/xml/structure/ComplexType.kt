@@ -8,8 +8,6 @@ import org.jdom2.Element as XsdElement
 @Serializable
 @SerialName("ComplexType")
 class ComplexType : Type {
-	val fields = mutableMapOf<String, Type>()
-	val attributes = mutableMapOf<String, Type>()
 	@Transient
 	private var registration: ((TypePlaceholder) -> TypePlaceholder)? = null
 
@@ -20,8 +18,8 @@ class ComplexType : Type {
 		this.registration = registration
 	}
 
-	override fun createInstance(): SerializableInstance {
-		val instance = SerializableInstance(name).also { it.type = this }
+	override fun createInstance(): Type {
+		val instance = Instance(name)
 		for (field in fields) {
 			instance.fields[field.key] = field.value.createInstance()
 		}
