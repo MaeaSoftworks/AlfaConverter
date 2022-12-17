@@ -6,14 +6,14 @@ import kotlinx.serialization.Transient
 
 @Serializable
 @SerialName("Type")
-sealed class Type {
-	abstract val name: String
-
+sealed class Type(val name: String) {
 	@Transient
 	var dependent = 0
 
 	val isPrimitive: Boolean
 		get() = Primitive.findPrimitive(name, ":") != null
 
-	abstract fun createInstance(): SerializableInstance
+	open fun createInstance(): SerializableInstance {
+		return SerializableInstance(name).also { it.type = this }
+	}
 }

@@ -17,10 +17,10 @@
                 <xsd:element name="birthday" type="xsd:date"/>
                 <xsd:element name="age" type="age"/>
                 <xsd:element name="address" type="xsd:string"/>
-                <xsd:element name="diagnosis" type="xsd:string"/>
+                <xsd:element name="diagnosis" type="diagnosis"/>
                 <xsd:element name="researchType" type="xsd:string"/>
                 <xsd:element ref="lab"/>
-                <xsd:element name="analysis" type="analysis"/>
+                <xsd:element name="analysis" type="analysisTime"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -32,9 +32,22 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-    <xsd:simpleType name="diagnosis">
-        <xsd:list itemType="xsd:string"/>
+    <xsd:simpleType name="diagnosisCode">
+        <xsd:restriction base="xsd:positiveInteger">
+            <xsd:enumeration value="1"/>
+            <xsd:enumeration value="5"/>
+            <xsd:enumeration value="15"/>
+            <xsd:enumeration value="25"/>
+            <xsd:enumeration value="30"/>
+        </xsd:restriction>
     </xsd:simpleType>
+
+    <xsd:complexType name="diagnosis">
+        <xsd:sequence>
+            <xsd:element name="code" type="diagnosisCode"/>
+            <xsd:element name="name" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
 
     <xsd:element name="lab">
         <xsd:complexType>
@@ -44,7 +57,7 @@
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:complexType name="analysis">
+    <xsd:complexType name="analysisTime">
         <xsd:attribute name="dateStart" type="xsd:date"/>
         <xsd:attribute name="timeStart" type="xsd:time"/>
         <xsd:attribute name="dateComplete" type="xsd:date"/>

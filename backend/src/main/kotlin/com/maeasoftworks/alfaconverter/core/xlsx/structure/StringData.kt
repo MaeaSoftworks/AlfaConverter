@@ -8,7 +8,7 @@ import org.xlsx4j.sml.CTXstringWhitespace
 import org.xlsx4j.sml.Cell
 import org.xlsx4j.sml.STCellType
 
-class StringData : Data {
+open class StringData : Data {
 	private lateinit var sharedStrings: SharedStrings
 	private val value: String
 

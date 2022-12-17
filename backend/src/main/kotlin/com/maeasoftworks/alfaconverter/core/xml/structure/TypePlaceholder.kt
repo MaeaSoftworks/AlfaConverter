@@ -5,8 +5,7 @@ class TypePlaceholder(
 	val awaitedTypeName: String,
 	val isRef: Boolean = false,
 	val fieldName: String? = null
-) : Type() {
-	override val name = "\$\$placeholder\$\$"
+) : Type("\$\$placeholder\$\$") {
 	override fun createInstance(): SerializableInstance {
 		throw Exception("How?")
 	}

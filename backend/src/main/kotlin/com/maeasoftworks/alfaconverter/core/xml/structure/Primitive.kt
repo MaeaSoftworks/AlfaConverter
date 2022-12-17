@@ -1,33 +1,51 @@
 package com.maeasoftworks.alfaconverter.core.xml.structure
 
-enum class Primitive(val xsdName: String, val element: () -> SimpleType) {
-	ANY_URI("anyURI", { SimpleType("anyURI") }),
-	BASE_64_BINARY("base64Binary", { SimpleType("base64Binary") }),
-	BOOLEAN("boolean", { SimpleType("boolean") }),
-	DATE("date", { SimpleType("date") }),
-	DATETIME("dateTime", { SimpleType("dateTime") }),
-	DECIMAL("decimal", { SimpleType("decimal") }),
-	DOUBLE("double", { SimpleType("double") }),
-	DURATION("duration", { SimpleType("duration") }),
-	FLOAT("float", { SimpleType("float") }),
-	HEX_BINARY("hexBinary", { SimpleType("hexBinary") }),
-	G_DAY("gDay", { SimpleType("gDay") }),
-	G_MONTH("gMonth", { SimpleType("gMonth") }),
-	G_MONTH_DAY("gMonthDay", { SimpleType("gMonthDay") }),
-	G_YEAR("gYear", { SimpleType("gYear") }),
-	G_YEAR_MONTH("gYearMonth", { SimpleType("gYearMonth") }),
-	NOTATION("NOTATION", { SimpleType("NOTATION") }),
-	QNAME("QName", { SimpleType("QName") }),
-	STRING("string", { SimpleType("string") }),
-	TIME("time", { SimpleType("time") });
+import kotlinx.serialization.Serializable
 
-	companion object {
-		fun findPrimitive(name: String, xsdPrefix: String): Primitive? {
-			return name.removePrefix("$xsdPrefix:").let { n -> Primitive.values().firstOrNull { it.xsdName == n } }
-		}
+object Primitive {
+	@Serializable object AnyUri : Type("anyURI")
+	@Serializable object Base64Binary : Type("base64Binary")
+	@Serializable object Boolean : Type("boolean")
+	@Serializable object Date : Type("date")
+	@Serializable object Datetime : Type("dateTime")
+	@Serializable object Decimal : Type("decimal")
+	@Serializable object Double : Type("double")
+	@Serializable object Duration : Type("duration")
+	@Serializable object Float : Type("float")
+	@Serializable object HexBinary : Type("hexBinary")
+	@Serializable object GDay : Type("gDay")
+	@Serializable object GMonth : Type("gMonth")
+	@Serializable object GMonthDay : Type("gMonthDay")
+	@Serializable object GYear : Type("gYear")
+	@Serializable object GYearMonth : Type("gYearMonth")
+	@Serializable object Notation : Type("NOTATION")
+	@Serializable object QName : Type("QName")
+	@Serializable object String : Type("string")
+	@Serializable object Time : Type("time")
+
+	private val subclasses = listOf(
+		AnyUri,
+		Base64Binary,
+		Boolean,
+		Date,
+		Datetime,
+		Decimal,
+		Double,
+		Duration,
+		Float,
+		HexBinary,
+		GDay,
+		GMonth,
+		GMonthDay,
+		GYear,
+		GYearMonth,
+		Notation,
+		QName,
+		String,
+		Time
+	)
+
+	fun findPrimitive(name: kotlin.String, prefix: kotlin.String): Type? {
+		return name.removePrefix("$prefix:").let { n -> subclasses.firstOrNull { it.name == n } }
 	}
-}
-
-operator fun Primitive.invoke(): SimpleType {
-	return this.element()
 }

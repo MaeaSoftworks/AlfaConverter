@@ -7,13 +7,18 @@ import org.jdom2.Element as XsdElement
 
 @Serializable
 @SerialName("ComplexType")
-class ComplexType(
-	override val name: String,
-	@Transient
-	private val registration: ((TypePlaceholder) -> TypePlaceholder)? = null
-) : Type() {
+class ComplexType : Type {
 	val fields = mutableMapOf<String, Type>()
 	val attributes = mutableMapOf<String, Type>()
+	@Transient
+	private var registration: ((TypePlaceholder) -> TypePlaceholder)? = null
+
+	constructor(
+		name: String,
+		registration: ((TypePlaceholder) -> TypePlaceholder)? = null
+	) : super(name) {
+		this.registration = registration
+	}
 
 	override fun createInstance(): SerializableInstance {
 		val instance = SerializableInstance(name).also { it.type = this }
@@ -32,7 +37,7 @@ class ComplexType(
 			val fieldType: String? = field.getAttributeValue("type")
 			val refField: String? = field.getAttributeValue("ref")
 			if (fieldName != null && fieldType != null) {
-				fields[fieldName] = Primitive.findPrimitive(fieldType, prefix)?.element?.invoke()
+				fields[fieldName] = Primitive.findPrimitive(fieldType, prefix)
 					?: registration!!(TypePlaceholder(name, fieldType, fieldName = fieldName))
 			} else if (refField != null) {
 				fields[refField] = registration!!(TypePlaceholder(name, refField, true))
@@ -45,23 +50,8 @@ class ComplexType(
 		for (attribute in attributes) {
 			val attributeName = attribute.getAttributeValue("name")
 			val attributeType = attribute.getAttributeValue("type")
-			this.attributes[attributeName] = Primitive.findPrimitive(attributeType, prefix)?.element?.invoke()
+			this.attributes[attributeName] = Primitive.findPrimitive(attributeType, prefix)
 				?: registration!!(TypePlaceholder(name, attributeName, true))
-		}
-	}
-
-	fun build(builder: Builder.() -> Unit): ComplexType {
-		builder(this.Builder())
-		return this
-	}
-
-	inner class Builder {
-		infix fun String.of(type: Type) {
-			this@ComplexType.fields[this] = type
-		}
-
-		infix fun String.of(type: Primitive) {
-			this@ComplexType.fields[this] = type.element()
 		}
 	}
 }

@@ -7,7 +7,6 @@ import com.maeasoftworks.alfaconverter.core.conversions.actions.Split
 import com.maeasoftworks.alfaconverter.core.xml.structure.ComplexType
 import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 import com.maeasoftworks.alfaconverter.core.xml.structure.Primitive
-import com.maeasoftworks.alfaconverter.core.xml.structure.invoke
 import com.maeasoftworks.alfaconverter.models.XmlPreviewResponse
 import com.maeasoftworks.alfaconverter.plugins.serializer
 
@@ -26,24 +25,24 @@ class XmlModuleTest {
 	private val element = Element("root").also { root ->
 		root.type = ComplexType("root").also { rootType ->
 			rootType.fields["person"] = ComplexType("person").also { person ->
-				person.fields["firstname"] = Primitive.STRING()
-				person.fields["lastname"] = Primitive.STRING()
-				person.fields["middleName"] = Primitive.STRING()
-				person.fields["birthday"] = Primitive.DATE()
-				person.fields["age"] = Primitive.DECIMAL()
-				person.fields["address"] = Primitive.STRING()
-				person.fields["diagnosis"] = Primitive.STRING()
-				person.fields["researchType"] = Primitive.STRING()
+				person.fields["firstname"] = Primitive.String
+				person.fields["lastname"] = Primitive.String
+				person.fields["middleName"] = Primitive.String
+				person.fields["birthday"] = Primitive.Date
+				person.fields["age"] = Primitive.Decimal
+				person.fields["address"] = Primitive.String
+				person.fields["diagnosis"] = Primitive.String
+				person.fields["researchType"] = Primitive.String
 				person.fields["lab"] = ComplexType("lab").also { lab ->
-					lab.attributes["address"] = Primitive.STRING()
-					lab.attributes["name"] = Primitive.STRING()
-					lab.attributes["code"] = Primitive.STRING()
+					lab.attributes["address"] = Primitive.String
+					lab.attributes["name"] = Primitive.String
+					lab.attributes["code"] = Primitive.String
 				}
 				person.fields["analysis"] = ComplexType("analysis").also { analysis ->
-					analysis.attributes["dateStart"] = Primitive.DATE()
-					analysis.attributes["timeStart"] = Primitive.TIME()
-					analysis.attributes["dateComplete"] = Primitive.DATE()
-					analysis.attributes["timeComplete"] = Primitive.TIME()
+					analysis.attributes["dateStart"] = Primitive.Date
+					analysis.attributes["timeStart"] = Primitive.Time
+					analysis.attributes["dateComplete"] = Primitive.Date
+					analysis.attributes["timeComplete"] = Primitive.Time
 				}
 			}
 		}
