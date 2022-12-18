@@ -117,7 +117,7 @@ class Schema {
 		current: ColumnAddress? = null
 	) {
 		val pref = current ?: mutableListOf(type.name)
-		for (field in (type as ComplexType).fields) {
+		for (field in type.fields) {
 			if (field.value !is ComplexType) {
 				result += pref + field.key
 			} else {

@@ -7,7 +7,7 @@ import kotlinx.serialization.Transient
 
 @Serializable
 @SerialName("Type")
-sealed class Type(val name: String) : Cloneable {
+open class Type(var name: String) : Cloneable {
 	@Transient var dependent = 0
 	@Transient var value: Data? = null
 	@Transient var collection: List<Type>? = null
@@ -26,7 +26,7 @@ sealed class Type(val name: String) : Cloneable {
 	}
 
 	public override fun clone(): Type {
-		val clone: Type = Instance(name)
+		val clone = Type(name)
 		for (i in fields) {
 			clone.fields[i.key] = i.value.clone()
 		}
@@ -43,7 +43,7 @@ sealed class Type(val name: String) : Cloneable {
 	fun toXml() = toXml(null, null)
 
 	private fun toXml(targetName: String?, target: Target?): String {
-		if (Primitive.findPrimitive(name, ":") != null) {
+		if (Primitive.isPrimitive(name)) {
 			return when (target) {
 				Target.FIELD -> {
 					"<${targetName}>${
@@ -70,11 +70,4 @@ sealed class Type(val name: String) : Cloneable {
 			}
 		}
 	}
-
-
-	open fun createInstance(): Type {
-		return Instance(name)
-	}
-
-	class Instance(name: String): Type(name)
 }

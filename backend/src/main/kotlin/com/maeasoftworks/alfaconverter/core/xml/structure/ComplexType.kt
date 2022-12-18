@@ -18,17 +18,6 @@ class ComplexType : Type {
 		this.registration = registration
 	}
 
-	override fun createInstance(): Type {
-		val instance = Instance(name)
-		for (field in fields) {
-			instance.fields[field.key] = field.value.createInstance()
-		}
-		for (attribute in attributes) {
-			instance.attributes[attribute.key] = attribute.value.createInstance()
-		}
-		return instance
-	}
-
 	fun sequenceToFields(sequence: XsdElement, prefix: String) {
 		for (field in sequence.children) {
 			val fieldName: String? = field.getAttributeValue("name")

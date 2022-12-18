@@ -56,3 +56,56 @@ Developed by Mæa Softworks special for Alfa-Bank ❤
 | `xsd:simpleType`                      |   🚧   |
 | `xsd:union`                           |   🚧   |
 | `xsd:unique`                          |   ❌    |
+
+## `.xsd` recognizable primitives:
+| Name           | Status |
+|----------------|--------|
+| `string`       |        |
+| `boolean`      |        |
+| `decimal`      |        |
+| `float`        |        |
+| `double`       |        |
+| `duration`     |        |
+| `dateTime`     |        |
+| `time`         |        |
+| `date`         |        |
+| `gYearMonth`   |        |
+| `gYear`        |        |
+| `gMonthDay`    |        |
+| `gDay`         |        |
+| `gMonth`       |        |
+| `hexBinary`    |        |
+| `base64Binary` |        |
+| `anyURI`       |        |
+| `QName`        |        |
+| `NOTATION`     |        |
+
+
+## `.xsd` recognizable derived types:
+| Name                 | Status |
+|----------------------|--------|
+| `normalizedString`   |        |
+| `token`              |        |
+| `language`           |        |
+| `NMTOKEN`            |        |
+| `NMTOKENS`           |        |
+| `Name`               |        |
+| `NCName`             |        |
+| `ID`                 |        |
+| `IDREF`              |        |
+| `IDREFS`             |        |
+| `ENTITY`             |        |
+| `ENTITIES`           |        |
+| `integer`            |        |
+| `nonPositiveInteger` |        |
+| `negativeInteger`    |        |
+| `long`               |        |
+| `int`                |        |
+| `short`              |        |
+| `byte`               |        |
+| `nonNegativeInteger` |        |
+| `unsignedLong`       |        |
+| `unsignedInt`        |        |
+| `unsignedShort`      |        |
+| `unsignedByte`       |        |
+| `positiveInteger`    |        |
