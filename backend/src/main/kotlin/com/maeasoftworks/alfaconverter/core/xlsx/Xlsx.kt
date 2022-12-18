@@ -1,5 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.xlsx
 
+import com.maeasoftworks.alfaconverter.core.Converter
 import com.maeasoftworks.alfaconverter.core.model.Modifier
 import com.maeasoftworks.alfaconverter.core.model.Result
 import com.maeasoftworks.alfaconverter.core.model.Source
@@ -32,9 +33,9 @@ class Xlsx : Source, Modifier, Result {
 	// modifier
 	override fun getAdditionalData() = null
 
-	override fun initialize(modifier: Modifier?) {
+	override fun initialize(parent: Converter<*, *, *>) {
 		table = Table().fill {
-			for (column in modifier!!.getHeaders()) {
+			for (column in parent.modifier!!.getHeaders()) {
 				column(column)
 			}
 		}

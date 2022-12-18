@@ -8,9 +8,12 @@ import kotlinx.serialization.Transient
 @Serializable
 @SerialName("Type")
 sealed class Type(val name: String) : Cloneable {
-	@Transient var dependent = 0
-	@Transient var value: Data? = null
-	@Transient var collection: List<Type>? = null
+	@Transient
+	var dependent = 0
+	@Transient
+	var value: Data? = null
+	@Transient
+	var collection: List<Type>? = null
 	val fields = mutableMapOf<String, Type>()
 	val attributes = mutableMapOf<String, Type>()
 
@@ -76,5 +79,5 @@ sealed class Type(val name: String) : Cloneable {
 		return Instance(name)
 	}
 
-	class Instance(name: String): Type(name)
+	class Instance(name: String) : Type(name)
 }

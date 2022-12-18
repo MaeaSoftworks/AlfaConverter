@@ -12,7 +12,7 @@ class Join(
 	private val targetColumn: ColumnAddress,
 	private val patterns: List<String>,
 	private val regexp: String
-): Action() {
+) : Action() {
 	override fun run(initialTable: Table, resultTable: Table) {
 		if (sourceColumns.size == 1) {
 			runSplit(initialTable, resultTable)
@@ -22,7 +22,7 @@ class Join(
 	}
 
 	private fun runSplit(initialTable: Table, resultTable: Table) {
-		
+
 	}
 
 	private fun runMergeAndSplit(initialTable: Table, resultTable: Table) {

@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.xml
 
-import com.maeasoftworks.alfaconverter.core.model.Modifier
+import com.maeasoftworks.alfaconverter.core.Converter
 import com.maeasoftworks.alfaconverter.core.model.Result
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.xml.structure.Element
@@ -14,7 +14,7 @@ class Xml(element: Element) : Result {
 			schema.table = value
 		}
 
-	override fun initialize(modifier: Modifier?) {}
+	override fun initialize(parent: Converter<*, *, *>) {}
 
 	override fun convert() = schema.save().toByteArray()
 }

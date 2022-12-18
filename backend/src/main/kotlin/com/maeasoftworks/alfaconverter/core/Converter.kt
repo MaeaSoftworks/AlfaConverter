@@ -12,6 +12,10 @@ class Converter<S : Source, M : Modifier?, R : Result?>(
 	val result: R,
 	val conversion: Conversion = Conversion()
 ) {
+	init {
+		result?.initialize(this)
+	}
+
 	fun executeActions() {
 		for (action in conversion.actions.indices) {
 			conversion.actions[0].run(source.table, result!!.table)
@@ -19,10 +23,7 @@ class Converter<S : Source, M : Modifier?, R : Result?>(
 		}
 	}
 
-	fun initializeResultTable() = result?.initialize(modifier)
-
 	fun convert(): ByteArray {
-		initializeResultTable()
 		executeActions()
 		return result!!.convert()
 	}
