@@ -48,10 +48,6 @@ class XmlTests {
 		})
 	)
 
-	init {
-		converter.initializeResultTable()
-	}
-
 	@Test
 	fun `all types detected`() {
 		assertEquals(5, schema.types.size, "Expected 4 types")

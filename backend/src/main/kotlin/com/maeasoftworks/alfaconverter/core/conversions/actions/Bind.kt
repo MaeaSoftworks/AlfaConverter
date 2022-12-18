@@ -5,7 +5,15 @@ import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import com.maeasoftworks.alfaconverter.core.model.Source
+import com.maeasoftworks.alfaconverter.core.model.Result
 
+/**
+ * Action that moves all data from [initialColumn] to [targetColumn].
+ * @param initialColumn address of column in [Source] table that will be bound.
+ * @param targetColumn address of column in [Result] table that will be filled.
+ * @constructor Creates new instance.
+ */
 @Serializable
 @SerialName("bind")
 class Bind(

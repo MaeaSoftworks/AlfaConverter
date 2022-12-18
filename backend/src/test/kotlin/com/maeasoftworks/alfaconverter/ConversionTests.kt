@@ -22,10 +22,6 @@ class ConversionTests {
 		result = Xlsx()
 	)
 
-	init {
-		converter.initializeResultTable()
-	}
-
 	private val result: Table
 		get() = converter.result.table
 

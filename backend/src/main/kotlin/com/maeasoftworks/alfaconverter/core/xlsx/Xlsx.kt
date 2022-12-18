@@ -34,10 +34,10 @@ class Xlsx : Source, Modifier, Result {
 	override fun getAdditionalData() = null
 
 	override fun initialize(parent: Converter<*, *, *>) {
-		table = Table().fill {
-			for (column in parent.modifier!!.getHeaders()) {
-				column(column)
-			}
+		table = Table()
+		for (column in parent.modifier!!.getHeaders()) {
+			table.columns += Table.Column(column)
+			table.headers += column
 		}
 	}
 

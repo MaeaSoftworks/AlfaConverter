@@ -32,10 +32,10 @@ class Schema {
 
 	constructor(schema: Element) {
 		elements = mutableListOf(schema)
-		table = Table().fill {
-			for (header in convertElementsToHeaders()) {
-				column(header)
-			}
+		table = Table()
+		for (header in convertElementsToHeaders()) {
+			table.columns += Table.Column(header)
+			table.headers += header
 		}
 	}
 

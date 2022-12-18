@@ -8,7 +8,7 @@ import com.maeasoftworks.alfaconverter.core.xml.Xsd
 import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 import com.maeasoftworks.alfaconverter.models.XmlPreviewResponse
 import com.maeasoftworks.alfaconverter.services.Extension
-import com.maeasoftworks.alfaconverter.services.require
+import com.maeasoftworks.alfaconverter.services.with
 import com.maeasoftworks.alfaconverter.utils.asByteArray
 import com.maeasoftworks.alfaconverter.utils.deserializeTo
 import com.maeasoftworks.alfaconverter.utils.extractParts
@@ -23,8 +23,8 @@ fun Application.xmlModule() {
 		route("/api/xml") {
 			post("preview") {
 				val (source, modifier) = call.receiveMultipart().extractParts(
-					"source" to { it.asByteArray() require Extension.XLSX },
-					"modifier" to { it.asByteArray() require Extension.XML }
+					"source" to { it.asByteArray() with Extension.XLSX },
+					"modifier" to { it.asByteArray() with Extension.XML }
 				)
 				val xmlConverter = Converter(Xlsx(source), Xsd(modifier))
 				val response = XmlPreviewResponse(
@@ -38,11 +38,11 @@ fun Application.xmlModule() {
 
 			post("/convert") {
 				val (source, schema, conversion) = call.receiveMultipart().extractParts(
-					"source" to { it.asByteArray() require Extension.XLSX },
+					"source" to { it.asByteArray() with Extension.XLSX },
 					"schema" to { it.deserializeTo<Element>() },
 					"conversion" to { it.deserializeTo<Conversion>() }
 				)
-				val response = Converter(source = Xlsx(source), result = Xml(schema), conversion = conversion).convert()
+				val response = Converter(Xlsx(source), Xml(schema), conversion).convert()
 				call.respondText(String(response), ContentType.Text.Xml)
 			}
 		}
