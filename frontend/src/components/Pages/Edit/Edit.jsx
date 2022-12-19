@@ -23,6 +23,8 @@ const Edit = () => {
     const [shouldRedirect, setShouldRedirect] = useState(false);
     const [requestBody, setRequestBody] = useState("");
 
+    const [isResponseOk, setIsResponseOk] = useState(true);
+
     const navigate = useNavigate();
 
     React.useEffect(() => {
@@ -288,7 +290,7 @@ const Edit = () => {
             if (('to-' + merge) in outerActions) {
                 res['pattern'] = outerActions['to-' + merge].pattern;
             } else {
-                res['pattern'] = merges[merge].map(number => "$" + number).join(' ');
+                res['pattern'] = merges[merge].map((number, index) => "${" + index + "}").join(' ');
             }
 
             if (('to-' + merge + '-cast') in outerActions) {
@@ -302,6 +304,45 @@ const Edit = () => {
         console.log(JSON.stringify(actionObj));
         // setRequestBody(JSON.stringify(actionObj));
         // setShouldRedirect(true);
+
+        downloadResult(JSON.stringify(actionObj));
+    };
+
+    const downloadResult = (conversion) => {
+        var formdata = new FormData();
+        formdata.append("conversion", conversion);
+        formdata.append("source", fileFrom, fileFrom.name);
+        formdata.append("modifier", fileTo, fileTo.name);
+
+        var requestOptions = {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        let status = 200;
+
+        fetch("http://127.0.0.1:8080/api/xlsx/convert", requestOptions)
+            .then(response => {
+                console.log(response);
+                status = response.status;
+                return response.blob();
+            })
+            .then(result => {
+                if (status === 200) {
+                    setIsResponseOk(true);
+                    console.log(result);
+                    const url = window.URL.createObjectURL(new Blob([result]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `${Date.now()}.xlsx`);
+                    document.body.appendChild(link);
+                    link.click();
+                } else if (status === 500) {
+                    setIsResponseOk(false);
+                }
+            })
+            .catch(error => console.log('error', error));
     };
 
     const breakCurrentUnattachedArrow = () => {
@@ -521,6 +562,8 @@ const Edit = () => {
                         <li>
                             {/*<Link to='/result'>*/}
                             <button className={css.apply_button} onClick={apply}>Преобразовать</button>
+                            <p className={isResponseOk ? css.server_error_hidden : css.server_error_showed}>Ошибка во время
+                                обработки файла на сервере. Возможно, вы указали невозможное преобразование</p>
                             {/*</Link>*/}
                         </li>
                     </ul>
