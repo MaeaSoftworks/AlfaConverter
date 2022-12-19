@@ -228,6 +228,11 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
         setActiveIndex(-1);
     };
 
+    const cancelSplitPopup = (event) => {
+        setActive(!active);
+        setActiveIndex(-1);
+    };
+
     const decorateOutput = (input) => {
         return input.map(token => "«" + token + "»").join(", ");
     };
@@ -256,13 +261,11 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
                     <div className={css.data_input_block}>
                         <p className={css.data_input_element}>Символ на всю группу</p>
                         <span style={{whiteSpace: 'pre'}}>{`«${values.multigroupSplitter === " " ? "Пробел" : values.multigroupSplitter}»`}</span>
-                        <input id="all" className={css.data_input_element} type="text" onChange={handleChange}
+                        <input id="all" className={css.data_input_field} type="text" onChange={handleChange}
                                defaultValue={values.multigroupSplitter}
                                disabled={chosenGroup === 0}></input>
                     </div>
                 </div>
-
-                {/*<hr className={css.horizontal_ruler}/>*/}
 
                 <div className={css.splitters_group}>
                     <h2 className={css.header_middle}>Символ каждой группы</h2>
@@ -271,14 +274,15 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
                             <p className={css.data_input_element}>Отделяем {col}</p>
                             <span
                                 style={{whiteSpace: 'pre'}}>{`«${values[col] === " " ? "Пробел" : values[col]}»`}</span>
-                            <input id={`${index}`} className={css.data_input_element} type="text"
+                            <input id={`${index}`} className={css.data_input_field} type="text"
                                    onChange={handleChange}
                                    defaultValue={values[col]}
                                    disabled={chosenGroup === 1}></input>
                         </div>
                     )}
-
                 </div>
+
+                <hr className={css.horizontal_ruler}/>
 
                 <div className={css.example}>
                     <p>Строка:</p>
@@ -289,8 +293,13 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
                     <p>{`${decorateOutput(exampleStringResult)}`}</p>
                 </div>
 
-                <button id="getResult" onClick={applySplitParameters} className={css.apply_button}>Подтвердить</button>
+                {/*<button id="getResult" onClick={initPopupValues}>Подтвердить</button>*/}
 
+                <div className={css.button_block}>
+                    <button id="getResult" onClick={applySplitParameters} className={css.apply_button}>Подтвердить
+                    </button>
+                    <button id="getResult" onClick={cancelSplitPopup} className={css.cancel_button}>Отмена</button>
+                </div>
             </div>
         </div>
     );

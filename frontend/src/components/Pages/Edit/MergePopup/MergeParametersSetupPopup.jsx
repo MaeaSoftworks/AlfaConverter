@@ -1,7 +1,15 @@
 import React, {useState, useEffect} from "react";
 import css from "./MergeParametersSetupPopup.module.css";
 
-const MergeParametersSetupPopup = ({active, setActive, setActiveIndex, toIndex, bundle, outerActions, setOuterActions}) => {
+const MergeParametersSetupPopup = ({
+                                       active,
+                                       setActive,
+                                       setActiveIndex,
+                                       toIndex,
+                                       bundle,
+                                       outerActions,
+                                       setOuterActions
+                                   }) => {
 
     const columnsFromFile = bundle[0];
     const columnsToFile = bundle[1];
@@ -15,7 +23,7 @@ const MergeParametersSetupPopup = ({active, setActive, setActiveIndex, toIndex, 
     const [formColumns, setFormColumns] = useState([]);
     const [chosenGroup, setDisabledGroup] = useState(1);
 
-    const [resultLength,setResultLength] = useState(-1);
+    const [resultLength, setResultLength] = useState(-1);
 
     const [castTargetType, setCastTargetType] = useState("String");
 
@@ -42,22 +50,22 @@ const MergeParametersSetupPopup = ({active, setActive, setActiveIndex, toIndex, 
         if (values.multigroupSplitter !== '') {
             result = [];
             let i = -1;
-            for(let key in values) {
+            for (let key in values) {
                 result.push('${' + i + '}');
                 result.push(values.multigroupSplitter);
                 i++;
             }
-            result = result.slice(2, result.length-1).join('');
+            result = result.slice(2, result.length - 1).join('');
 
         } else {
             result = [];
             let i = -1;
-            for(let key in values) {
+            for (let key in values) {
                 result.push('${' + i + '}');
                 result.push(values[key]);
                 i++;
             }
-            result = result.slice(2, result.length-1).join('');
+            result = result.slice(2, result.length - 1).join('');
         }
 
         console.log('result');
@@ -66,7 +74,7 @@ const MergeParametersSetupPopup = ({active, setActive, setActiveIndex, toIndex, 
         let index = columnsFromFile.map(element => element[0][0]);
         let endIndex = columnsToFile.map(element => element[0][0]);
         let sources = [];
-        for(let key in values) {
+        for (let key in values) {
             sources.push(index.indexOf(key));
         }
         sources = sources.slice(1, sources.length);
@@ -112,14 +120,14 @@ const MergeParametersSetupPopup = ({active, setActive, setActiveIndex, toIndex, 
         let result = exampleStringSource.join(values.multigroupSplitter);
 
         console.log('setValues ->', vals);
-        console.log('setResultLength -> ',formCols.length);
-        console.log('setFormColumns -> ',formCols.slice(0, formCols.length-1));
-        console.log('setExampleStringSource -> ',[...exampleStringSource]);
-        console.log('setExampleStringResult -> ',result);
+        console.log('setResultLength -> ', formCols.length);
+        console.log('setFormColumns -> ', formCols.slice(0, formCols.length - 1));
+        console.log('setExampleStringSource -> ', [...exampleStringSource]);
+        console.log('setExampleStringResult -> ', result);
 
         setValues(structuredClone(vals));
         setResultLength(formCols.length);
-        setFormColumns(formCols.slice(0, formCols.length-1));
+        setFormColumns(formCols.slice(0, formCols.length - 1));
         setExampleStringSource([...exampleStringSource]);
         setExampleStringResult(result);
         // setAboba(result);
@@ -216,6 +224,11 @@ const MergeParametersSetupPopup = ({active, setActive, setActiveIndex, toIndex, 
         setActiveIndex(-1);
     };
 
+    const cancelMergePopup = (event) => {
+        setActive(!active);
+        setActiveIndex(-1);
+    };
+
     const decorateOutput = (input) => {
         return input.map(token => "«" + token + "»").join(", ");
     };
@@ -228,9 +241,9 @@ const MergeParametersSetupPopup = ({active, setActive, setActiveIndex, toIndex, 
     return (
         <div className={active ? css.popup : css.hide}
              onClick={e => {
-            setActive(!active);
-            setActiveIndex(-1);
-        }}
+                 setActive(!active);
+                 setActiveIndex(-1);
+             }}
              onKeyDown={e => {
                  console.log(e.key);
                  if (e.key === 'Escape') {
@@ -249,8 +262,9 @@ const MergeParametersSetupPopup = ({active, setActive, setActiveIndex, toIndex, 
                     <h2 className={css.header_middle}>Символ на всю группу</h2>
                     <div className={css.data_input_block}>
                         <p className={css.data_input_element}>Символ на всю группу</p>
-                        <span style={{whiteSpace: 'pre'}}>{`«${values.multigroupSplitter === " " ? "Пробел" : values.multigroupSplitter}»`}</span>
-                        <input id="all" className={css.data_input_element} type="text" onChange={handleChange}
+                        <span
+                            style={{whiteSpace: 'pre'}}>{`«${values.multigroupSplitter === " " ? "Пробел" : values.multigroupSplitter}»`}</span>
+                        <input id="all" className={css.data_input_field} type="text" onChange={handleChange}
                                defaultValue={values.multigroupSplitter}
                                disabled={chosenGroup === 0}></input>
                     </div>
@@ -265,7 +279,7 @@ const MergeParametersSetupPopup = ({active, setActive, setActiveIndex, toIndex, 
                             <p className={css.data_input_element}>Символ после {formColumns[index]}</p>
                             <span
                                 style={{whiteSpace: 'pre'}}>{`«${values[col] === " " ? "Пробел" : values[col]}»`}</span>
-                            <input id={`${index}`} className={css.data_input_element} type="text"
+                            <input id={`${index}`} className={css.data_input_field} type="text"
                                    onChange={handleChange}
                                    defaultValue={values[col]}
                                    disabled={chosenGroup === 1}></input>
@@ -273,6 +287,8 @@ const MergeParametersSetupPopup = ({active, setActive, setActiveIndex, toIndex, 
                     )}
 
                 </div>
+
+                <hr className={css.horizontal_ruler}/>
 
                 <div className={css.example}>
                     <p>Строка:</p>
@@ -295,8 +311,12 @@ const MergeParametersSetupPopup = ({active, setActive, setActiveIndex, toIndex, 
                 </div>
 
                 {/*<button id="getResult" onClick={initPopupValues}>Подтвердить</button>*/}
-                <button id="getResult" onClick={applyMergeParameters} className={css.apply_button}>Подтвердить</button>
 
+                <div className={css.button_block}>
+                    <button id="getResult" onClick={applyMergeParameters} className={css.apply_button}>Подтвердить
+                    </button>
+                    <button id="getResult" onClick={cancelMergePopup} className={css.cancel_button}>Отмена</button>
+                </div>
             </div>
         </div>
     );
