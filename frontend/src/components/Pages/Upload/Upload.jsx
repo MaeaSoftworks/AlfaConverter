@@ -176,7 +176,7 @@ const Upload = () => {
                 <form onSubmit={onSubmit} className={css.form}>
 
                     <div className={css.file_button_container}>
-                        <label htmlFor="source_file" className={css.file_input_label}>
+                        <label htmlFor="source_file" className={`${css.file_input_label} ${isFileFromLegit ? css.file_input_label_loaded : ''}`}>
                             Выбрать исходный файл
                         </label>
                         <p className={css.file_input_description}>или перетащите файл сюда</p>
@@ -189,7 +189,7 @@ const Upload = () => {
                         или меньше</p>
 
                     <div className={css.file_button_container}>
-                        <label htmlFor="template_file" className={css.file_input_label}>
+                        <label htmlFor="template_file" className={`${css.file_input_label} ${isFileToLegit ? css.file_input_label_loaded : ''}`}>
                             Выбрать структуру
                         </label>
                         <p className={css.file_input_description}>или перетащите файл сюда</p>

@@ -73,6 +73,10 @@
     letter-spacing: 0.015em;
 }
 
+.file_input_label_loaded {
+    background: #EF3124;
+}
+
 .file_input_description {
     font-family: Segoe UI;
     font-size: 16px;

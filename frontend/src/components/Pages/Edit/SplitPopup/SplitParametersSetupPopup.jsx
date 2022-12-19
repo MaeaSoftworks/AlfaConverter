@@ -8,7 +8,6 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
     const arrows = bundle[2];
     const zip = bundle[3];
     const [values, setValues] = useState({multigroupSplitter: " ",});
-    const [splitPattern, setSplitPattern] = useState('');
     const [exampleStringSource, setExampleStringSource] = useState("");
     const [exampleStringResult, setExampleStringResult] = useState([]);
 
@@ -16,14 +15,6 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
     const [chosenGroup, setDisabledGroup] = useState(1);
 
     const [resultLength,setResultLength] = useState(-1);
-
-    const splitWithTail = (str, delim, count) => {
-        let parts = str.split(delim);
-        let tail = parts.slice(count).join(delim);
-        let result = parts.slice(0, count);
-        result.push(tail);
-        return result;
-    };
 
     useEffect(() => {
         initPopupValues();
@@ -63,17 +54,17 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
         }
         console.log(result);
 
-        let index = columnsToFile.map(element => element[0]);
+        let index = columnsFromFile.map(element => element[0][0]);
         let sources = [];
         for(let key in values) {
-            sources.push(index.indexOf(key));
+            sources.push([key]);
         }
         sources = sources.slice(1, sources.length);
 
         let resultNode = {
             "type": "split",
-            "initial-column": fromIndex,
-            "target-columns": sources,
+            "initialColumn": [index[fromIndex]],
+            "targetColumns": [sources],
             "pattern": result
         };
 
@@ -89,20 +80,18 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
 
     const initPopupValues = () => {
         let start = columnsFromFile[fromIndex];
-        let exampleStringSource = zip[columnsFromFile[fromIndex][0]];
+        let exampleStringSrc = zip[columnsFromFile[fromIndex][0]];
         let mappedArrows = arrows.map(node => [Number(node[0].replace('from-', '')), Number(node[1].replace('to-', ''))]);
         let filteredArrows = mappedArrows.filter(node => node[0] === fromIndex);
         let formCols = columnsToFile.map((value, index) => filteredArrows.flat().includes(index) ? value : undefined)
             .filter(value => value).map(value => value[0]);
         // setFormColumns(formCols);
 
-        formCols.forEach(value => values[value] = values[value] || "");
-        setValues(values);
-        setResultLength(formCols.length);
-        setFormColumns(formCols.slice(0, formCols.length-1));
-        setExampleStringSource(exampleStringSource);
+        let vals = structuredClone(values);
+        formCols.forEach(value => vals[value] = vals[value] || "");
 
-        let result = exampleStringSource.split(' ');
+
+        let result = exampleStringSrc.split(' ');
         if (result.length < formCols.length) {
             console.log('result.length', result.length);
             console.log('resultLength', resultLength);
@@ -110,15 +99,50 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
                 result.push('');
             }
         }
-        setExampleStringResult(result);
 
-        console.log('start', start);
+        console.log('setValues ->', vals);
+        console.log('setResultLength -> ',formCols.length);
+        console.log('setFormColumns -> ',formCols.slice(0, formCols.length-1));
+        console.log('setExampleStringSource -> ',exampleStringSrc);
+        console.log('setExampleStringResult -> ',[...result]);
+
+        setValues(structuredClone(vals));
+        setResultLength(formCols.length);
+        setFormColumns(formCols.slice(0, formCols.length-1));
+        setExampleStringSource(exampleStringSrc);
+        setExampleStringResult([...result]);
+
+        logState('init popup values');
+
+        // console.log('start', start);
+        // console.log('exampleStringSrc', exampleStringSrc);
+        // // console.log('fromIndex', fromIndex);
+        // // console.log('columnsFromFile', columnsFromFile[fromIndex][0]);
+        // console.log('mappedArrows', mappedArrows);
+        // console.log('filteredArrows', filteredArrows);
+        // console.log('formCols', formCols);
+
+        // console.log('============================================');
+        // console.log('mappedArrows', mappedArrows);
+        // console.log('filteredArrows', filteredArrows);
+        // console.log('columnsFromFile', columnsFromFile);
+        // console.log('formCols', formCols);
+        // console.log('formColumns', formColumns);
+        // console.log('values', values);
+        // console.log('exampleStringSrc', exampleStringSrc);
+        // console.log('exampleStringSource', exampleStringSource);
+        // console.log('exampleStringResult', exampleStringResult);
+        // console.log('============================================');
+    };
+
+    const logState = (from) => {
+        console.log('============= LOGSTATE from:' + from + '========================');
+        console.log('values', values);
+        console.log('resultLength', resultLength);
+        console.log('formColumns', formColumns);
         console.log('exampleStringSource', exampleStringSource);
-        // console.log('fromIndex', fromIndex);
-        // console.log('columnsFromFile', columnsFromFile[fromIndex][0]);
-        console.log('mappedArrows', mappedArrows);
-        console.log('filteredArrows', filteredArrows);
-        console.log('formCols', formCols);
+        console.log('exampleStringResult', exampleStringResult);
+        console.log('============================================');
     };
 
     function updateResult() {

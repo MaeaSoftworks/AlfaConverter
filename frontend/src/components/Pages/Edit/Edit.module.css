@@ -6,7 +6,7 @@
 }
 
 .header {
-    background: linear-gradient(180deg, rgba(128, 171, 255, 0.34) 0%, rgba(128, 171, 255, 0) 155.44%);
+    background: linear-gradient(180deg, rgba(234, 91, 91, 0.8) 0%, rgba(234, 91, 91, 0.128) 100%);
     padding-top: 140px;
     display: flex;
     justify-content: center;
@@ -89,6 +89,10 @@
 
 }
 
+.struct_block_container {
+    position: relative;
+}
+
 .struct_block {
     /*box-shadow:*/
     /*        2px 0 0 0 #888,*/
@@ -96,6 +100,10 @@
     /*        2px 2px 0 0 #888,   !* Just to fix the corner *!*/
     /*        2px 0 0 0 #888 inset,*/
     /*        0 2px 0 0 #888 inset;*/
+    max-width: 165px;
+    width: 165px;
+    /*position: relative;*/
+
     outline: black solid 1px;
     background: white;
     padding: 17px;
@@ -118,6 +126,76 @@
     pointer-events: none;
 }
 
+.from_point {
+    content: "";
+    display: block;
+    position: absolute;
+    /*margin-left: -18%;*/
+    /*margin-top: 100%;*/
+    top: 41%;
+    left: 98%;
+    border-radius: 50%;
+    height:10px;
+    width:10px;
+    visibility: hidden;
+}
+
+.to_point {
+    content: "";
+    display: block;
+    position: absolute;
+    /*margin-left: -18%;*/
+    /*margin-top: 100%;*/
+    top: 43%;
+    left: -3%;
+    border-radius: 50%;
+    height:10px;
+    width:10px;
+    visibility: hidden;
+}
+
+.split_point {
+    background-color: #FFB580;
+    outline-style: solid;
+    outline-color: #000000;
+    outline-width: 1px;
+    z-index: 2;
+    visibility: visible;
+}
+
+.merge_point {
+    background-color: #809CFF;
+    outline-style: solid;
+    outline-color: #000000;
+    outline-width: 1px;
+    z-index: 2;
+    visibility: visible;
+}
+
+.connect_point {
+    background-color: gray;
+    outline-style: solid;
+    outline-color: #000000;
+    outline-width: 1px;
+    z-index: 2;
+    visibility: visible;
+}
+
+/*.struct_block::after {*/
+/*    content: "";*/
+/*    display: block;*/
+/*    position: absolute;*/
+/*    !*margin-left: -18%;*!*/
+/*    !*margin-top: 100%;*!*/
+/*    top: 45%;*/
+/*    left: -3%;*/
+/*    border-radius: 50%;*/
+/*    height:10px;*/
+/*    width:10px;*/
+/*    background-color: red;*/
+/*    z-index: 999;*/
+/*}*/
+
 .struct_input:focus, .struct_input:active {
     border: none;
     outline: none;
@@ -129,8 +207,8 @@
 
 .popup_trigger {
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     border: none;
 }
 
@@ -139,15 +217,32 @@
 }
 
 .split_popup_trigger {
-    margin-left: -120px;
-    margin-top: -20px;
-    background-color: lightgreen;
+    left: -20%;
+    top: 30%;
+    background-color: #FFB580;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #FFD5B7;
+    border-radius: 50%;
+    background-image: url("popup_settings.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-clip: border-box;
 }
 
 .merge_popup_trigger {
-    margin-left: 150px;
-    margin-top: -20px;
-    background-color: lightblue;
+    /*margin-left: 220px;*/
+    left: 107%;
+    top: 30%;
+    background-color: #809CFF;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #B4C4FF;
+    border-radius: 50%;
+    background-image: url("popup_settings.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-clip: border-box;
 }
 
 .control_panel {
