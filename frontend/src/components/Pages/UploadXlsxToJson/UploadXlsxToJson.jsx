@@ -135,7 +135,7 @@ const UploadXlsxToJson = () => {
                     let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(prettyJsonString);
                     let dlAnchorElem = document.createElement('a');
                     dlAnchorElem.setAttribute("href",     dataStr     );
-                    dlAnchorElem.setAttribute("download", "scene.txt");
+                    dlAnchorElem.setAttribute("download", `${Date.now()}.json`);
                     dlAnchorElem.click();
                     setIsResponseOk(true);
                 } else if (status === 500) {
