@@ -1,11 +1,11 @@
-import css from "../Result/Result.module.css";
-import upload_img from "../UploadXlsxXlsx/upload_image.png";
+import css from "./ResultXlsxToJson.module.css";
+import upload_img from "../UploadXlsxToXlsx/upload_image.png";
 import {Link, useLocation} from 'react-router-dom';
 import back_arrow_img from './back_arrow.svg';
 import {useState} from "react";
 
 
-const Result = () => {
+const ResultXlsxlToJson = () => {
 
     const {state} = useLocation();
     const requestBody = state.requestBody;
@@ -70,4 +70,4 @@ const Result = () => {
     );
 };
 
-export default Result;
+export default ResultXlsxlToJson;

@@ -1,4 +1,4 @@
-import css from './Edit.module.css';
+import css from './EditXlsxToXlsx.module.css';
 import upload_image from './upload_header_laptop_img.png';
 import connection_light from './connection_light_bg.png';
 import split_light from './split_light_bg.png';
@@ -10,7 +10,7 @@ import React, {useEffect, useId, useState} from "react";
 import SplitParametersSetupPopup from "./SplitPopup/SplitParametersSetupPopup";
 import MergeParametersSetupPopup from "./MergePopup/MergeParametersSetupPopup";
 
-const Edit = () => {
+const EditXlsxToXlsx = () => {
 
     const {state} = useLocation();
     const columns = state.columns;
@@ -573,4 +573,4 @@ const Edit = () => {
     );
 };
 
-export default Edit;
+export default EditXlsxToXlsx;

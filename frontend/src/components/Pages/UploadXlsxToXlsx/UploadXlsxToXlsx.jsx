@@ -1,10 +1,10 @@
-import css from './Upload.module.css';
+import css from './UploadXlsxToXlsx.module.css';
 import {useNavigate} from "react-router-dom";
 import upload_img from './upload_image.png';
 import React, {useState, useEffect} from 'react';
-import result from "../Result/Result";
+import result from "../ResultXlsxToJson/ResultXlsxlToJson";
 
-const Upload = () => {
+const UploadXlsxToXlsx = () => {
 
     const [shouldRedirect, setShouldRedirect] = useState(false);
     let documentColumns = [];
@@ -213,4 +213,4 @@ const Upload = () => {
     );
 };
 
-export default Upload;
+export default UploadXlsxToXlsx;
