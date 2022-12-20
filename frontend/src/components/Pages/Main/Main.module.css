@@ -47,6 +47,10 @@
     margin-left: 20%;
     margin-bottom: 100px;
     border-radius: 25px;
+    width: fit-content;
+    height: 200px;
+
+    border: 1px solid #A4A2A2;
 }
 
 .choose_element {
@@ -72,6 +76,11 @@
 .choose_element:last-of-type {
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
+}
+
+.vertical_splitter {
+    width: 1px;
+    background-color: #A4A2A2;
 }
 
 .element_header {

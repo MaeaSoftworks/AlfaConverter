@@ -17,10 +17,12 @@ const Main = () => {
                     <h1 className={css.element_header}>XLSX в XLSX</h1>
                     <p className={css.element_description}>Преобразование ваших таблиц в таблицу с необходимой структурой</p>
                 </NavLink>
+                <div className={css.vertical_splitter}/>
                 <NavLink to='/upload' className={css.choose_element}>
                     <h1 className={css.element_header}>XLSX в XML</h1>
                     <p className={css.element_description}>Конвертируйте ваши XLSX файлы в легко редактируемые XML файлы</p>
                 </NavLink>
+                <div className={css.vertical_splitter}/>
                 <NavLink to='/upload' className={css.choose_element}>
                     <h1 className={css.element_header}>XLSX в JSON</h1>
                     <p className={css.element_description}>Конвертируйте ваши XLSX файлы в легко редактируемые JSON файлы</p>
