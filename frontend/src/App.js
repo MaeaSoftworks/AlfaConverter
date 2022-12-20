@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import Result from "./components/Pages/Result/Result";
 import Edit from "./components/Pages/Edit/Edit";
-import Upload from "./components/Pages/Upload/Upload";
+import Upload from "./components/Pages/UploadXlsxXlsx/Upload";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import Main from "./components/Pages/Main/Main";
