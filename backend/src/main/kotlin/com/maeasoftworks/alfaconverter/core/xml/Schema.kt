@@ -32,10 +32,10 @@ class Schema {
 
 	constructor(schema: Element) {
 		elements = mutableListOf(schema)
-		table = Table().fill {
-			for (header in convertElementsToHeaders()) {
-				column(header)
-			}
+		table = Table()
+		for (header in convertElementsToHeaders()) {
+			table.columns += Table.Column(header)
+			table.headers += header
 		}
 	}
 
@@ -135,9 +135,9 @@ class Schema {
 	}
 
 	fun save(): String {
-		val root = elements.first().createInstance()
+		val root = elements.first().type
 		val example = root.fields.values.first()
-		val instances = mutableListOf<SerializableInstance>()
+		val instances = mutableListOf<Type>()
 		for (y in 0 until table.rowsCount) {
 			val instance = example.clone()
 			instances += instance

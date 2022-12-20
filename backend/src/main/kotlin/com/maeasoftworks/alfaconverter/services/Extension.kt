@@ -41,4 +41,4 @@ enum class Extension(private val tika: String) {
  * @return validated file if all checks was passed
  * @throws IncorrectFileException if file was empty or file format was not expected
  */
-infix fun ByteArray.require(expected: Extension) = Extension.validate(this, expected)
+infix fun ByteArray.with(expected: Extension) = Extension.validate(this, expected)

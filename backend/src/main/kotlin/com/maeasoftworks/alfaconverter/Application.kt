@@ -1,5 +1,6 @@
 package com.maeasoftworks.alfaconverter
 
+import com.maeasoftworks.alfaconverter.modules.jsonModule
 import com.maeasoftworks.alfaconverter.modules.xlsxModule
 import com.maeasoftworks.alfaconverter.modules.xmlModule
 import com.maeasoftworks.alfaconverter.plugins.configureHTTP
@@ -18,4 +19,5 @@ fun Application.module() {
 	configureStatusPages()
 	xlsxModule()
 	xmlModule()
+	jsonModule()
 }

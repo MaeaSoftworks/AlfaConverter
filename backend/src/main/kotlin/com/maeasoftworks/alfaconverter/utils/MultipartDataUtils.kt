@@ -21,12 +21,16 @@ suspend fun MultiPartData.extractParts(vararg parts: String): List<PartData> {
 	return parts.map { result[it]!! }.toList()
 }
 
+suspend inline fun <T1> MultiPartData.extractParts(
+	part: Pair<String, (PartData) -> T1>
+): T1 = part.second(extractParts(part.first)[0])
+
 suspend inline fun <T1, T2> MultiPartData.extractParts(
 	part1: Pair<String, (PartData) -> T1>,
 	part2: Pair<String, (PartData) -> T2>
 ): Pair<T1, T2> = extractParts(part1.first, part2.first).let { part1.second(it[0]) to part2.second(it[1]) }
 
-suspend fun <T1, T2, T3> MultiPartData.extractParts(
+suspend inline fun <T1, T2, T3> MultiPartData.extractParts(
 	part1: Pair<String, (PartData) -> T1>,
 	part2: Pair<String, (PartData) -> T2>,
 	part3: Pair<String, (PartData) -> T3>,

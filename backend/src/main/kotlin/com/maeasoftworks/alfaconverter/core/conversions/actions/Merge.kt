@@ -6,7 +6,16 @@ import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import com.maeasoftworks.alfaconverter.core.model.Source
+import com.maeasoftworks.alfaconverter.core.model.Result
 
+/**
+ * Action that merges all data from [initialColumns] to [targetColumn] by [pattern].
+ * @param initialColumns addresses of columns in [Source] table that will be merged.
+ * @param targetColumn address of column in [Result] table that will be filled.
+ * @param pattern merging pattern. insertion template format: "${_&lt;address1&gt;_}".
+ * @constructor Creates new instance.
+ */
 @Serializable
 @SerialName("merge")
 class Merge(

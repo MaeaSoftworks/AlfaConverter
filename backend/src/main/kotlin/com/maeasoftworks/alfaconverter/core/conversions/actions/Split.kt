@@ -7,7 +7,16 @@ import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import com.maeasoftworks.alfaconverter.core.model.Source
+import com.maeasoftworks.alfaconverter.core.model.Result
 
+/**
+ * Action that splits all data from [initialColumn] to [targetColumns].
+ * @param initialColumn address of column in [Source] table that will be split.
+ * @param targetColumns addresses of columns in [Result] table that will be filled.
+ * @param pattern regex pattern.
+ * @constructor Creates new instance.
+ */
 @Serializable
 @SerialName("split")
 class Split(

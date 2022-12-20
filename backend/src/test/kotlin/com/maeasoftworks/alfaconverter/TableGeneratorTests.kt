@@ -13,10 +13,6 @@ class TableGeneratorTests {
 		Xlsx(Files.readAllBytes(Path.of("src/test/resources/table generator/source.xlsx")))
 	)
 
-	init {
-		converter.initializeResultTable()
-	}
-
 	private val initial: Table
 		get() = converter.source.table
 

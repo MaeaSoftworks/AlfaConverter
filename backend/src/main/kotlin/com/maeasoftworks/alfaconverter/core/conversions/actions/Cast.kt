@@ -4,9 +4,23 @@ import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.Factory
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.TypeName
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.NumberData
+import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import com.maeasoftworks.alfaconverter.core.model.Result
 
+/**
+ * Action that cast all data from in [targetColumn] to [targetType] with specified [dataFormat].
+ *
+ * Applicable only for [Xlsx] result implementation.
+ *
+ * Note: [dataFormat] applicable only for [NumberData].
+ * @param targetColumn address of column in [Result] table that will be cast.
+ * @param targetType type from [TypeName] enum to which the cast will be performed.
+ * @param dataFormat [NumberData] format.
+ * @constructor Creates new instance.
+ */
 @Serializable
 @SerialName("cast")
 class Cast(
