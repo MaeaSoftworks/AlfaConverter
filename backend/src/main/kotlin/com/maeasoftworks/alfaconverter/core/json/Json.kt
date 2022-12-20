@@ -12,7 +12,7 @@ import kotlinx.serialization.encodeToString
  * Implementation of [Result] for json result type.
  */
 class Json : Result {
-	override lateinit var table: Table
+	override var table: Table = Table()
 
 	/**
 	 * Gets [Source] table and set it to local table.
