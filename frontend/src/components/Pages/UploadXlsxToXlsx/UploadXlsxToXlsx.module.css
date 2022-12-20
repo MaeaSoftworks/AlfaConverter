@@ -1,0 +1,168 @@
+.page {
+    font-family: Segoe UI, serif;
+    display: flex;
+    justify-content: center;
+    padding-top: 170px;
+    padding-bottom: 170px;
+}
+
+.upload {
+    display: flex;
+    width: 1300px;
+    gap: 64px;
+    margin-top: 64px;
+    margin-bottom: 64px;
+}
+
+.textblock {
+    width: 40%;
+}
+
+.header {
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 67px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.description {
+    margin-top: 16px;
+
+    font-family: Segoe UI, serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 39px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.form {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.file_button_container {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.file_input {
+    display: none;
+}
+
+.file_input_label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 16px;
+
+    background: #6C6C6C;
+    border-radius: 12px;
+    color: #FFFFFF;
+
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 34px;
+    letter-spacing: 0.015em;
+}
+
+.file_input_label_loaded {
+    background: #EF3124;
+}
+
+.file_input_description {
+    font-family: Segoe UI;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 22px;
+    letter-spacing: 0.02em;
+    text-align: left;
+
+}
+
+.send_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: left;
+
+    width: fit-content;
+
+    padding: 10px 16px;
+
+    border-radius: 12px;
+    color: #FFFFFF;
+
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 34px;
+    letter-spacing: 0.015em;
+
+    box-shadow: none;
+    border: none;
+}
+
+.button_active {
+    background: #EF3124;
+}
+
+.button_inactive {
+    background: #6C6C6C;
+}
+
+.button_inactive:hover {
+    cursor: not-allowed;
+}
+
+.image {
+    width: 432px;
+    height: 432px;
+}
+
+.file_input_label:hover,
+.button_active:hover {
+    cursor: pointer;
+    background-color: lightgrey;
+    color: #000000;
+    transition-duration: 0.5s;
+}
+
+.file_error_hidden {
+    display: none;
+    color: red;
+    font-family: Segoe UI, serif;
+    font-size: 20px;
+    font-weight: 350;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.file_error_showed {
+    color: red;
+    font-family: Segoe UI, serif;
+    font-size: 20px;
+    font-weight: 350;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.server_error_showed {
+    color: red;
+    font-family: Segoe UI, serif;
+    font-size: 20px;
+    font-weight: 350;
+    letter-spacing: 0em;
+    margin-top: 12px;
+}
+
+.server_error_hidden {
+    display: none;
+}

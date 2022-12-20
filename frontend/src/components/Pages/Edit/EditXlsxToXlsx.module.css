@@ -275,7 +275,7 @@
 
 .control_button_connection {
     padding: 0;
-    background: url("connection_light_bg.png");
+    background: url("connection_dark_bg.png");
     border: none;
     width: 81px;
     height: 81px;
@@ -283,8 +283,8 @@
 
 .control_button_connection:hover {
     padding: 0;
-    background: url("connection_dark_bg.png");
-    box-shadow: 0 0 14px 12px #ccc;
+    background: url("connection_light_bg.png");
+    /*box-shadow: 0 0 14px 12px #ccc;*/
     border: none;
     width: 81px;
     height: 81px;
@@ -293,7 +293,7 @@
 
 .control_button_connection_active {
     padding: 0;
-    background: url("connection_dark_bg.png");
+    background: url("connection_light_bg.png");
     box-shadow: 0 0 14px 12px #ccc;
     border: none;
     width: 81px;
@@ -306,7 +306,7 @@
 
 .control_button_split {
     padding: 0;
-    background: url("split_light_bg.png");
+    background: url("split_dark_bg.png");
     border: none;
     width: 81px;
     height: 81px;
@@ -314,8 +314,8 @@
 
 .control_button_split:hover {
     padding: 0;
-    background: url("split_dark_bg.png");
-    box-shadow: 0 0 14px 12px #ccc;
+    background: url("split_light_bg.png");
+    /*box-shadow: 0 0 14px 12px #ccc;*/
     border: none;
     width: 81px;
     height: 81px;
@@ -324,7 +324,7 @@
 
 .control_button_split_active {
     padding: 0;
-    background: url("split_dark_bg.png");
+    background: url("split_light_bg.png");
     box-shadow: 0 0 14px 12px #ccc;
     border: none;
     width: 81px;
@@ -337,7 +337,7 @@
 
 .control_button_merge {
     padding: 0;
-    background: url("merge_light_bg.png");
+    background: url("merge_dark_bg.png");
     border: none;
     width: 81px;
     height: 81px;
@@ -345,8 +345,8 @@
 
 .control_button_merge:hover {
     padding: 0;
-    background: url("merge_dark_bg.png");
-    box-shadow: 0 0 14px 12px #ccc;
+    background: url("merge_light_bg.png");
+    /*box-shadow: 0 0 14px 12px #ccc;*/
     border: none;
     width: 81px;
     height: 81px;
@@ -355,7 +355,7 @@
 
 .control_button_merge_active {
     padding: 0;
-    background: url("merge_dark_bg.png");
+    background: url("merge_light_bg.png");
     box-shadow: 0 0 14px 12px #ccc;
     border: none;
     width: 81px;
@@ -367,8 +367,8 @@
 }
 
 .control_button_delete {
+    background: url("delete_dark_bg.png");
     padding: 0;
-    background: url("delete.png");
     border: none;
     width: 81px;
     height: 81px;
@@ -376,7 +376,8 @@
 
 .control_button_delete:hover {
     padding: 0;
-    box-shadow: 0 0 14px 12px #ccc;
+    background: url("delete_light_bg.png");
+    /*box-shadow: 0 0 14px 12px #ccc;*/
     border: none;
     width: 81px;
     height: 81px;
@@ -385,7 +386,7 @@
 
 .control_button_delete_active {
     padding: 0;
-    background: url("delete.png");
+    background: url("delete_light_bg.png");
     box-shadow: 0 0 14px 12px #ccc;
     border: none;
     width: 81px;
