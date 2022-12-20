@@ -1,0 +1,461 @@
+.page {
+    font-family: Segoe UI, serif;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.header {
+    background: linear-gradient(180deg, rgba(234, 91, 91, 0.8) 0%, rgba(234, 91, 91, 0.128) 100%);
+    padding-top: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 120px;
+    padding-bottom: 50px;
+}
+
+.header_text_block {
+    width: 30%;
+}
+
+.header_header {
+    font-family: Segoe UI, serif;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 67px;
+    letter-spacing: 0;
+}
+
+.header_description {
+    font-family: Segoe UI, serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 39px;
+    letter-spacing: 0;
+}
+
+.header_img {
+    height: 450px;
+}
+
+.edit {
+    display: flex;
+    gap: 32px;
+    padding: 32px;
+}
+
+.scheme_board {
+    width: 60%;
+    min-height: 700px;
+    height: fit-content;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    background-color: #E5E5E5;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 256px;
+}
+
+.dynamic_arrow_endpoint {
+    visibility: hidden;
+    /*background-color: #A82F2F;*/
+    width: 1px;
+    height: 1px;
+    position: absolute;
+}
+
+.file_struct {
+    display: flex;
+    flex-direction: column;
+}
+
+.struct_header {
+    outline: black solid 1px;
+    background: white;
+    padding: 4px 25px;
+    margin-bottom: 10px;
+
+    color: #6C6C6C;
+
+    font-family: Segoe UI, serif;
+    font-size: 14px;
+    font-weight: 350;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: center;
+
+}
+
+.struct_block_container {
+    position: relative;
+}
+
+.struct_block {
+    /*width: 100%;*/
+    position: relative;
+
+    /*box-shadow:*/
+    /*        2px 0 0 0 #888,*/
+    /*        0 2px 0 0 #888,*/
+    /*        2px 2px 0 0 #888,   !* Just to fix the corner *!*/
+    /*        2px 0 0 0 #888 inset,*/
+    /*        0 2px 0 0 #888 inset;*/
+    /*max-width: 165px;*/
+    /*width: 165px;*/
+    /*position: relative;*/
+
+    outline: black solid 1px;
+    background: white;
+    padding: 17px;
+
+    font-family: Segoe UI, serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: center;
+}
+
+.struct_block:hover {
+    cursor: pointer;
+}
+
+.struct_input {
+    border: none;
+    background: none;
+    pointer-events: none;
+}
+
+.from_point {
+    content: "";
+    display: block;
+    position: absolute;
+    /*margin-left: -18%;*/
+    /*margin-top: 100%;*/
+    top: 41%;
+    left: 98%;
+    border-radius: 50%;
+    height:10px;
+    width:10px;
+    visibility: hidden;
+}
+
+.to_point {
+    content: "";
+    display: block;
+    position: absolute;
+    /*margin-left: -18%;*/
+    /*margin-top: 100%;*/
+    top: 43%;
+    left: -3%;
+    border-radius: 50%;
+    height:10px;
+    width:10px;
+    visibility: hidden;
+}
+
+.split_point {
+    background-color: #FFB580;
+    outline-style: solid;
+    outline-color: #000000;
+    outline-width: 1px;
+    z-index: 2;
+    visibility: visible;
+}
+
+.merge_point {
+    background-color: #809CFF;
+    outline-style: solid;
+    outline-color: #000000;
+    outline-width: 1px;
+    z-index: 2;
+    visibility: visible;
+}
+
+.connect_point {
+    background-color: gray;
+    outline-style: solid;
+    outline-color: #000000;
+    outline-width: 1px;
+    z-index: 2;
+    visibility: visible;
+}
+
+/*.struct_block::after {*/
+/*    content: "";*/
+/*    display: block;*/
+/*    position: absolute;*/
+/*    !*margin-left: -18%;*!*/
+/*    !*margin-top: 100%;*!*/
+/*    top: 45%;*/
+/*    left: -3%;*/
+/*    border-radius: 50%;*/
+/*    height:10px;*/
+/*    width:10px;*/
+/*    background-color: red;*/
+/*    z-index: 999;*/
+/*}*/
+
+.struct_input:focus, .struct_input:active {
+    border: none;
+    outline: none;
+}
+
+.popup_trigger_invisible {
+    visibility: hidden;
+}
+
+.popup_trigger {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border: none;
+}
+
+.popup_trigger:hover {
+    cursor: pointer;
+}
+
+.split_popup_trigger {
+    left: -20%;
+    top: 30%;
+    background-color: #FFB580;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #FFD5B7;
+    border-radius: 50%;
+    background-image: url("popup_settings.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-clip: border-box;
+}
+
+.merge_popup_trigger {
+    /*margin-left: 220px;*/
+    left: 107%;
+    top: 30%;
+    background-color: #809CFF;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #B4C4FF;
+    border-radius: 50%;
+    background-image: url("popup_settings.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-clip: border-box;
+}
+
+.control_panel {
+
+}
+
+.control_panel_header {
+    font-family: Segoe UI, serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 45px;
+    letter-spacing: 0.015em;
+    text-align: left;
+
+    text-align: center;
+}
+
+.controls {
+    margin-top: 24px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.control {
+    display: flex;
+    gap: 24px;
+}
+
+.control_button_connection {
+    padding: 0;
+    background: url("connection_dark_bg.png");
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_connection:hover {
+    padding: 0;
+    background: url("connection_light_bg.png");
+    /*box-shadow: 0 0 14px 12px #ccc;*/
+    border: none;
+    width: 81px;
+    height: 81px;
+    cursor: pointer;
+}
+
+.control_button_connection_active {
+    padding: 0;
+    background: url("connection_light_bg.png");
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_connection_active:hover {
+    cursor: pointer;
+}
+
+.control_button_split {
+    padding: 0;
+    background: url("split_dark_bg.png");
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_split:hover {
+    padding: 0;
+    background: url("split_light_bg.png");
+    /*box-shadow: 0 0 14px 12px #ccc;*/
+    border: none;
+    width: 81px;
+    height: 81px;
+    cursor: pointer;
+}
+
+.control_button_split_active {
+    padding: 0;
+    background: url("split_light_bg.png");
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_split_active:hover {
+    cursor: pointer;
+}
+
+.control_button_merge {
+    padding: 0;
+    background: url("merge_dark_bg.png");
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_merge:hover {
+    padding: 0;
+    background: url("merge_light_bg.png");
+    /*box-shadow: 0 0 14px 12px #ccc;*/
+    border: none;
+    width: 81px;
+    height: 81px;
+    cursor: pointer;
+}
+
+.control_button_merge_active {
+    padding: 0;
+    background: url("merge_light_bg.png");
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_merge_active:hover {
+    cursor: pointer;
+}
+
+.control_button_delete {
+    background: url("delete_dark_bg.png");
+    padding: 0;
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_delete:hover {
+    padding: 0;
+    background: url("delete_light_bg.png");
+    /*box-shadow: 0 0 14px 12px #ccc;*/
+    border: none;
+    width: 81px;
+    height: 81px;
+    cursor: pointer;
+}
+
+.control_button_delete_active {
+    padding: 0;
+    background: url("delete_light_bg.png");
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_delete_active:hover {
+    cursor: pointer;
+}
+
+.control_button_img {
+
+}
+
+.control_name {
+    font-family: Segoe UI, serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 22px;
+    letter-spacing: 0.015em;
+}
+
+.control_description {
+    font-family: Segoe UI, serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.015em;
+    text-align: left;
+}
+
+.apply_button {
+    width: 310px;
+    height: 75px;
+    background: #EF3124;
+    border-radius: 12px;
+    color: #FFFFFF;
+    text-transform: uppercase;
+
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 34px;
+    letter-spacing: 0.015em;
+
+    margin-top: 125px;
+    border: none;
+
+    margin-left: 200px;
+}
+
+.apply_button:hover {
+    cursor: pointer;
+    background-color: lightgrey;
+    color: #000000;
+    transition-duration: 0.5s;
+}
+
+.server_error_showed {
+    color: red;
+    font-family: Segoe UI, serif;
+    font-size: 20px;
+    font-weight: 350;
+    letter-spacing: 0em;
+    margin-top: 12px;
+}
+
+.server_error_hidden {
+    display: none;
+}

@@ -1,0 +1,152 @@
+.popup {
+    z-index: 999;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0,0,0,0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.hide {
+    display: none;
+}
+
+.content {
+    padding: 20px;
+    /*border-radius: 12px;*/
+    background-color: white;
+    min-height: 400px;
+    height: fit-content;
+    /*min-width: 400px;*/
+    width: 550px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: default;
+
+    font-family: Segoe UI, serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: center;
+}
+
+.header_top {
+    align-self: center;
+}
+
+.horizontal_ruler {
+    margin-left: 0;
+    margin-right: 0;
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 2px solid #809CFF;
+    padding: 0;
+}
+
+.splitters_group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.header_middle {
+    align-self: center;
+}
+
+.data_input_block {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.data_input_element {
+    /*white-space: nowrap;*/
+    width: 30%;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.data_input_field {
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 1px solid #B7B7B7;
+    border-radius: 5px;
+    padding-left: 5px;
+}
+
+.data_input_field:disabled {
+    background-color: #B7B7B7;
+}
+
+.example {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.select {
+    cursor: pointer;
+    width: 50%;
+    align-self: center;
+    border: 1px solid #B7B7B7;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.button_block {
+    display: flex;
+    gap: 10px;
+    align-self: center;
+}
+
+.apply_button {
+    background-color: #809CFF;
+    border: none;
+    border-radius: 8px;
+
+    font-family: Segoe UI, serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 0.015em;
+
+    color: #FFFFFF;
+
+    padding: 5px 20px;
+}
+
+.apply_button:hover {
+    cursor: pointer;
+    background-color: #5f74c2;
+}
+
+.cancel_button {
+    background-color: #EA5B5B;
+    border: none;
+    border-radius: 8px;
+
+    font-family: Segoe UI, serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 0.015em;
+
+    color: #FFFFFF;
+
+    padding: 5px 20px;
+}
+
+.cancel_button:hover {
+    cursor: pointer;
+    background-color: #c74c4c;
+}
