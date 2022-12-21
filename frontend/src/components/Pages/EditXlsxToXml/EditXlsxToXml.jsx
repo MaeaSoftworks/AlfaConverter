@@ -467,7 +467,7 @@ const EditXlsxToXml = () => {
         return structuredClone(tree);
     };
 
-    const generateXmlStructureView = (input, accumulator, index) => {
+    const generateXmlStructureView = (input, accumulator) => {
         let keys = Object.keys(input).filter(key => key !== 'fullPath');
         // console.log('input');
         // console.log(input);
@@ -475,26 +475,37 @@ const EditXlsxToXml = () => {
             return;
         // console.log('keys');
         // console.log(keys);
+
+
+
         for (let i = 0; i < keys.length; i++) {
             if (Object.keys(input[keys[i]]).length === 1) {
                 // console.log(keys[i], 'X');
+                let index = Number(columnsToFile.filter(column => column[0] === input[keys[i]]['fullPath']).map(x => x[1])[0].replace('to-', ''));
                 accumulator.push(
-                    <div className={css.struct_block} id={input[keys[i]]['fullPath']} data-index={index}
+                    // <div className={css.struct_block} id={input[keys[i]]['fullPath']} data-index={index}
+                    <div className={css.struct_block} id={`to-${index}`} data-index={index}
                          onClick={structBlockInArrowHandler}>
                         <p className={css.struct_input}>{keys[i]}</p>
                         {/*<div className={`${css.to_point} ${css.connect_point}`}/>*/}
                         <div className={
                             `${css.to_point} 
-                             ${isThereNoPendingArrowsOfTypeWithId('split', input[keys[i]]['fullPath']) ? '' : css.split_point}
-                             ${isThereNoPendingArrowsOfTypeWithId('merge', input[keys[i]]['fullPath']) ? '' : css.merge_point}
-                             ${isThereNoPendingArrowsOfTypeWithId('connect', input[keys[i]]['fullPath']) ? '' : css.connect_point}`
+                             ${isThereNoPendingArrowsOfTypeWithId('split', `to-${index}`) ? '' : css.split_point}
+                             ${isThereNoPendingArrowsOfTypeWithId('merge', `to-${index}`) ? '' : css.merge_point}
+                             ${isThereNoPendingArrowsOfTypeWithId('connect', `to-${index}`) ? '' : css.connect_point}`
                         }/>
+                        <MergeParametersSetupPopup active={activeMergeIndex === index}
+                                                   setActive={setActive}
+                                                   setActiveIndex={setActiveMergeIndex}
+                                                   toIndex={index}
+                                                   bundle={[columnsFromFile, columnsToFile, arrows, zipped]}
+                                                   outerActions={outerActions}
+                                                   setOuterActions={setOuterActions}/>
                         <button onClick={mergePopupClickHandler}
                                 data-target-index={index}
-                                className={css.popup_trigger + ' ' + css.merge_popup_trigger + ' ' + (isThereNoPendingArrowsOfTypeWithId('merge', input[keys[i]]['fullPath']) ? css.popup_trigger_invisible : '')}></button>
+                                className={css.popup_trigger + ' ' + css.merge_popup_trigger + ' ' + (isThereNoPendingArrowsOfTypeWithId('merge', `to-${index}`) ? css.popup_trigger_invisible : '')}></button>
                     </div>
                 );
-                index++;
             } else {
                 // console.log(keys[i]);
                 let localAccumulator = [];
@@ -504,14 +515,14 @@ const EditXlsxToXml = () => {
                         {localAccumulator}
                     </div>
                 );
-                generateXmlStructureView(input[keys[i]], localAccumulator, index);
+                generateXmlStructureView(input[keys[i]], localAccumulator);
             }
         }
     };
 
     const getStructuredViewOfXml = () => {
         let accumulator = [];
-        generateXmlStructureView(generateXmlTree(), accumulator, 0);
+        generateXmlStructureView(generateXmlTree(), accumulator);
         // console.log('accumulator');
         // console.log(accumulator);
         return accumulator;
