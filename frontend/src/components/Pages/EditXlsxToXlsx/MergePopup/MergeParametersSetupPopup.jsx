@@ -108,9 +108,10 @@ const MergeParametersSetupPopup = ({
         let mergeTarget = columnsToFile[toIndex];
         let mappedArrows = arrows.map(node => [Number(node[0].replace('from-', '')), Number(node[1].replace('to-', ''))]);
         let filteredArrows = mappedArrows.filter(node => node[1] === toIndex);
-        let formCols = columnsFromFile
-            .map((value, index) => filteredArrows.flat().includes(index) ? value : undefined)
-            .filter(value => value).map(value => value[0]);
+        // let formCols = columnsFromFile
+        //     .map((value, index) => filteredArrows.flat().includes(index) ? value : undefined)
+        //     .filter(value => value).map(value => value[0]);
+        let formCols = filteredArrows.map(arrow => columnsFromFile[arrow[0]][0]);
 
         let vals = structuredClone(values);
         formCols.forEach(value => vals[value] = vals[value] || "");
