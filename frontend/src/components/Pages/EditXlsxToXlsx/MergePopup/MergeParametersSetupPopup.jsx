@@ -25,7 +25,7 @@ const MergeParametersSetupPopup = ({
 
     const [resultLength, setResultLength] = useState(-1);
 
-    const [castTargetType, setCastTargetType] = useState("String");
+    const [castTargetType, setCastTargetType] = useState("0");
 
     useEffect(() => {
         initPopupValues();
@@ -89,7 +89,7 @@ const MergeParametersSetupPopup = ({
         let castNode = {
             "type": "cast",
             "targetColumn": [endIndex[toIndex]],
-            "targetType": castTargetType
+            "dataFormat": Number(castTargetType)
         }
 
         let outerActns = outerActions;
@@ -301,13 +301,13 @@ const MergeParametersSetupPopup = ({
                     {/*<p>{`«${aboba}»`}</p>*/}
                 </div>
                 <div className={css.example}>
-                    <p>И будет иметь тип данных:</p>
+                    <p>И будет иметь тип даты:</p>
                     <select className={css.select} onChange={onSelectChange}>
-                        <option value="String">Строка</option>
-                        <option value="Boolean">Булево значение</option>
-                        <option value="Number">Число</option>
-                        <option value="Null">Null</option>
-                        <option value="Object">Объект</option>
+                        <option value="0">Не нужен</option>
+                        <option value="14">"dd.MM.yyyy"</option>
+                        <option value="20">"HH:mm"</option>
+                        <option value="21">"H:mm:ss"</option>
+                        <option value="22">"dd.MM.yyyy H:mm"</option>
                     </select>
                 </div>
 
