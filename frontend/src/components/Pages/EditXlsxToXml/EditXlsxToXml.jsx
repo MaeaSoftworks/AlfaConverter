@@ -408,7 +408,7 @@ const EditXlsxToXml = () => {
     };
 
     const isThereNoLinkedArrowsOfTypeWithId = (typeOfArrow, IdOfArrow) => {
-       return arrows.filter(arrow => arrow[2].type === typeOfArrow && arrow.includes(IdOfArrow) && arrow[1] !== 'dynamic_arrow_endpoint').length === 0;
+        return arrows.filter(arrow => arrow[2].type === typeOfArrow && arrow.includes(IdOfArrow) && arrow[1] !== 'dynamic_arrow_endpoint').length === 0;
     };
 
     const isThereNoPendingArrowsOfTypeWithId = (typeOfArrow, IdOfArrow) => {
@@ -416,6 +416,100 @@ const EditXlsxToXml = () => {
     };
 
     const [active, setActive] = useState(false);
+
+    // const generateXmlTree = () => {
+    //     let input = columnsToFile.map(node => node[0]);
+    //     let resultObject = {};
+    //     for (let i = 0; i < input.length; i++) {
+    //         let nodes = input[i].split('.');
+    //         let lastObject = {};
+    //         let prevNode = "";
+    //         for (let j = 0; j < nodes.length; j++) {
+    //             let node = nodes[i];
+    //
+    //             if (node in resultObject) {
+    //                 lastObject = resultObject[node];
+    //             }
+    //             else if (node in lastObject) {
+    //                 lastObject[]
+    //             }
+    //             else {
+    //                 resultObject[node] = {};
+    //                 lastObject = resultObject[node];
+    //             }
+    //
+    //             prevNode = node;
+    //         }
+    //     }
+    //     console.log(input);
+    // };
+
+    const generateXmlTree = () => {
+        let input = columnsToFile.map(node => node[0]);
+        let tree = {};
+        let lastNode = {};
+        tree = lastNode;
+        for (let i = 0; i < input.length; i++) {
+            let fullNodeName = input[i].split('.');
+            for (let j = 0; j < fullNodeName.length; j++) {
+                let nodeName = fullNodeName[j];
+
+                if (!(nodeName in lastNode)) {
+                    lastNode[nodeName] = {
+                        fullPath: fullNodeName.slice(0, j + 1).join('.')
+                    };
+                }
+                lastNode = lastNode[nodeName];
+            }
+            lastNode = tree;
+        }
+        console.log(tree);
+        return structuredClone(tree);
+    };
+
+    const generateXmlStructureView = (input, accumulator, index) => {
+        let keys = Object.keys(input);
+        console.log('input');
+        console.log(input);
+        if (typeof input === 'string')
+            return;
+        console.log('keys');
+        console.log(keys);
+        for (let i = 0; i < keys.length; i++) {
+            if (Object.keys(input[keys[i]]).length === 1) {
+                // console.log(keys[i], 'X');
+                accumulator.push(
+                    <div className={css.struct_block} style={{backgroundColor: 'red'}} id={input[keys[i]]['fullPath']} data-index={index}
+                         onClick={structBlockInArrowHandler}>
+                        <p className={css.struct_input}>{keys[i]}</p>
+                        <div className={`${css.to_point} ${css.connect_point}`}/>
+                        <button onClick={mergePopupClickHandler}
+                                data-target-index={index}
+                                className={css.popup_trigger + ' ' + css.merge_popup_trigger}></button>
+                    </div>
+                );
+                index++;
+            } else {
+                // console.log(keys[i]);
+                let localAccumulator = [];
+                accumulator.push(
+                    <div className={css.struct_block} style={{backgroundColor: 'blue'}}>
+                        <p className={css.struct_input}>{keys[i]}</p>
+                        {localAccumulator}
+                    </div>
+                );
+                generateXmlStructureView(input[keys[i]], localAccumulator, index);
+            }
+        }
+    };
+
+    const getStructuredViewOfXml = () => {
+        let accumulator = [];
+        generateXmlStructureView(generateXmlTree(), accumulator, 0);
+        // console.log('accumulator');
+        // console.log(accumulator);
+        return accumulator;
+    };
 
     return (
         <div className={css.page} onKeyDown={e => {
@@ -435,7 +529,8 @@ const EditXlsxToXml = () => {
             </div>
             <div className={css.edit}>
                 {/*<Popup active={active} dataBundle={popupDataBundle}/>*/}
-                <div className={css.scheme_board} onMouseMove={mouseMoveHandler} onMouseLeave={breakCurrentUnattachedArrow}>
+                <div className={css.scheme_board} onMouseMove={mouseMoveHandler}
+                     onMouseLeave={breakCurrentUnattachedArrow}>
                     <Xwrapper>
                         <div className={css.dynamic_arrow_endpoint} id='dynamic_arrow_endpoint'>
                         </div>
@@ -476,31 +571,99 @@ const EditXlsxToXml = () => {
                             {/*     onClick={structBlockInArrowHandler}>*/}
                             {/*    <input className={css.struct_input} type='text' value='Фамилия'/>*/}
                             {/*</div>*/}
-                            {columnsToFile.map((columnName, index) =>
-                                <div className={css.struct_block_container}>
-                                    <div className={css.struct_block} id={columnName[1]} data-index={index}
-                                         onClick={structBlockInArrowHandler}>
-                                        <p className={css.struct_input}>{columnName[0]}</p>
-                                    </div>
-                                    <div className={
-                                        `${css.to_point} 
-                                        ${isThereNoPendingArrowsOfTypeWithId('split', columnName[1]) ? '' : css.split_point}
-                                        ${isThereNoPendingArrowsOfTypeWithId('merge', columnName[1]) ? '' : css.merge_point}
-                                        ${isThereNoPendingArrowsOfTypeWithId('connect', columnName[1]) ? '' : css.connect_point}`
-                                    }/>
-                                    <MergeParametersSetupPopup active={activeMergeIndex === index}
-                                                               setActive={setActive}
-                                                               setActiveIndex={setActiveMergeIndex}
-                                                               toIndex={index}
-                                                               bundle={[columnsFromFile, columnsToFile, arrows, zipped]}
-                                                               outerActions={outerActions}
-                                                               setOuterActions={setOuterActions}/>
-                                    <button onClick={mergePopupClickHandler}
-                                            data-target-index={index}
-                                            className={css.popup_trigger + ' ' + css.merge_popup_trigger + ' ' + (isThereNoPendingArrowsOfTypeWithId('merge', columnName[1]) ? css.popup_trigger_invisible : '')}></button>
-                                </div>
-                            )}
+                            {/*{columnsToFile.map((columnName, index) =>*/}
+                            {/*    <div className={css.struct_block_container}>*/}
+                            {/*        <div className={css.struct_block} id={columnName[1]} data-index={index}*/}
+                            {/*             onClick={structBlockInArrowHandler}>*/}
+                            {/*            <p className={css.struct_input}>{columnName[0]}</p>*/}
+                            {/*        </div>*/}
+                            {/*        <div className={*/}
+                            {/*            `${css.to_point} */}
+                            {/*            ${isThereNoPendingArrowsOfTypeWithId('split', columnName[1]) ? '' : css.split_point}*/}
+                            {/*            ${isThereNoPendingArrowsOfTypeWithId('merge', columnName[1]) ? '' : css.merge_point}*/}
+                            {/*            ${isThereNoPendingArrowsOfTypeWithId('connect', columnName[1]) ? '' : css.connect_point}`*/}
+                            {/*        }/>*/}
+                            {/*        <MergeParametersSetupPopup active={activeMergeIndex === index}*/}
+                            {/*                                   setActive={setActive}*/}
+                            {/*                                   setActiveIndex={setActiveMergeIndex}*/}
+                            {/*                                   toIndex={index}*/}
+                            {/*                                   bundle={[columnsFromFile, columnsToFile, arrows, zipped]}*/}
+                            {/*                                   outerActions={outerActions}*/}
+                            {/*                                   setOuterActions={setOuterActions}/>*/}
+                            {/*        <button onClick={mergePopupClickHandler}*/}
+                            {/*                data-target-index={index}*/}
+                            {/*                className={css.popup_trigger + ' ' + css.merge_popup_trigger + ' ' + (isThereNoPendingArrowsOfTypeWithId('merge', columnName[1]) ? css.popup_trigger_invisible : '')}></button>*/}
+                            {/*    </div>*/}
+                            {/*)}*/}
+
+                            <div className={css.struct_block_container}>
+                                {getStructuredViewOfXml()}
+                            </div>
+
+                            {/*<div className={css.struct_block_container}>*/}
+                            {/*    <div className={css.struct_block}>*/}
+                            {/*        <p className={css.struct_input}>root</p>*/}
+                            {/*        <div className={css.struct_block}>*/}
+                            {/*            <p className={css.struct_input}>person</p>*/}
+                            {/*            <div className={css.struct_block} id={'to-root.person.firstName'} data-index={0}*/}
+                            {/*                 onClick={structBlockInArrowHandler}>*/}
+                            {/*                <p className={css.struct_input}>firstname</p>*/}
+                            {/*                <div className={`${css.to_point} ${css.connect_point}`}/>*/}
+                            {/*                <button onClick={mergePopupClickHandler}*/}
+                            {/*                        data-target-index={0}*/}
+                            {/*                        className={css.popup_trigger + ' ' + css.merge_popup_trigger}></button>*/}
+                            {/*            </div>*/}
+                            {/*            <div className={css.struct_block}>*/}
+                            {/*                <p className={css.struct_input}>lastname</p>*/}
+                            {/*            </div>*/}
+                            {/*            <div className={css.struct_block}>*/}
+                            {/*                <p className={css.struct_input}>middlename</p>*/}
+                            {/*            </div>*/}
+                            {/*            <div className={css.struct_block}>*/}
+                            {/*                <p className={css.struct_input}>age</p>*/}
+                            {/*            </div>*/}
+                            {/*            <div className={css.struct_block}>*/}
+                            {/*                <p className={css.struct_input}>address</p>*/}
+                            {/*            </div>*/}
+                            {/*            <div className={css.struct_block}>*/}
+                            {/*                <p className={css.struct_input}>diagnosis</p>*/}
+                            {/*            </div>*/}
+                            {/*            <div className={css.struct_block}>*/}
+                            {/*                <p className={css.struct_input}>researchType</p>*/}
+                            {/*            </div>*/}
+                            {/*            <div className={css.struct_block}>*/}
+                            {/*                <p className={css.struct_input}>lab</p>*/}
+                            {/*                <div className={css.struct_block}>*/}
+                            {/*                    <p className={css.struct_input}>address</p>*/}
+                            {/*                </div>*/}
+                            {/*                <div className={css.struct_block}>*/}
+                            {/*                    <p className={css.struct_input}>name</p>*/}
+                            {/*                </div>*/}
+                            {/*                <div className={css.struct_block}>*/}
+                            {/*                    <p className={css.struct_input}>code</p>*/}
+                            {/*                </div>*/}
+                            {/*            </div>*/}
+                            {/*            <div className={css.struct_block}>*/}
+                            {/*                <p className={css.struct_input}>analysis</p>*/}
+                            {/*                <div className={css.struct_block}>*/}
+                            {/*                    <p className={css.struct_input}>dateStart</p>*/}
+                            {/*                </div>*/}
+                            {/*                <div className={css.struct_block}>*/}
+                            {/*                    <p className={css.struct_input}>timeStart</p>*/}
+                            {/*                </div>*/}
+                            {/*                <div className={css.struct_block}>*/}
+                            {/*                    <p className={css.struct_input}>dateComplete</p>*/}
+                            {/*                </div>*/}
+                            {/*                <div className={css.struct_block}>*/}
+                            {/*                    <p className={css.struct_input}>timeComplete</p>*/}
+                            {/*                </div>*/}
+                            {/*            </div>*/}
+                            {/*        </div>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
                         </div>
+
+
                         {
                             arrows.map(startAndEnd => <Xarrow key={startAndEnd[3]} start={startAndEnd[0]}
                                                               id={startAndEnd[3]}
@@ -564,7 +727,8 @@ const EditXlsxToXml = () => {
                         <li>
                             {/*<Link to='/result'>*/}
                             <button className={css.apply_button} onClick={apply}>Преобразовать</button>
-                            <p className={isResponseOk ? css.server_error_hidden : css.server_error_showed}>Ошибка во время
+                            <p className={isResponseOk ? css.server_error_hidden : css.server_error_showed}>Ошибка во
+                                время
                                 обработки файла на сервере. Возможно, вы указали невозможное преобразование</p>
                             {/*</Link>*/}
                         </li>
