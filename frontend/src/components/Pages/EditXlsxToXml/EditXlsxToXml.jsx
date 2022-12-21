@@ -468,7 +468,7 @@ const EditXlsxToXml = () => {
     };
 
     const generateXmlStructureView = (input, accumulator, index) => {
-        let keys = Object.keys(input);
+        let keys = Object.keys(input).filter(key => key !== 'fullPath');
         console.log('input');
         console.log(input);
         if (typeof input === 'string')
@@ -479,7 +479,7 @@ const EditXlsxToXml = () => {
             if (Object.keys(input[keys[i]]).length === 1) {
                 // console.log(keys[i], 'X');
                 accumulator.push(
-                    <div className={css.struct_block} style={{backgroundColor: 'red'}} id={input[keys[i]]['fullPath']} data-index={index}
+                    <div className={css.struct_block} id={input[keys[i]]['fullPath']} data-index={index}
                          onClick={structBlockInArrowHandler}>
                         <p className={css.struct_input}>{keys[i]}</p>
                         <div className={`${css.to_point} ${css.connect_point}`}/>
@@ -493,7 +493,7 @@ const EditXlsxToXml = () => {
                 // console.log(keys[i]);
                 let localAccumulator = [];
                 accumulator.push(
-                    <div className={css.struct_block} style={{backgroundColor: 'blue'}}>
+                    <div className={css.struct_block}>
                         <p className={css.struct_input}>{keys[i]}</p>
                         {localAccumulator}
                     </div>
@@ -506,8 +506,8 @@ const EditXlsxToXml = () => {
     const getStructuredViewOfXml = () => {
         let accumulator = [];
         generateXmlStructureView(generateXmlTree(), accumulator, 0);
-        // console.log('accumulator');
-        // console.log(accumulator);
+        console.log('accumulator');
+        console.log(accumulator);
         return accumulator;
     };
 
