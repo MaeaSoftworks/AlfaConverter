@@ -129,6 +129,15 @@
     pointer-events: none;
 }
 
+.struct_input_header {
+    border: none;
+    background: none;
+    pointer-events: none;
+    margin-bottom: 15px;
+    text-align: left;
+    font-weight: bold;
+}
+
 .from_point {
     content: "";
     display: block;

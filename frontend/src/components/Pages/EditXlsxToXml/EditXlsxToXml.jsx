@@ -511,7 +511,7 @@ const EditXlsxToXml = () => {
                 let localAccumulator = [];
                 accumulator.push(
                     <div className={css.struct_block}>
-                        <p className={css.struct_input}>{keys[i]}</p>
+                        <p className={`${css.struct_input} ${css.struct_input_header}`}>{keys[i]}</p>
                         {localAccumulator}
                     </div>
                 );
