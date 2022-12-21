@@ -3,6 +3,7 @@ Service for converting documents based on their content.
 Supported file formats to conversion:
 - [x] `.xlsx` to `.xlsx` using second `.xlsx` as map
 - [x] `.xlsx` to `.xml` using `.xsd` scheme of expected `.xml` format
+- [x] `.xlsx` to `.json`
 
 Developed by Mæa Softworks special for Alfa-Bank ❤
 
