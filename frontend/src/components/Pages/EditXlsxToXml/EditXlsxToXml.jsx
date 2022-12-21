@@ -463,18 +463,18 @@ const EditXlsxToXml = () => {
             }
             lastNode = tree;
         }
-        console.log(tree);
+        // console.log(tree);
         return structuredClone(tree);
     };
 
     const generateXmlStructureView = (input, accumulator, index) => {
         let keys = Object.keys(input).filter(key => key !== 'fullPath');
-        console.log('input');
-        console.log(input);
+        // console.log('input');
+        // console.log(input);
         if (typeof input === 'string')
             return;
-        console.log('keys');
-        console.log(keys);
+        // console.log('keys');
+        // console.log(keys);
         for (let i = 0; i < keys.length; i++) {
             if (Object.keys(input[keys[i]]).length === 1) {
                 // console.log(keys[i], 'X');
@@ -482,10 +482,16 @@ const EditXlsxToXml = () => {
                     <div className={css.struct_block} id={input[keys[i]]['fullPath']} data-index={index}
                          onClick={structBlockInArrowHandler}>
                         <p className={css.struct_input}>{keys[i]}</p>
-                        <div className={`${css.to_point} ${css.connect_point}`}/>
+                        {/*<div className={`${css.to_point} ${css.connect_point}`}/>*/}
+                        <div className={
+                            `${css.to_point} 
+                             ${isThereNoPendingArrowsOfTypeWithId('split', input[keys[i]]['fullPath']) ? '' : css.split_point}
+                             ${isThereNoPendingArrowsOfTypeWithId('merge', input[keys[i]]['fullPath']) ? '' : css.merge_point}
+                             ${isThereNoPendingArrowsOfTypeWithId('connect', input[keys[i]]['fullPath']) ? '' : css.connect_point}`
+                        }/>
                         <button onClick={mergePopupClickHandler}
                                 data-target-index={index}
-                                className={css.popup_trigger + ' ' + css.merge_popup_trigger}></button>
+                                className={css.popup_trigger + ' ' + css.merge_popup_trigger + ' ' + (isThereNoPendingArrowsOfTypeWithId('merge', input[keys[i]]['fullPath']) ? css.popup_trigger_invisible : '')}></button>
                     </div>
                 );
                 index++;
@@ -506,8 +512,8 @@ const EditXlsxToXml = () => {
     const getStructuredViewOfXml = () => {
         let accumulator = [];
         generateXmlStructureView(generateXmlTree(), accumulator, 0);
-        console.log('accumulator');
-        console.log(accumulator);
+        // console.log('accumulator');
+        // console.log(accumulator);
         return accumulator;
     };
 
