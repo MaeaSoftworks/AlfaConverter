@@ -4,7 +4,6 @@ package com.maeasoftworks.alfaconverter.modules
 
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
 import com.maeasoftworks.alfaconverter.core.conversions.actions.*
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.TypeName
 import com.maeasoftworks.alfaconverter.models.XlsxPreviewResponse
 import com.maeasoftworks.alfaconverter.plugins.serializer
 import io.ktor.client.call.*
@@ -125,8 +124,7 @@ class XlsxModuleTest {
 											listOf("merged"),
 											"\${0} \${1} \${2}"
 										),
-										Bind(listOf("who?"), listOf("whoooo?")),
-										Cast(listOf("bind 1 here"), TypeName.Number, 0)
+										Bind(listOf("who?"), listOf("whoooo?"))
 									)
 								)
 							).also { println("\u001B[33mConversion from api/xlsx/convert as JSON:\n\u001B[33m${it}") }

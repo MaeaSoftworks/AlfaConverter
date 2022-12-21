@@ -19,37 +19,35 @@ class Spreadsheet {
 	private lateinit var worksheet: Worksheet
 	var table: Table
 
+	constructor(table: Table) {
+		this.table = table
+	}
+
 	constructor(file: ByteArray) {
 		document = SpreadsheetMLPackage.load(ByteArrayInputStream(file))
 		worksheet = (document.parts[sheet] as WorksheetPart).jaxbElement
 		table = Table()
 		for (columnPos in worksheet.sheetData.row[0].c.indices) {
-			val sObj = extractValue(worksheet.sheetData.row[0].c[columnPos])
-			val column = Column(listOf(sObj.getString().trim()))
+			val data = extractValue(worksheet.sheetData.row[0].c[columnPos])
+			val column = Column(listOf(data.getString().trim()))
 			table.columns.add(column)
 			table.headers.add(column.name)
 		}
 
 		for (row in 1 until worksheet.sheetData.row.size) {
 			for (column in worksheet.sheetData.row[row].c.indices) {
-				table.columns[column].also {
-					it.cells += extractValue(worksheet.sheetData.row[row].c[column])
-				}
+				table.columns[column].also { it.cells += extractValue(worksheet.sheetData.row[row].c[column]) }
 			}
 		}
 	}
 
-	constructor(table: Table) {
-		this.table = table
-	}
-
 	fun getHeaders(): List<ColumnAddress> {
-		val headers: MutableList<String> = mutableListOf()
+		val headers: MutableList<List<String>> = mutableListOf()
 		if (worksheet.sheetData.row[0].c.isEmpty()) throw NoSuchElementException("First row of table was empty")
 		for (cell in worksheet.sheetData.row[0].c.indices) {
-			headers.add(extractValue(worksheet.sheetData.row[0].c[cell]).getString())
+			headers.add(listOf(extractValue(worksheet.sheetData.row[0].c[cell]).getString()))
 		}
-		return headers.map { listOf(it) }
+		return headers
 	}
 
 	fun getExamples(): List<String> {
@@ -94,11 +92,7 @@ class Spreadsheet {
 	private fun extractValue(docx4jCell: org.xlsx4j.sml.Cell): Data {
 		return when (docx4jCell.t) {
 			STCellType.B -> BooleanData(docx4jCell)
-			STCellType.N -> NumberData(
-				docx4jCell.v.toDouble(),
-				(document.parts[stylesPart] as Styles).getXfByIndex(docx4jCell.s).numFmtId
-			)
-
+			STCellType.N -> NumberData(docx4jCell.v.toDouble(), (document.parts[stylesPart] as Styles).getXfByIndex(docx4jCell.s).numFmtId)
 			STCellType.E -> NullData()
 			STCellType.S -> StringData(document, docx4jCell)
 			STCellType.STR -> NullData()

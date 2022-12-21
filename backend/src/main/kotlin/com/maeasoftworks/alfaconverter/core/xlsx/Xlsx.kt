@@ -31,11 +31,12 @@ class Xlsx : Source, Modifier, Result {
 	override fun getExamples() = spreadsheet.getExamples()
 
 	// modifier
-	override fun getAdditionalData() = null
+	override fun getPayload() = null
 
 	override fun initialize(parent: Converter<*, *, *>) {
+		check(parent.modifier != null) { "Conversion cannot work if the result is not specified" }
 		table = Table()
-		for (column in parent.modifier!!.getHeaders()) {
+		for (column in parent.modifier.getHeaders()) {
 			table.columns += Table.Column(column)
 			table.headers += column
 		}

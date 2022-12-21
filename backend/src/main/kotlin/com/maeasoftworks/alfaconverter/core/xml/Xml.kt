@@ -10,9 +10,7 @@ class Xml(element: Element) : Result {
 
 	override var table: Table
 		get() = schema.table
-		set(value) {
-			schema.table = value
-		}
+		set(value) { schema.table = value }
 
 	override fun initialize(parent: Converter<*, *, *>) {}
 

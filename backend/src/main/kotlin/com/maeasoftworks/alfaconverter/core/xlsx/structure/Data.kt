@@ -10,8 +10,4 @@ abstract class Data {
 	abstract fun getXmlRepresentation(): String
 
 	abstract fun getString(): String
-
-	abstract override fun equals(other: Any?): Boolean
-
-	abstract override fun hashCode(): Int
 }

@@ -3,6 +3,7 @@ package com.maeasoftworks.alfaconverter.core.xml
 import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.xml.structure.*
+import com.maeasoftworks.alfaconverter.exceptions.UnprocessableSchemaException
 import org.jdom2.Document
 import org.jdom2.input.SAXBuilder
 import org.jdom2.Element as XsdElement
@@ -13,18 +14,19 @@ class Schema {
 	lateinit var table: Table
 
 	private val builder = SAXBuilder()
-	private var document: Document? = null
+	private lateinit var document: Document
 	private lateinit var prefix: String
-	private val root: XsdElement?
-		get() = document?.rootElement
+	private val root: XsdElement
+		get() = document.rootElement
 
 	private val placeholders = mutableListOf<TypePlaceholder>()
 
 	constructor(data: String) {
 		document = builder.build(data.byteInputStream())
-		prefix = root!!.namespacesInScope.firstOrNull { it.uri == "http://www.w3.org/2001/XMLSchema" }?.prefix
-			?: throw Exception("Invalid markup")
-		for (element in root!!.children) {
+		check(document.rootElement != null) { "Schema was empty" }
+		prefix = root.namespacesInScope.firstOrNull { it.uri == "http://www.w3.org/2001/XMLSchema" }?.prefix
+			?: throw UnprocessableSchemaException("xsd namespace not found")
+		for (element in root.children) {
 			handleXsdElement(element)
 		}
 		setPlaceholders()
@@ -33,7 +35,7 @@ class Schema {
 	constructor(schema: Element) {
 		elements = mutableListOf(schema)
 		table = Table()
-		for (header in convertElementsToHeaders()) {
+		for (header in extractElementHeaders()) {
 			table.columns += Table.Column(header)
 			table.headers += header
 		}
@@ -48,29 +50,19 @@ class Schema {
 	}
 
 	private fun createElement(xsdElement: XsdElement) {
-		val element = Element(
-			xsdElement.getAttribute("name").value
-		)
-		element.type = createType(xsdElement.children.first(), element.name)
-		elements += element
+		elements += xsdElement.getAttribute("name").value.let { Element(it, createType(xsdElement.children.first(), it)) }
 	}
 
 	private fun createType(typeDeclaration: XsdElement, name: String): Type {
 		return when (typeDeclaration.name) {
-			"simpleType" -> {
-				TODO()
-			}
-
-			"complexType" -> {
-				createComplexType(typeDeclaration, name)
-			}
-
-			else -> throw Exception("Invalid schema")
+			"simpleType" -> throw UnprocessableSchemaException("simpleType is not supported yet")
+			"complexType" -> createComplexType(typeDeclaration, name)
+			else -> throw UnprocessableSchemaException("tag ${typeDeclaration.name} is not supported")
 		}
 	}
 
 	private fun createComplexType(typeDeclaration: XsdElement, name: String): ComplexType {
-		val type = ComplexType(name, ::register)
+		val type = ComplexType(name) { placeholders += it }
 		var isSequenceBody = false
 		typeDeclaration.children.firstOrNull { it.name == "sequence" }?.let {
 			type.sequenceToFields(it, prefix)
@@ -91,47 +83,34 @@ class Schema {
 				type as ComplexType
 				val fieldName = if (placeholder.isRef) placeholder.awaitedTypeName else placeholder.fieldName!!
 				if (fieldName in type.fields.keys) {
-					type.fields[fieldName] = types.firstOrNull {
-						it.name == placeholder.awaitedTypeName
-					}?.also { it.dependent++ } ?: UnknownType(placeholder.targetTypeName)
+					type.fields[fieldName] = types.firstOrNull { it.name == placeholder.awaitedTypeName }?.also { it.dependent++ }
+						?: throw UnprocessableSchemaException("type definition for type ${placeholder.awaitedTypeName} not found")
 				} else {
 					if (fieldName in type.attributes.keys) {
-						type.attributes[placeholder.awaitedTypeName] = types.firstOrNull {
-							it.name == placeholder.awaitedTypeName
-						}?.also { it.dependent++ } ?: UnknownType(placeholder.targetTypeName)
+						type.attributes[placeholder.awaitedTypeName] = types.firstOrNull { it.name == placeholder.awaitedTypeName }?.also { it.dependent++ }
+							?: throw UnprocessableSchemaException("type definition for type ${placeholder.awaitedTypeName} not found")
 					}
 				}
 			}
 		}
 	}
 
-	fun convertElementsToHeaders(): List<ColumnAddress> {
-		val result = mutableListOf<ColumnAddress>()
-		convertElementToHeaders(elements.first { it.type.dependent == 0 }.type, result)
-		return result
+	fun extractElementHeaders() = mutableListOf<ColumnAddress>().also {
+		extractElementHeaders(elements.first { element -> element.type.dependent == 0 }.type, it)
 	}
 
-	private fun convertElementToHeaders(
-		type: Type,
-		result: MutableList<ColumnAddress>,
-		current: ColumnAddress? = null
-	) {
+	private fun extractElementHeaders(type: Type, result: MutableList<ColumnAddress>, current: ColumnAddress? = null) {
 		val pref = current ?: mutableListOf(type.name)
 		for (field in (type as ComplexType).fields) {
 			if (field.value !is ComplexType) {
 				result += pref + field.key
 			} else {
-				convertElementToHeaders(field.value, result, pref + field.key)
+				extractElementHeaders(field.value, result, pref + field.key)
 			}
 		}
 		for (attribute in (type).attributes) {
 			result += pref + attribute.key
 		}
-	}
-
-	private fun register(placeholder: TypePlaceholder): TypePlaceholder {
-		placeholders += placeholder
-		return placeholder
 	}
 
 	fun save(): String {

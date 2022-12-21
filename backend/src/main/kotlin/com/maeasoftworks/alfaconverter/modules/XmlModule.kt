@@ -30,7 +30,7 @@ fun Application.xmlModule() {
 				val response = XmlPreviewResponse(
 					xmlConverter.source.getHeaders(),
 					xmlConverter.source.getExamples(),
-					xmlConverter.modifier.getAdditionalData(),
+					xmlConverter.modifier.getPayload(),
 					xmlConverter.modifier.getHeaders()
 				)
 				call.respond(response)

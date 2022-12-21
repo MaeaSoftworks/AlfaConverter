@@ -2,89 +2,28 @@ package com.maeasoftworks.alfaconverter.core.xlsx.structure
 
 import org.xlsx4j.sml.Cell
 import org.xlsx4j.sml.STCellType
-import java.io.InvalidClassException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
 
-class NumberData(value: Number, dataFormat: Long = 0) : Data() {
-	private var value: Any
-	private var rawValue: Number = 0
-	private var numFormat: Long? = dataFormat
-	private var string: String
-
-	init {
-		rawValue = if (floor(value.toDouble()) == value.toDouble()) value.toInt() else value.toDouble()
-		this.value = rawValue
-		when (this.numFormat) {
-			0L -> {
-				string = this.value.toString()
-			}
-
-			14L -> {
-				val date = convertFromOADate(rawValue.toDouble())
-				this.value = date
-				string = SimpleDateFormat("dd.MM.yyyy").format(date)
-			}
-
-			20L -> {
-				val date = convertFromOADate(rawValue.toDouble())
-				this.value = date
-				val c = Calendar.getInstance().also {
-					it.time = date
-					it.add(Calendar.SECOND, 1)
-				}.time
-				string = SimpleDateFormat("HH:mm").format(c)
-			}
-
-			21L -> {
-				val date = convertFromOADate(rawValue.toDouble())
-				this.value = date
-				string = SimpleDateFormat("H:mm:ss").format(date)
-			}
-
-			22L -> {
-				val date = convertFromOADate(rawValue.toDouble())
-				this.value = date
-				string = SimpleDateFormat("dd.MM.yyyy H:mm").format(date)
-			}
-
-			else -> throw InvalidClassException("Unknown number format")
-		}
+data class NumberData(private val number: Number, private val numFormat: Long = 0) : Data() {
+	private val value: Number = if (floor(number.toDouble()) == number.toDouble()) number.toInt() else number.toDouble()
+	private val serialized: String = when (numFormat) {
+		0L -> value.toString()
+		14L -> SimpleDateFormat("dd.MM.yyyy").format(convertFromOADate(value.toDouble()))
+		20L -> SimpleDateFormat("HH:mm").format(Calendar.getInstance().apply { time = convertFromOADate(value.toDouble()); add(Calendar.SECOND, 1) }.time)
+		21L ->  SimpleDateFormat("H:mm:ss").format(convertFromOADate(value.toDouble()))
+		22L -> SimpleDateFormat("dd.MM.yyyy H:mm").format(convertFromOADate(value.toDouble()))
+		else -> throw IllegalArgumentException("Number format $numFormat is not supported yet")
 	}
 
-	override fun getXlsxRepresentation(): Cell {
-		return Cell().also {
-			it.t = STCellType.N
-			it.v = rawValue.toString()
-			it.s = numFormat!!
-		}
-	}
+	override fun getXlsxRepresentation() = Cell().apply { t = STCellType.N; v = value.toString(); s = numFormat }
 
-	override fun getJsonRepresentation(): String {
-		return string
-	}
+	override fun getJsonRepresentation() = serialized
 
-	override fun getXmlRepresentation(): String {
-		return if (numFormat == 0L) string else "\"$string\""
-	}
+	override fun getXmlRepresentation() = if (numFormat == 0L) serialized else "\"$serialized\""
 
-	override fun getString(): String {
-		return string
-	}
-
-	override fun equals(other: Any?): Boolean {
-		return other != null
-				&& other is NumberData
-				&& rawValue == other.rawValue
-				&& numFormat == other.numFormat
-	}
-
-	override fun hashCode(): Int {
-		var result = rawValue.hashCode()
-		result = 31 * result + numFormat.hashCode()
-		return result
-	}
+	override fun getString() = serialized
 
 	private fun convertFromOADate(d: Double): Date {
 		val mantissa = d - d.toLong()

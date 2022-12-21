@@ -3,16 +3,9 @@ package com.maeasoftworks.alfaconverter.core.xlsx.structure
 import org.xlsx4j.sml.Cell
 import org.xlsx4j.sml.STCellType
 
-class BooleanData : Data {
-	private var value: Boolean = false
+data class BooleanData(private var value: Boolean = false) : Data() {
 
-	constructor(value: Boolean) {
-		this.value = value
-	}
-
-	constructor(cell: Cell) {
-		value = cell.v == "1"
-	}
+	constructor(cell: Cell) : this(cell.v == "1")
 
 	override fun getXlsxRepresentation(): Cell {
 		return Cell().also {
@@ -31,13 +24,5 @@ class BooleanData : Data {
 
 	override fun getString(): String {
 		return value.toString()
-	}
-
-	override fun equals(other: Any?): Boolean {
-		return other != null && other is BooleanData && value == other.value
-	}
-
-	override fun hashCode(): Int {
-		return value.hashCode() * 17
 	}
 }

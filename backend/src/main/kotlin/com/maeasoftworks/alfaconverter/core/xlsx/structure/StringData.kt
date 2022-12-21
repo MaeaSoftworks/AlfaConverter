@@ -8,49 +8,19 @@ import org.xlsx4j.sml.CTXstringWhitespace
 import org.xlsx4j.sml.Cell
 import org.xlsx4j.sml.STCellType
 
-open class StringData : Data {
-	private lateinit var sharedStrings: SharedStrings
-	private val value: String
+data class StringData(private val value: String) : Data() {
+	constructor(spreadsheet: SpreadsheetMLPackage, cell: Cell) : this((spreadsheet.parts[sharedStringsPart] as SharedStrings).jaxbElement.si[cell.v.toInt()].t.value)
 
-	constructor(spreadsheet: SpreadsheetMLPackage, cell: Cell) {
-		sharedStrings = spreadsheet.parts[sharedStringsPart] as SharedStrings
-		value = sharedStrings.jaxbElement.si[cell.v.toInt()].t.value
+	override fun getXlsxRepresentation() = Cell().apply {
+		t = STCellType.INLINE_STR
+		`is` = CTRst().apply { t = CTXstringWhitespace().apply { value = this@StringData.value } }
 	}
 
-	constructor(value: String) {
-		this.value = value
-	}
+	override fun getJsonRepresentation() = value
 
-	override fun getXlsxRepresentation(): Cell {
-		return Cell().also {
-			it.t = STCellType.INLINE_STR
-			it.`is` = CTRst().also { ctr ->
-				ctr.t = CTXstringWhitespace().also { ctx ->
-					ctx.value = value
-				}
-			}
-		}
-	}
+	override fun getXmlRepresentation() = "\"$value\""
 
-	override fun getJsonRepresentation(): String {
-		return value
-	}
-
-	override fun getXmlRepresentation(): String {
-		return "\"$value\""
-	}
-
-	override fun getString(): String {
-		return value
-	}
-
-	override fun equals(other: Any?): Boolean {
-		return other != null && other is StringData && value == other.value
-	}
-
-	override fun hashCode(): Int {
-		return value.hashCode() * 19
-	}
+	override fun getString() = value
 
 	companion object {
 		private val sharedStringsPart = PartName("/xl/sharedStrings.xml")

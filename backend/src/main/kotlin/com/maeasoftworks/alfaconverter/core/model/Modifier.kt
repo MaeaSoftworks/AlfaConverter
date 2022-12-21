@@ -14,5 +14,5 @@ interface Modifier {
 	 * Retrieves payload (type-specific).
 	 * @return payload.
 	 */
-	fun getAdditionalData(): Any?
+	fun getPayload(): Any?
 }

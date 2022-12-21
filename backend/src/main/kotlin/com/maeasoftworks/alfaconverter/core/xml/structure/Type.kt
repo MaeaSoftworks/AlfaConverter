@@ -10,13 +10,14 @@ import kotlinx.serialization.Transient
 sealed class Type(val name: String) : Cloneable {
 	@Transient
 	var dependent = 0
+
 	@Transient
 	var value: Data? = null
+
 	@Transient
 	var collection: List<Type>? = null
 	val fields = mutableMapOf<String, Type>()
 	val attributes = mutableMapOf<String, Type>()
-
 
 	operator fun get(path: String): Type {
 		return if (fields.contains(path)) {

@@ -3,14 +3,12 @@ package com.maeasoftworks.alfaconverter
 import com.maeasoftworks.alfaconverter.core.Converter
 import com.maeasoftworks.alfaconverter.core.conversions.Conversion
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Cast
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Merge
 import com.maeasoftworks.alfaconverter.core.conversions.actions.Split
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.NumberData
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.TypeName
 import org.junit.Test
 import java.io.File
 import kotlin.test.assertEquals
@@ -31,10 +29,9 @@ class ConversionTests {
 	@Test
 	fun `binding test`() {
 		conversion.actions += Bind(listOf("Column to bind 1"), listOf("bind 1 here"))
-		conversion.actions += Cast(listOf("bind 1 here"), TypeName.Number, 0)
 		converter.executeActions()
 		for (row in result[listOf("bind 1 here")]!!.cells.indices) {
-			val expected = NumberData((row + 1) * 10, 0)
+			val expected = NumberData((row + 1) * 10.0, 0)
 			assertEquals(
 				expected,
 				result[listOf("bind 1 here")]!!.cells[row],

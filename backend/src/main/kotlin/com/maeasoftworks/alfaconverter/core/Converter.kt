@@ -28,8 +28,9 @@ class Converter<S : Source, M : Modifier?, R : Result?>	(
 	 * Actually here goes on all table conversions. This function runs all actions in [conversion].
 	 */
 	fun executeActions() {
+		check(result != null) { "Conversion cannot run if the result is not specified" }
 		for (action in conversion.actions.indices) {
-			conversion.actions[0].run(source.table, result!!.table)
+			conversion.actions[0].run(source.table, result.table)
 			conversion.actions.removeAt(0)
 		}
 	}
@@ -39,8 +40,9 @@ class Converter<S : Source, M : Modifier?, R : Result?>	(
 	 * @return conversion result as [ByteArray].
 	 */
 	fun convert(): ByteArray {
+		check(result != null) { "Conversion cannot work if the result is not specified" }
 		executeActions()
-		return result!!.convert()
+		return result.convert()
 	}
 }
 

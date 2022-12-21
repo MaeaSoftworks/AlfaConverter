@@ -21,31 +21,34 @@ class XmlTests {
 
 	private val converter = Converter(
 		source = Xlsx(File("src/test/resources/xml/source.xlsx").readBytes()),
-		result = Xml(Element("root").also { root ->
-			root.type = ComplexType("root").also { rootType ->
-				rootType.fields["person"] = ComplexType("person").also { person ->
-					person.fields["firstname"] = Primitive.String
-					person.fields["lastname"] = Primitive.String
-					person.fields["middleName"] = Primitive.String
-					person.fields["birthday"] = Primitive.Date
-					person.fields["age"] = Primitive.Decimal
-					person.fields["address"] = Primitive.String
-					person.fields["diagnosis"] = Primitive.String
-					person.fields["researchType"] = Primitive.String
-					person.fields["lab"] = ComplexType("lab").also { lab ->
-						lab.attributes["address"] = Primitive.String
-						lab.attributes["name"] = Primitive.String
-						lab.attributes["code"] = Primitive.String
-					}
-					person.fields["analysis"] = ComplexType("analysis").also { analysis ->
-						analysis.attributes["dateStart"] = Primitive.Date
-						analysis.attributes["timeStart"] = Primitive.Time
-						analysis.attributes["dateComplete"] = Primitive.Date
-						analysis.attributes["timeComplete"] = Primitive.Time
+		result = Xml(
+			Element(
+				"root",
+				ComplexType("root").also { rootType ->
+					rootType.fields["person"] = ComplexType("person").also { person ->
+						person.fields["firstname"] = Primitive.String
+						person.fields["lastname"] = Primitive.String
+						person.fields["middleName"] = Primitive.String
+						person.fields["birthday"] = Primitive.Date
+						person.fields["age"] = Primitive.Decimal
+						person.fields["address"] = Primitive.String
+						person.fields["diagnosis"] = Primitive.String
+						person.fields["researchType"] = Primitive.String
+						person.fields["lab"] = ComplexType("lab").also { lab ->
+							lab.attributes["address"] = Primitive.String
+							lab.attributes["name"] = Primitive.String
+							lab.attributes["code"] = Primitive.String
+						}
+						person.fields["analysis"] = ComplexType("analysis").also { analysis ->
+							analysis.attributes["dateStart"] = Primitive.Date
+							analysis.attributes["timeStart"] = Primitive.Time
+							analysis.attributes["dateComplete"] = Primitive.Date
+							analysis.attributes["timeComplete"] = Primitive.Time
+						}
 					}
 				}
-			}
-		})
+			)
+		)
 	)
 
 	@Test

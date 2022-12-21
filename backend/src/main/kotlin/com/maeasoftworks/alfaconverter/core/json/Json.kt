@@ -19,13 +19,11 @@ class Json : Result {
 	 * @param parent [Converter] that owns this [Result].
 	 */
 	override fun initialize(parent: Converter<*, *, *>) {
-		parent.conversion.actions.add(
-			object : AnonymousAction() {
-				override fun run(initialTable: Table, resultTable: Table) {
-					table = initialTable
-				}
+		parent.conversion.actions.add(object : AnonymousAction() {
+			override fun run(initialTable: Table, resultTable: Table) {
+				table = initialTable
 			}
-		)
+		})
 	}
 
 	override fun convert(): ByteArray {

@@ -12,6 +12,7 @@ fun Application.configureStatusPages() {
 		register<InvalidPartDataTypeException>(HttpStatusCode.BadRequest)
 		register<RequiredPartNotFoundException>(HttpStatusCode.BadRequest)
 		register<IncorrectFileException>(HttpStatusCode.BadRequest)
+		register<IllegalStateException>(HttpStatusCode.UnprocessableEntity)
 		status(HttpStatusCode.NotFound) { call, code ->
 			call.respondText(
 				serializer.encodeToString(ExceptionWrapper("404", "Route not found")),

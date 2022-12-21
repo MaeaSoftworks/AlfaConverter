@@ -22,8 +22,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class XmlModuleTest {
-	private val element = Element("root").also { root ->
-		root.type = ComplexType("root").also { rootType ->
+	private val element = Element(
+		"root",
+		ComplexType("root").also { rootType ->
 			rootType.fields["person"] = ComplexType("person").also { person ->
 				person.fields["firstname"] = Primitive.String
 				person.fields["lastname"] = Primitive.String
@@ -46,7 +47,7 @@ class XmlModuleTest {
 				}
 			}
 		}
-	}.also { println("\u001B[33mSchema from api/xml/preview as JSON:\n\u001B[33m${serializer.encodeToString(it)}") }
+	).also { println("\u001B[33mSchema from api/xml/preview as JSON:\n\u001B[33m${serializer.encodeToString(it)}") }
 
 	@Test
 	fun `test post api-xml-preview`() = testApplication {

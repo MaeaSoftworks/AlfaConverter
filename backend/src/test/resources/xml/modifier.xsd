@@ -15,7 +15,7 @@
                 <xsd:element name="lastname" type="xsd:string"/>
                 <xsd:element name="middleName" type="xsd:string"/>
                 <xsd:element name="birthday" type="xsd:date"/>
-                <xsd:element name="age" type="age"/>
+                <xsd:element name="age" type="xsd:decimal"/>
                 <xsd:element name="address" type="xsd:string"/>
                 <xsd:element name="diagnosis" type="diagnosis"/>
                 <xsd:element name="researchType" type="xsd:string"/>
@@ -25,26 +25,9 @@
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:simpleType name="age">
-        <xsd:restriction base="xsd:integer">
-            <xsd:minInclusive value="0"/>
-            <xsd:maxInclusive value="100"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-
-    <xsd:simpleType name="diagnosisCode">
-        <xsd:restriction base="xsd:positiveInteger">
-            <xsd:enumeration value="1"/>
-            <xsd:enumeration value="5"/>
-            <xsd:enumeration value="15"/>
-            <xsd:enumeration value="25"/>
-            <xsd:enumeration value="30"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-
     <xsd:complexType name="diagnosis">
         <xsd:sequence>
-            <xsd:element name="code" type="diagnosisCode"/>
+            <xsd:element name="code" type="xsd:decimal"/>
             <xsd:element name="name" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>

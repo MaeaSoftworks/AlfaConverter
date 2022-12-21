@@ -8,25 +8,21 @@ import org.jdom2.Element as XsdElement
 @Serializable
 @SerialName("ComplexType")
 class ComplexType : Type {
-	@Transient
-	private var registration: ((TypePlaceholder) -> TypePlaceholder)? = null
+	@Transient private var registration: ((TypePlaceholder) -> Unit)? = null
 
-	constructor(
-		name: String,
-		registration: ((TypePlaceholder) -> TypePlaceholder)? = null
-	) : super(name) {
+	constructor(name: String, registration: ((TypePlaceholder) -> Unit)? = null) : super(name) {
 		this.registration = registration
 	}
 
 	override fun createInstance(): Type {
-		val instance = Instance(name)
-		for (field in fields) {
-			instance.fields[field.key] = field.value.createInstance()
+		return Instance(name).apply {
+			for (field in fields) {
+				fields[field.key] = field.value.createInstance()
+			}
+			for (attribute in attributes) {
+				attributes[attribute.key] = attribute.value.createInstance()
+			}
 		}
-		for (attribute in attributes) {
-			instance.attributes[attribute.key] = attribute.value.createInstance()
-		}
-		return instance
 	}
 
 	fun sequenceToFields(sequence: XsdElement, prefix: String) {
@@ -35,10 +31,9 @@ class ComplexType : Type {
 			val fieldType: String? = field.getAttributeValue("type")
 			val refField: String? = field.getAttributeValue("ref")
 			if (fieldName != null && fieldType != null) {
-				fields[fieldName] = Primitive.findPrimitive(fieldType, prefix)
-					?: registration!!(TypePlaceholder(name, fieldType, fieldName = fieldName))
+				fields[fieldName] = Primitive.findPrimitive(fieldType, prefix) ?: TypePlaceholder(name, fieldType, fieldName = fieldName).also(registration!!)
 			} else if (refField != null) {
-				fields[refField] = registration!!(TypePlaceholder(name, refField, true))
+				fields[refField] = TypePlaceholder(name, refField, true).also(registration!!)
 			}
 		}
 	}
@@ -48,8 +43,7 @@ class ComplexType : Type {
 		for (attribute in attributes) {
 			val attributeName = attribute.getAttributeValue("name")
 			val attributeType = attribute.getAttributeValue("type")
-			this.attributes[attributeName] = Primitive.findPrimitive(attributeType, prefix)
-				?: registration!!(TypePlaceholder(name, attributeName, true))
+			this.attributes[attributeName] = Primitive.findPrimitive(attributeType, prefix) ?: TypePlaceholder(name, attributeName, true).also(registration!!)
 		}
 	}
 }
