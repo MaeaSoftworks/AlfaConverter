@@ -254,8 +254,8 @@ const EditXlsxToXml = () => {
         Object.keys(binds).forEach(bind => {
             let res = {
                 "type": "bind",
-                "initialColumn": columnsFromFile[bind][0],
-                "targetColumn": [columnsToFile[binds[bind][0]]][0][0]
+                "initialColumn": [columnsFromFile[bind][0]],
+                "targetColumn": [columnsToFile[binds[bind][0]]][0][0].split('.')
             };
             console.log(res);
             actionObj.actions.push(res);
@@ -264,8 +264,8 @@ const EditXlsxToXml = () => {
         Object.keys(splits).forEach(split => {
             let res = {
                 "type": "split",
-                "initialColumn": columnsFromFile[split][0],
-                "targetColumns": splits[split].map(index => columnsToFile[index][0]),
+                "initialColumn": [columnsFromFile[split][0]],
+                "targetColumns": splits[split].map(index => columnsToFile[index][0].split('.')),
                 // "pattern": Array(splits[split].length).fill("(\\S+)").join(" ")
             };
 
@@ -283,8 +283,8 @@ const EditXlsxToXml = () => {
         Object.keys(merges).forEach(merge => {
             let res = {
                 "type": "merge",
-                "initialColumns": merges[merge].map(index => columnsFromFile[index][0]),
-                "targetColumn": columnsFromFile[merge][0],
+                "initialColumns": merges[merge].map(index => [columnsFromFile[index][0]]),
+                "targetColumn": columnsToFile[merge][0].split('.'),
                 // "pattern": merges[merge].map(number => "$" + number).join(' ')
             };
 
@@ -294,9 +294,9 @@ const EditXlsxToXml = () => {
                 res['pattern'] = merges[merge].map((number, index) => "${" + index + "}").join(' ');
             }
 
-            if (('to-' + merge + '-cast') in outerActions) {
-                actionObj.actions.push(outerActions['to-' + merge + '-cast']);
-            }
+            // if (('to-' + merge + '-cast') in outerActions) {
+            //     actionObj.actions.push(outerActions['to-' + merge + '-cast']);
+            // }
 
             console.log(res);
             actionObj.actions.push(res);
@@ -307,14 +307,14 @@ const EditXlsxToXml = () => {
         // setRequestBody(JSON.stringify(actionObj));
         // setShouldRedirect(true);
 
-        // downloadResult(JSON.stringify(actionObj));
+        downloadResult(JSON.stringify(actionObj));
     };
 
     const downloadResult = (conversion) => {
         var formdata = new FormData();
         formdata.append("conversion", conversion);
-        formdata.append("source", fileFrom, fileFrom.name);
-        formdata.append("modifier", fileTo, fileTo.name);
+        formdata.append("source", fileFrom);
+        formdata.append("schema", JSON.stringify(schema));
 
         var requestOptions = {
             method: 'POST',
@@ -324,7 +324,7 @@ const EditXlsxToXml = () => {
 
         let status = 200;
 
-        fetch("http://127.0.0.1:8080/api/xlsx/convert", requestOptions)
+        fetch("http://127.0.0.1:8080/api/xml/convert", requestOptions)
             .then(response => {
                 console.log(response);
                 status = response.status;
@@ -337,7 +337,7 @@ const EditXlsxToXml = () => {
                     const url = window.URL.createObjectURL(new Blob([result]));
                     const link = document.createElement('a');
                     link.href = url;
-                    link.setAttribute('download', `${Date.now()}.xlsx`);
+                    link.setAttribute('download', `${Date.now()}.xml`);
                     document.body.appendChild(link);
                     link.click();
                 } else if (status === 500) {
@@ -457,6 +457,16 @@ const EditXlsxToXml = () => {
                                         ${isThereNoPendingArrowsOfTypeWithId('merge', columnName[1]) ? '' : css.merge_point}
                                         ${isThereNoPendingArrowsOfTypeWithId('connect', columnName[1]) ? '' : css.connect_point}`
                                     }/>
+                                    <SplitParametersSetupPopup active={activeSplitIndex === index}
+                                                               setActive={setActive}
+                                                               setActiveIndex={setActiveSplitIndex}
+                                                               fromIndex={index}
+                                                               bundle={[columnsFromFile, columnsToFile, arrows, zipped]}
+                                                               outerActions={outerActions}
+                                                               setOuterActions={setOuterActions}/>
+                                    <button onClick={splitPopupClickHandler}
+                                            data-target-index={index}
+                                            className={css.popup_trigger + ' ' + css.split_popup_trigger + ' ' + (isThereNoPendingArrowsOfTypeWithId('split', columnName[1]) ? css.popup_trigger_invisible : '')}></button>
                                 </div>
                             )}
                         </div>
@@ -478,6 +488,16 @@ const EditXlsxToXml = () => {
                                         ${isThereNoPendingArrowsOfTypeWithId('merge', columnName[1]) ? '' : css.merge_point}
                                         ${isThereNoPendingArrowsOfTypeWithId('connect', columnName[1]) ? '' : css.connect_point}`
                                     }/>
+                                    <MergeParametersSetupPopup active={activeMergeIndex === index}
+                                                               setActive={setActive}
+                                                               setActiveIndex={setActiveMergeIndex}
+                                                               toIndex={index}
+                                                               bundle={[columnsFromFile, columnsToFile, arrows, zipped]}
+                                                               outerActions={outerActions}
+                                                               setOuterActions={setOuterActions}/>
+                                    <button onClick={mergePopupClickHandler}
+                                            data-target-index={index}
+                                            className={css.popup_trigger + ' ' + css.merge_popup_trigger + ' ' + (isThereNoPendingArrowsOfTypeWithId('merge', columnName[1]) ? css.popup_trigger_invisible : '')}></button>
                                 </div>
                             )}
                         </div>
