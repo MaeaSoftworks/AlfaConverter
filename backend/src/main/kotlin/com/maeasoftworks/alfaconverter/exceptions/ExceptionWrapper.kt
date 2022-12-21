@@ -9,15 +9,15 @@ import kotlinx.serialization.encodeToString
 
 @Serializable
 data class ExceptionWrapper(val code: String, val message: String) {
-	constructor(code: String, cause: Throwable) : this(code, cause.message ?: "No message provided")
+    constructor(code: String, cause: Throwable) : this(code, cause.message ?: "No message provided")
 }
 
 inline fun <reified T : Throwable> StatusPagesConfig.register(code: HttpStatusCode) {
-	exception<T> { call, cause ->
-		call.respondText(
-			serializer.encodeToString(ExceptionWrapper(code.value.toString(), cause)),
-			ContentType.Application.Json,
-			code
-		)
-	}
+    exception<T> { call, cause ->
+        call.respondText(
+            serializer.encodeToString(ExceptionWrapper(code.value.toString(), cause)),
+            ContentType.Application.Json,
+            code
+        )
+    }
 }

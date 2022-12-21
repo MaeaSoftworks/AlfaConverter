@@ -14,13 +14,13 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Application.jsonModule() {
-	routing {
-		route("/api/json") {
-			post("/convert") {
-				val source = call.receiveMultipart().extractParts("source" to { it.asByteArray() with Extension.XLSX })
-				val response = Converter(Xlsx(source), Json()).convert()
-				call.respondBytes(response, ContentType.Application.Json)
-			}
-		}
-	}
+    routing {
+        route("/api/json") {
+            post("/convert") {
+                val source = call.receiveMultipart().extractParts("source" to { it.asByteArray() with Extension.XLSX })
+                val response = Converter(Xlsx(source), Json()).convert()
+                call.respondBytes(response, ContentType.Application.Json)
+            }
+        }
+    }
 }

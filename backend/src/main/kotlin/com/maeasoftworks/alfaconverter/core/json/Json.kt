@@ -12,27 +12,27 @@ import kotlinx.serialization.encodeToString
  * Implementation of [Result] for json result type.
  */
 class Json : Result {
-	override var table: Table = Table()
+    override var table: Table = Table()
 
-	/**
-	 * Gets [Source] table and set it to local table.
-	 * @param parent [Converter] that owns this [Result].
-	 */
-	override fun initialize(parent: Converter<*, *, *>) {
-		parent.conversion.actions.add(object : AnonymousAction() {
-			override fun run(initialTable: Table, resultTable: Table) {
-				table = initialTable
-			}
-		})
-	}
+    /**
+     * Gets [Source] table and set it to local table.
+     * @param parent [Converter] that owns this [Result].
+     */
+    override fun initialize(parent: Converter<*, *, *>) {
+        parent.conversion.actions.add(object : AnonymousAction() {
+            override fun run(initialTable: Table, resultTable: Table) {
+                table = initialTable
+            }
+        })
+    }
 
-	override fun convert(): ByteArray {
-		val result = mutableListOf<Map<String, String?>>()
-		val headers = table.headers.map { it[0] }
-		for (i in 0 until table.rowsCount) {
-			val record = Table.slice(table, i).map { it?.getJsonRepresentation() }
-			result.add(headers.zip(record).toMap())
-		}
-		return serializer.encodeToString(result).toByteArray()
-	}
+    override fun convert(): ByteArray {
+        val result = mutableListOf<Map<String, String?>>()
+        val headers = table.headers.map { it[0] }
+        for (i in 0 until table.rowsCount) {
+            val record = Table.slice(table, i).map { it?.getJsonRepresentation() }
+            result.add(headers.zip(record).toMap())
+        }
+        return serializer.encodeToString(result).toByteArray()
+    }
 }

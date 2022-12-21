@@ -8,39 +8,39 @@ import com.maeasoftworks.alfaconverter.core.model.Table
 
 class Xlsx : Source, Modifier, Result {
 
-	// all
-	private var spreadsheet: Spreadsheet = Spreadsheet(Table())
+    // all
+    private var spreadsheet: Spreadsheet = Spreadsheet(Table())
 
-	// source & result
-	override var table: Table
-		get() = spreadsheet.table
-		set(value) {
-			spreadsheet.table = value
-		}
+    // source & result
+    override var table: Table
+        get() = spreadsheet.table
+        set(value) {
+            spreadsheet.table = value
+        }
 
-	constructor()
+    constructor()
 
-	constructor(file: ByteArray) {
-		this.spreadsheet = Spreadsheet(file)
-	}
+    constructor(file: ByteArray) {
+        this.spreadsheet = Spreadsheet(file)
+    }
 
-	// source & modifier
-	override fun getHeaders() = spreadsheet.getHeaders()
+    // source & modifier
+    override fun getHeaders() = spreadsheet.getHeaders()
 
-	// source
-	override fun getExamples() = spreadsheet.getExamples()
+    // source
+    override fun getExamples() = spreadsheet.getExamples()
 
-	// modifier
-	override fun getPayload() = null
+    // modifier
+    override fun getPayload() = null
 
-	override fun initialize(parent: Converter<*, *, *>) {
-		check(parent.modifier != null) { "Conversion cannot work if the result is not specified" }
-		table = Table()
-		for (column in parent.modifier.getHeaders()) {
-			table.add(column)
-		}
-	}
+    override fun initialize(parent: Converter<*, *, *>) {
+        check(parent.modifier != null) { "Conversion cannot work if the result is not specified" }
+        table = Table()
+        for (column in parent.modifier.getHeaders()) {
+            table.add(column)
+        }
+    }
 
-	// result
-	override fun convert() = spreadsheet.save()
+    // result
+    override fun convert() = spreadsheet.save()
 }

@@ -1,12 +1,12 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
 import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
+import com.maeasoftworks.alfaconverter.core.model.Result
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx
+import com.maeasoftworks.alfaconverter.core.xlsx.structure.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import com.maeasoftworks.alfaconverter.core.model.Result
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.*
 
 /**
  * Action that cast all data from in [targetColumn] to specified [dataFormat] of [NumberData].
@@ -20,13 +20,13 @@ import com.maeasoftworks.alfaconverter.core.xlsx.structure.*
 @Serializable
 @SerialName("cast")
 class Cast(
-	private val targetColumn: ColumnAddress,
-	private val dataFormat: Long? = 0
+    private val targetColumn: ColumnAddress,
+    private val dataFormat: Long? = 0
 ) : Action() {
-	override fun run(initialTable: Table, resultTable: Table) {
-		val cells = resultTable[targetColumn]
-		for (cell in cells.indices) {
-			cells[cell] = NumberData(cells[cell]!!.getString().toDouble(), dataFormat!!)
-		}
-	}
+    override fun run(initialTable: Table, resultTable: Table) {
+        val cells = resultTable[targetColumn]
+        for (cell in cells.indices) {
+            cells[cell] = NumberData(cells[cell]!!.getString().toDouble(), dataFormat!!)
+        }
+    }
 }

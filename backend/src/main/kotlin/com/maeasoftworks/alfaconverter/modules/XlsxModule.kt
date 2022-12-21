@@ -16,31 +16,31 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Application.xlsxModule() {
-	routing {
-		route("/api/xlsx") {
-			post("preview") {
-				val (source, target) = call.receiveMultipart().extractParts(
-					"source" to { it.asByteArray() with Extension.XLSX },
-					"modifier" to { it.asByteArray() with Extension.XLSX }
-				)
-				val converter = Converter(source = Xlsx(source), modifier = Xlsx(target))
-				call.respond(
-					listOf(
-						XlsxPreviewResponse(converter.source.getHeaders(), converter.source.getExamples()),
-						XlsxPreviewResponse(converter.modifier.getHeaders())
-					)
-				)
-			}
+    routing {
+        route("/api/xlsx") {
+            post("preview") {
+                val (source, target) = call.receiveMultipart().extractParts(
+                    "source" to { it.asByteArray() with Extension.XLSX },
+                    "modifier" to { it.asByteArray() with Extension.XLSX }
+                )
+                val converter = Converter(source = Xlsx(source), modifier = Xlsx(target))
+                call.respond(
+                    listOf(
+                        XlsxPreviewResponse(converter.source.getHeaders(), converter.source.getExamples()),
+                        XlsxPreviewResponse(converter.modifier.getHeaders())
+                    )
+                )
+            }
 
-			post("/convert") {
-				val (source, modifier, conversion) = call.receiveMultipart().extractParts(
-					"source" to { it.asByteArray() with Extension.XLSX },
-					"modifier" to { it.asByteArray() with Extension.XLSX },
-					"conversion" to { it.deserializeTo<Conversion>() }
-				)
-				val response = Converter(Xlsx(source), Xlsx(modifier), Xlsx(), conversion).convert()
-				call.respondBytes(response, ContentType.Application.Xlsx)
-			}
-		}
-	}
+            post("/convert") {
+                val (source, modifier, conversion) = call.receiveMultipart().extractParts(
+                    "source" to { it.asByteArray() with Extension.XLSX },
+                    "modifier" to { it.asByteArray() with Extension.XLSX },
+                    "conversion" to { it.deserializeTo<Conversion>() }
+                )
+                val response = Converter(Xlsx(source), Xlsx(modifier), Xlsx(), conversion).convert()
+                call.respondBytes(response, ContentType.Application.Xlsx)
+            }
+        }
+    }
 }

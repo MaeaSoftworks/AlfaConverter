@@ -9,8 +9,8 @@ data class XlsxPreviewResponse(val headers: List<ColumnAddress>, val examples: L
 
 @Serializable
 data class XmlPreviewResponse(
-	var headers: List<ColumnAddress>,
-	var examples: List<String>,
-	var schema: Element,
-	var endpoints: List<ColumnAddress>
+    var headers: List<ColumnAddress>,
+    var examples: List<String>,
+    var schema: Element,
+    var endpoints: List<ColumnAddress>
 )

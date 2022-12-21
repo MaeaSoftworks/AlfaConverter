@@ -19,32 +19,32 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Application.xmlModule() {
-	routing {
-		route("/api/xml") {
-			post("preview") {
-				val (source, modifier) = call.receiveMultipart().extractParts(
-					"source" to { it.asByteArray() with Extension.XLSX },
-					"modifier" to { it.asByteArray() with Extension.XML }
-				)
-				val xmlConverter = Converter(Xlsx(source), Xsd(modifier))
-				val response = XmlPreviewResponse(
-					xmlConverter.source.getHeaders(),
-					xmlConverter.source.getExamples(),
-					xmlConverter.modifier.getPayload(),
-					xmlConverter.modifier.getHeaders()
-				)
-				call.respond(response)
-			}
+    routing {
+        route("/api/xml") {
+            post("preview") {
+                val (source, modifier) = call.receiveMultipart().extractParts(
+                    "source" to { it.asByteArray() with Extension.XLSX },
+                    "modifier" to { it.asByteArray() with Extension.XML }
+                )
+                val xmlConverter = Converter(Xlsx(source), Xsd(modifier))
+                val response = XmlPreviewResponse(
+                    xmlConverter.source.getHeaders(),
+                    xmlConverter.source.getExamples(),
+                    xmlConverter.modifier.getPayload(),
+                    xmlConverter.modifier.getHeaders()
+                )
+                call.respond(response)
+            }
 
-			post("/convert") {
-				val (source, schema, conversion) = call.receiveMultipart().extractParts(
-					"source" to { it.asByteArray() with Extension.XLSX },
-					"schema" to { it.deserializeTo<Element>() },
-					"conversion" to { it.deserializeTo<Conversion>() }
-				)
-				val response = Converter(Xlsx(source), Xml(schema), conversion).convert()
-				call.respondText(String(response), ContentType.Text.Xml)
-			}
-		}
-	}
+            post("/convert") {
+                val (source, schema, conversion) = call.receiveMultipart().extractParts(
+                    "source" to { it.asByteArray() with Extension.XLSX },
+                    "schema" to { it.deserializeTo<Element>() },
+                    "conversion" to { it.deserializeTo<Conversion>() }
+                )
+                val response = Converter(Xlsx(source), Xml(schema), conversion).convert()
+                call.respondText(String(response), ContentType.Text.Xml)
+            }
+        }
+    }
 }

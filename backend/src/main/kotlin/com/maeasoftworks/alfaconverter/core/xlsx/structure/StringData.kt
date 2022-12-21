@@ -9,20 +9,20 @@ import org.xlsx4j.sml.Cell
 import org.xlsx4j.sml.STCellType
 
 data class StringData(private val value: String) : Data() {
-	constructor(spreadsheet: SpreadsheetMLPackage, cell: Cell) : this((spreadsheet.parts[sharedStringsPart] as SharedStrings).jaxbElement.si[cell.v.toInt()].t.value)
+    constructor(spreadsheet: SpreadsheetMLPackage, cell: Cell) : this((spreadsheet.parts[sharedStringsPart] as SharedStrings).jaxbElement.si[cell.v.toInt()].t.value)
 
-	override fun getXlsxRepresentation() = Cell().apply {
-		t = STCellType.INLINE_STR
-		`is` = CTRst().apply { t = CTXstringWhitespace().apply { value = this@StringData.value } }
-	}
+    override fun getXlsxRepresentation() = Cell().apply {
+        t = STCellType.INLINE_STR
+        `is` = CTRst().apply { t = CTXstringWhitespace().apply { value = this@StringData.value } }
+    }
 
-	override fun getJsonRepresentation() = value
+    override fun getJsonRepresentation() = value
 
-	override fun getXmlRepresentation() = "\"$value\""
+    override fun getXmlRepresentation() = "\"$value\""
 
-	override fun getString() = value
+    override fun getString() = value
 
-	companion object {
-		private val sharedStringsPart = PartName("/xl/sharedStrings.xml")
-	}
+    companion object {
+        private val sharedStringsPart = PartName("/xl/sharedStrings.xml")
+    }
 }

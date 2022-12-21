@@ -13,11 +13,11 @@ import io.ktor.server.netty.*
 fun main(args: Array<String>) = EngineMain.main(args)
 
 fun Application.module() {
-	configureSerialization()
-	configureLogging()
-	configureHTTP()
-	configureStatusPages()
-	xlsxModule()
-	xmlModule()
-	jsonModule()
+    configureSerialization()
+    configureLogging()
+    configureHTTP()
+    configureStatusPages()
+    xlsxModule()
+    xmlModule()
+    jsonModule()
 }

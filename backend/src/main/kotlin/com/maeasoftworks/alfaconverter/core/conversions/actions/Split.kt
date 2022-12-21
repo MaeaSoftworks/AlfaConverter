@@ -1,14 +1,14 @@
 package com.maeasoftworks.alfaconverter.core.conversions.actions
 
 import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
+import com.maeasoftworks.alfaconverter.core.model.Result
+import com.maeasoftworks.alfaconverter.core.model.Source
 import com.maeasoftworks.alfaconverter.core.model.Table
 import com.maeasoftworks.alfaconverter.core.model.Table.*
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import com.maeasoftworks.alfaconverter.core.model.Source
-import com.maeasoftworks.alfaconverter.core.model.Result
 
 /**
  * Action that splits all data from [initialColumn] to [targetColumns].
@@ -20,21 +20,21 @@ import com.maeasoftworks.alfaconverter.core.model.Result
 @Serializable
 @SerialName("split")
 class Split(
-	private val initialColumn: ColumnAddress,
-	private val targetColumns: List<ColumnAddress>,
-	@Suppress("CanBeParameter")
-	private val pattern: String
+    private val initialColumn: ColumnAddress,
+    private val targetColumns: List<ColumnAddress>,
+    @Suppress("CanBeParameter")
+    private val pattern: String
 ) : Action() {
-	@Transient
-	private val regex = Regex(pattern)
+    @Transient
+    private val regex = Regex(pattern)
 
-	override fun run(initialTable: Table, resultTable: Table) {
-		val initialColumn = initialTable[initialColumn]
-		for (row in 0 until initialTable.rowsCount) {
-			val results = regex.matchEntire(initialColumn[row]!!.getString())!!.groups.filterNotNull().drop(1)
-			for (column in results.indices) {
-				resultTable[targetColumns[column], row] = StringData(results[column].value)
-			}
-		}
-	}
+    override fun run(initialTable: Table, resultTable: Table) {
+        val initialColumn = initialTable[initialColumn]
+        for (row in 0 until initialTable.rowsCount) {
+            val results = regex.matchEntire(initialColumn[row]!!.getString())!!.groups.filterNotNull().drop(1)
+            for (column in results.indices) {
+                resultTable[targetColumns[column], row] = StringData(results[column].value)
+            }
+        }
+    }
 }

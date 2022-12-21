@@ -8,5 +8,5 @@ import kotlinx.serialization.json.Json
 val serializer = Json { allowStructuredMapKeys = true }
 
 fun Application.configureSerialization() {
-	install(ContentNegotiation) { json(serializer) }
+    install(ContentNegotiation) { json(serializer) }
 }

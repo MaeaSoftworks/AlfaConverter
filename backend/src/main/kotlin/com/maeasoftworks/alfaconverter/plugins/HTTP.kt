@@ -6,9 +6,9 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.defaultheaders.*
 
 fun Application.configureHTTP() {
-	install(DefaultHeaders)
-	install(CORS) {
-		allowMethod(HttpMethod.Put)
-		anyHost()
-	}
+    install(DefaultHeaders)
+    install(CORS) {
+        allowMethod(HttpMethod.Put)
+        anyHost()
+    }
 }
