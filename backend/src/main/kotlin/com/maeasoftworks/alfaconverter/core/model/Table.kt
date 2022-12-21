@@ -7,6 +7,14 @@ import com.maeasoftworks.alfaconverter.core.xlsx.structure.Data
  */
 typealias Column = MutableList<Data?>
 
+fun Column.getOrNull(pos: Int): Data? {
+    return if (size <= pos || size == 0) {
+        null
+    } else {
+        this[pos]
+    }
+}
+
 typealias ColumnAddress = List<String>
 
 /**

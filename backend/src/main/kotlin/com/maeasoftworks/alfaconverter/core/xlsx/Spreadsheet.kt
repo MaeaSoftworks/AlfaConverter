@@ -2,6 +2,7 @@ package com.maeasoftworks.alfaconverter.core.xlsx
 
 import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
 import com.maeasoftworks.alfaconverter.core.model.Table
+import com.maeasoftworks.alfaconverter.core.model.getOrNull
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.*
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage
 import org.docx4j.openpackaging.parts.PartName
@@ -73,7 +74,7 @@ class Spreadsheet {
         for (rowNumber in 0 until table.rowsCount) {
             val row = factory.createRow()
             for (columnNumber in 0 until table.values.size) {
-                val cell = table[columnNumber][rowNumber]?.getXlsxRepresentation()
+                val cell = table[columnNumber].getOrNull(rowNumber)?.getXlsxRepresentation()
                 cell?.r = toExcel(columnNumber) + (rowNumber + 2).toString()
                 if (cell != null) {
                     row.c.add(cell)
