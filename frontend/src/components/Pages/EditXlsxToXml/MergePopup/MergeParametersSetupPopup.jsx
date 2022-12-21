@@ -86,15 +86,15 @@ const MergeParametersSetupPopup = ({
             "pattern": result
         };
 
-        let castNode = {
-            "type": "cast",
-            "targetColumn": [endIndex[toIndex]],
-            "targetType": castTargetType
-        }
+        // let castNode = {
+        //     "type": "cast",
+        //     "targetColumn": [endIndex[toIndex]],
+        //     "targetType": castTargetType
+        // }
 
         let outerActns = outerActions;
         outerActns['to-' + toIndex] = resultNode;
-        outerActns['to-' + toIndex + '-cast'] = castNode;
+        // outerActns['to-' + toIndex + '-cast'] = castNode;
         setOuterActions(outerActns);
 
         console.log('outerActnsMerge');
@@ -304,16 +304,16 @@ const MergeParametersSetupPopup = ({
                     <p>{`«${exampleStringResult}»`}</p>
                     {/*<p>{`«${aboba}»`}</p>*/}
                 </div>
-                <div className={css.example}>
-                    <p>И будет иметь тип данных:</p>
-                    <select className={css.select} onChange={onSelectChange}>
-                        <option value="String">Строка</option>
-                        <option value="Boolean">Булево значение</option>
-                        <option value="Number">Число</option>
-                        <option value="Null">Null</option>
-                        <option value="Object">Объект</option>
-                    </select>
-                </div>
+                {/*<div className={css.example}>*/}
+                {/*    <p>И будет иметь тип данных:</p>*/}
+                {/*    <select className={css.select} onChange={onSelectChange}>*/}
+                {/*        <option value="String">Строка</option>*/}
+                {/*        <option value="Boolean">Булево значение</option>*/}
+                {/*        <option value="Number">Число</option>*/}
+                {/*        <option value="Null">Null</option>*/}
+                {/*        <option value="Object">Объект</option>*/}
+                {/*    </select>*/}
+                {/*</div>*/}
 
                 {/*<button id="getResult" onClick={initPopupValues}>Подтвердить</button>*/}
 
