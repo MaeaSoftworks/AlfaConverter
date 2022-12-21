@@ -36,8 +36,7 @@ class Schema {
 		elements = mutableListOf(schema)
 		table = Table()
 		for (header in extractElementHeaders()) {
-			table.columns += Table.Column(header)
-			table.headers += header
+			table.add(header)
 		}
 	}
 
@@ -122,12 +121,12 @@ class Schema {
 			instances += instance
 
 			for (x in table.columns.indices) {
-				val path = table.columns[x].name.drop(2)
+				val path = table.headers[x].drop(2)
 				var endpoint = instance
 				for (f in path) {
 					endpoint = endpoint[f]
 				}
-				endpoint.value = table.columns[x].cells[y]
+				endpoint.value = table[x][y]
 			}
 		}
 		root.collection = instances

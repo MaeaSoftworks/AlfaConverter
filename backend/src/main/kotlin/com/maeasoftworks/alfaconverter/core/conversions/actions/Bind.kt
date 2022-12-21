@@ -22,8 +22,8 @@ class Bind(
 ) : Action() {
 
 	override fun run(initialTable: Table, resultTable: Table) {
-		for (cell in initialTable[initialColumn]?.cells!!) {
-			resultTable[targetColumn]?.cells?.add(cell)
+		for (cell in initialTable[initialColumn]) {
+			resultTable[targetColumn] += cell
 		}
 	}
 }

@@ -3,24 +3,32 @@ package com.maeasoftworks.alfaconverter.core.model
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.Data
 
 /**
+ * Data store for one column of table.
+ */
+typealias Column = MutableList<Data?>
+
+typealias ColumnAddress = List<String>
+
+/**
  * Data store. All formats can be represented as table and all conversions also can be performed on tables.
  */
 class Table {
 	/**
 	 * List of columns.
 	 */
-	val columns: MutableList<Column> = mutableListOf()
+	val values: LinkedHashMap<ColumnAddress, Column> = linkedMapOf()
 
-	/**
-	 * List of column addresses, a.k.a headers.
-	 */
-	val headers: MutableList<ColumnAddress> = mutableListOf()
+	val headers: List<ColumnAddress>
+		get() = values.keys.toList()
+
+	val columns: List<Column>
+		get() = values.values.toList()
 
 	/**
 	 * Count of rows in table excluding header.
 	 */
 	val rowsCount: Int
-		get() = columns.maxOf { it.cells.size }
+		get() = values.values.maxOf { it.size }
 
 	/**
 	 * Get value by column address & row index.
@@ -29,7 +37,7 @@ class Table {
 	 * @return value of cell.
 	 */
 	operator fun get(column: ColumnAddress, row: Int): Data? {
-		return columns.firstOrNull { it.name == column }?.get(row)
+		return values[column]?.get(row)
 	}
 
 	/**
@@ -37,8 +45,9 @@ class Table {
 	 * @param column column address.
 	 * @return column.
 	 */
-	operator fun get(column: ColumnAddress): Column? {
-		return columns.firstOrNull { it.name == column }
+	@JvmName("getColumn")
+	operator fun get(column: ColumnAddress): Column {
+		return values[column] ?: throw IndexOutOfBoundsException("Column $column not found")
 	}
 
 	/**
@@ -46,8 +55,13 @@ class Table {
 	 * @param columns column addresses.
 	 * @return list of columns.
 	 */
+	@JvmName("getColumns")
 	operator fun get(columns: List<ColumnAddress>): List<Column> {
-		return this.columns.filter { it.name in columns }
+		return columns.map { this.values[it] ?: throw IndexOutOfBoundsException("Column $it not found") }
+	}
+
+	operator fun get(column: Int): Column {
+		return values[values.keys.toList()[column]] ?: throw IndexOutOfBoundsException("Column $column not found")
 	}
 
 	/**
@@ -56,15 +70,19 @@ class Table {
 	 * @param row row index.
 	 */
 	operator fun set(column: ColumnAddress, row: Int, value: Data) {
-		columns.firstOrNull { it.name == column }?.let {
-			if (it.cells.size == row) {
-				it.cells.add(value)
-			} else if (it.cells.size > row) {
-				it.cells[row] = value
+		values[column]?.let {
+			if (it.size == row) {
+				it.add(value)
+			} else if (it.size > row) {
+				it[row] = value
 			} else {
-				throw IndexOutOfBoundsException()
+				throw IndexOutOfBoundsException("Column $column not found")
 			}
 		}
+	}
+
+	fun add(address: ColumnAddress) {
+		values[address] = mutableListOf()
 	}
 
 	companion object {
@@ -77,24 +95,9 @@ class Table {
 		fun slice(columns: List<Column>, pos: Int): List<Data?> {
 			return columns.map { it[pos] }
 		}
-	}
 
-	/**
-	 * Data store for one column of table.
-	 */
-	open class Column(var name: ColumnAddress) {
-		/**
-		 * Data values.
-		 */
-		val cells: MutableList<Data> = mutableListOf()
-
-		/**
-		 * Get value directly from column without accessing [cells].
-		 * @param pos row index.
-		 * @return value of cell.
-		 */
-		operator fun get(pos: Int): Data? {
-			return if (pos < cells.size) cells[pos] else null
+		fun slice(table: Table, pos: Int): List<Data?> {
+			return table.values.values.map { it[pos] }
 		}
 	}
 }

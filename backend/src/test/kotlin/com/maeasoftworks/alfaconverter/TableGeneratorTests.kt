@@ -18,7 +18,7 @@ class TableGeneratorTests {
 
 	@Test
 	fun `size detection`() {
-		assertEquals(10, initial.columns.size)
+		assertEquals(10, initial.values.size)
 		assertEquals(1, initial.rowsCount)
 		assertEquals(10, initial.headers.count())
 	}

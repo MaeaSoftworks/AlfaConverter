@@ -30,12 +30,12 @@ class ConversionTests {
 	fun `binding test`() {
 		conversion.actions += Bind(listOf("Column to bind 1"), listOf("bind 1 here"))
 		converter.executeActions()
-		for (row in result[listOf("bind 1 here")]!!.cells.indices) {
+		for (row in result[listOf("bind 1 here")].indices) {
 			val expected = NumberData((row + 1) * 10.0, 0)
 			assertEquals(
 				expected,
-				result[listOf("bind 1 here")]!!.cells[row],
-				"E: ${expected.getString()}; A: ${result[listOf("bind 1 here")]!!.cells[row].getString()}"
+				result[listOf("bind 1 here")][row],
+				"E: ${expected.getString()}; A: ${result[listOf("bind 1 here")][row]!!.getString()}"
 			)
 		}
 	}
@@ -55,13 +55,13 @@ class ConversionTests {
 		converter.executeActions()
 		var pos = 0
 		for (columnPos in 2..4) {
-			val column = result.columns[columnPos].cells
+			val column = result[columnPos]
 			for (cell in column.indices) {
 				val expected = StringData(getString(pos++ + columnPos - 2))
 				assertEquals(
 					expected,
 					column[cell],
-					"E: ${expected.getString()}; A: ${column[cell].getString()}; at ${columnPos}:${cell}"
+					"E: ${expected.getString()}; A: ${column[cell]!!.getString()}; at ${columnPos}:${cell}"
 				)
 			}
 		}
@@ -82,7 +82,7 @@ class ConversionTests {
 		)
 		converter.executeActions()
 		var pos = 0
-		for (cell in result[listOf("merged")]!!.cells) {
+		for (cell in result[listOf("merged")]) {
 			assertEquals(
 				StringData(getString(pos++)),
 				cell

@@ -37,8 +37,7 @@ class Xlsx : Source, Modifier, Result {
 		check(parent.modifier != null) { "Conversion cannot work if the result is not specified" }
 		table = Table()
 		for (column in parent.modifier.getHeaders()) {
-			table.columns += Table.Column(column)
-			table.headers += column
+			table.add(column)
 		}
 	}
 

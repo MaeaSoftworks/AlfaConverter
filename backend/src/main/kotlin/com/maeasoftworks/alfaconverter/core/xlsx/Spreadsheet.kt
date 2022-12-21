@@ -2,7 +2,6 @@ package com.maeasoftworks.alfaconverter.core.xlsx
 
 import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
 import com.maeasoftworks.alfaconverter.core.model.Table
-import com.maeasoftworks.alfaconverter.core.model.Table.Column
 import com.maeasoftworks.alfaconverter.core.xlsx.structure.*
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage
 import org.docx4j.openpackaging.parts.PartName
@@ -29,14 +28,12 @@ class Spreadsheet {
 		table = Table()
 		for (columnPos in worksheet.sheetData.row[0].c.indices) {
 			val data = extractValue(worksheet.sheetData.row[0].c[columnPos])
-			val column = Column(listOf(data.getString().trim()))
-			table.columns.add(column)
-			table.headers.add(column.name)
+			table.add(listOf(data.getString().trim()))
 		}
 
 		for (row in 1 until worksheet.sheetData.row.size) {
 			for (column in worksheet.sheetData.row[row].c.indices) {
-				table.columns[column].also { it.cells += extractValue(worksheet.sheetData.row[row].c[column]) }
+				table[column] += extractValue(worksheet.sheetData.row[row].c[column])
 			}
 		}
 	}
@@ -66,7 +63,7 @@ class Spreadsheet {
 		val sheet = pkg.createWorksheetPart(PartName("/xl/worksheets/sheet1.xml"), "result", 1)
 		val sheetData = sheet.contents.sheetData
 		val header = factory.createRow()
-		for (columnNumber in 0 until table.columns.size) {
+		for (columnNumber in 0 until table.values.size) {
 			val cell = StringData(table.headers[columnNumber][0]).getXlsxRepresentation()
 			cell.r = toExcel(columnNumber) + "1"
 			header.c.add(cell)
@@ -75,8 +72,8 @@ class Spreadsheet {
 
 		for (rowNumber in 0 until table.rowsCount) {
 			val row = factory.createRow()
-			for (columnNumber in 0 until table.columns.size) {
-				val cell = table.columns[columnNumber][rowNumber]?.getXlsxRepresentation()
+			for (columnNumber in 0 until table.values.size) {
+				val cell = table[columnNumber][rowNumber]?.getXlsxRepresentation()
 				cell?.r = toExcel(columnNumber) + (rowNumber + 2).toString()
 				if (cell != null) {
 					row.c.add(cell)

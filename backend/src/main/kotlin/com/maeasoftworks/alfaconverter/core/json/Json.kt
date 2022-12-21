@@ -30,7 +30,7 @@ class Json : Result {
 		val result = mutableListOf<Map<String, String?>>()
 		val headers = table.headers.map { it[0] }
 		for (i in 0 until table.rowsCount) {
-			val record = Table.slice(table.columns, i).map { it?.getJsonRepresentation() }
+			val record = Table.slice(table, i).map { it?.getJsonRepresentation() }
 			result.add(headers.zip(record).toMap())
 		}
 		return serializer.encodeToString(result).toByteArray()

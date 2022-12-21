@@ -24,9 +24,9 @@ class Cast(
 	private val dataFormat: Long? = 0
 ) : Action() {
 	override fun run(initialTable: Table, resultTable: Table) {
-		val cells = resultTable[targetColumn]!!.cells
+		val cells = resultTable[targetColumn]
 		for (cell in cells.indices) {
-			cells[cell] = NumberData(cells[cell].getString().toDouble(), dataFormat!!)
+			cells[cell] = NumberData(cells[cell]!!.getString().toDouble(), dataFormat!!)
 		}
 	}
 }
