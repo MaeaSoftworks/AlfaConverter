@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 import upload_img from './upload_image.png';
 import React, {useState, useEffect} from 'react';
 import result from "../ResultXlsxToJson/ResultXlsxlToJson";
+import arrowOk from "../UploadXlsxToXml/arrow_ok.svg";
 
 const UploadXlsxToXlsx = () => {
 
@@ -169,17 +170,32 @@ const UploadXlsxToXlsx = () => {
         <div className={css.page}>
             <div className={css.upload}>
                 <div className={css.textblock}>
-                    <h1 className={css.header}>Конвертация</h1>
+                    <h1 className={css.header}>Конвертация <br/> XLSX в XLSX</h1>
                     <p className={css.description}>Загрузите два файла: документ, который нужно конвертировать и
                         документ с необходимой структурой. Сервис поддерживает файлы объемом до 20МБ</p>
                 </div>
                 <form onSubmit={onSubmit} className={css.form}>
 
                     <div className={css.file_button_container}>
-                        <label htmlFor="source_file" className={`${css.file_input_label} ${isFileFromLegit ? css.file_input_label_loaded : ''}`}>
+                        <label htmlFor="source_file" className={css.file_input_label}>
                             Выбрать исходный файл
                         </label>
-                        <p className={css.file_input_description}>или перетащите файл сюда</p>
+                        <div className={css.file_input_data}>
+                            <p className={css.file_input_description}
+                               style={
+                                   {
+                                       display: `${isFileFromLegit ? 'none' : 'block'}`
+                                   }
+                               }>или перетащите файл
+                                сюда</p>
+                            <div className={css.arrow_block} style={
+                                {
+                                    display: `${isFileFromLegit ? 'block' : 'none'}`
+                                }
+                            }>
+                                <img className={css.arrow_img} src={arrowOk}></img>
+                            </div>
+                        </div>
                         {/*<input type="file" name="source_file" id="source_file" className={css.file_input}/>*/}
                         <input type="file" id="source_file" className={css.file_input} onChange={onInputFileFrom}/>
                     </div>
@@ -189,11 +205,25 @@ const UploadXlsxToXlsx = () => {
                         или меньше</p>
 
                     <div className={css.file_button_container}>
-                        <label htmlFor="template_file" className={`${css.file_input_label} ${isFileToLegit ? css.file_input_label_loaded : ''}`}>
+                        <label htmlFor="template_file" className={css.file_input_label}>
                             Выбрать структуру
                         </label>
-                        <p className={css.file_input_description}>или перетащите файл сюда</p>
-                        {/*<input type="file" name="template_file" id="template_file" className={css.file_input}/>*/}
+                        <div className={css.file_input_data}>
+                            <p className={css.file_input_description}
+                               style={
+                                   {
+                                       display: `${isFileToLegit ? 'none' : 'block'}`
+                                   }
+                               }>или перетащите файл
+                                сюда</p>
+                            <div className={css.arrow_block} style={
+                                {
+                                    display: `${isFileToLegit ? 'block' : 'none'}`
+                                }
+                            }>
+                                <img className={css.arrow_img} src={arrowOk}></img>
+                            </div>
+                        </div>                        {/*<input type="file" name="template_file" id="template_file" className={css.file_input}/>*/}
                         <input type="file" id="template_file" className={css.file_input} onChange={onInputFileTo}/>
                     </div>
                     <p className={fileToErrorClass[0]}>Ошибка! Файл имеет неверное расширение. Необходимо .xlsx</p>

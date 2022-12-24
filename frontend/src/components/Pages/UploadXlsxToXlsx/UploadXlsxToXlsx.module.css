@@ -63,7 +63,7 @@
 
     padding: 16px;
 
-    background: #6C6C6C;
+    background: #A4A2A2;
     border-radius: 12px;
     color: #FFFFFF;
 
@@ -84,6 +84,18 @@
     line-height: 22px;
     letter-spacing: 0.02em;
     text-align: left;
+
+}
+
+.file_input_data {
+    display: flex;
+}
+
+.arrow_block {
+
+}
+
+.arrow_img {
 
 }
 
@@ -115,7 +127,7 @@
 }
 
 .button_inactive {
-    background: #6C6C6C;
+    background: #A4A2A2;
 }
 
 .button_inactive:hover {

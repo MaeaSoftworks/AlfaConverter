@@ -63,7 +63,7 @@
 
     padding: 16px;
 
-    background: #6C6C6C;
+    background: #A4A2A2;
     border-radius: 12px;
     color: #FFFFFF;
 
@@ -77,6 +77,10 @@
     background: #EF3124;
 }
 
+.file_input_data {
+    display: flex;
+}
+
 .file_input_description {
     font-family: Segoe UI;
     font-size: 16px;
@@ -84,6 +88,14 @@
     line-height: 22px;
     letter-spacing: 0.02em;
     text-align: left;
+
+}
+
+.arrow_block {
+
+}
+
+.arrow_img {
 
 }
 
@@ -115,7 +127,7 @@
 }
 
 .button_inactive {
-    background: #6C6C6C;
+    background: #A4A2A2;
 }
 
 .button_inactive:hover {
