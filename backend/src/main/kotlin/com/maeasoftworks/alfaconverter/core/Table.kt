@@ -1,21 +1,23 @@
-package com.maeasoftworks.alfaconverter.core.model
+package com.maeasoftworks.alfaconverter.core
 
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.Data
+import com.maeasoftworks.alfaconverter.core.xlsx.Data
 
 /**
  * Data store for one column of table.
  */
 typealias Column = MutableList<Data?>
 
-fun Column.getOrNull(pos: Int): Data? {
-    return if (size <= pos || size == 0) {
-        null
-    } else {
-        this[pos]
-    }
-}
-
+/**
+ * Address of column in table.
+ */
 typealias ColumnAddress = List<String>
+
+/**
+ * [IndexOutOfBoundsException]-safe getter implementation.
+ * @param pos position of object.
+ * @return object or null if position was incorrect.
+ */
+fun Column.getOrNull(pos: Int) = if (size <= pos || size == 0) null else this[pos]
 
 /**
  * Data store. All formats can be represented as table and all conversions also can be performed on tables.
@@ -26,9 +28,15 @@ class Table {
      */
     val values: LinkedHashMap<ColumnAddress, Column> = linkedMapOf()
 
+    /**
+     * Shortcut for table first row a.k.a headers.
+     */
     val headers: List<ColumnAddress>
         get() = values.keys.toList()
 
+    /**
+     * Shortcut for table data.
+     */
     val columns: List<Column>
         get() = values.values.toList()
 
@@ -68,6 +76,11 @@ class Table {
         return columns.map { this.values[it] ?: throw IndexOutOfBoundsException("Column $it not found") }
     }
 
+    /**
+     * Get column by column position.
+     * @param column column position.
+     * @return list of columns.
+     */
     operator fun get(column: Int): Column {
         return values[values.keys.toList()[column]] ?: throw IndexOutOfBoundsException("Column $column not found")
     }
@@ -89,21 +102,31 @@ class Table {
         }
     }
 
+    /**
+     * Create empty column with header.
+     * @param address column address/header.
+     */
     fun add(address: ColumnAddress) {
         values[address] = mutableListOf()
     }
 
     companion object {
         /**
-         * Provides row-based access to table or specified columns.
+         * Provides row-based access to specified columns.
          * @param columns columns that need to be viewed.
          * @param pos row position to view.
-         * @return list of values in [pos] row of table/columns.
+         * @return list of values in [pos] row of columns.
          */
         fun slice(columns: List<Column>, pos: Int): List<Data?> {
             return columns.map { it[pos] }
         }
 
+        /**
+         * Provides row-based access to table.
+         * @param table table that need to be viewed.
+         * @param pos row position to view.
+         * @return list of values in [pos] row of table.
+         */
         fun slice(table: Table, pos: Int): List<Data?> {
             return table.values.values.map { it[pos] }
         }

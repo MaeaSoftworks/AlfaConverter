@@ -102,7 +102,5 @@ object Primitive {
         Time
     )
 
-    fun findPrimitive(name: kotlin.String, prefix: kotlin.String): Type? {
-        return name.removePrefix("$prefix:").let { n -> subclasses.firstOrNull { it.name == n } }
-    }
+    fun findPrimitive(name: kotlin.String, prefix: kotlin.String) = name.removePrefix("$prefix:").let { n -> subclasses.firstOrNull { it.name == n } }
 }

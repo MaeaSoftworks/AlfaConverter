@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverter.exceptions
 
-import com.maeasoftworks.alfaconverter.plugins.serializer
+import com.maeasoftworks.alfaconverter.modules.serializer
 import io.ktor.http.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*

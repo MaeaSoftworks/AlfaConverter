@@ -1,6 +1,6 @@
-package com.maeasoftworks.alfaconverter.models
+package com.maeasoftworks.alfaconverter.dto
 
-import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
+import com.maeasoftworks.alfaconverter.core.ColumnAddress
 import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 import kotlinx.serialization.Serializable
 

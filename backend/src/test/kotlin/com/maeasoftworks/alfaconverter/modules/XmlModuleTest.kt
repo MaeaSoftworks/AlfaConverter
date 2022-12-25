@@ -1,14 +1,13 @@
 package com.maeasoftworks.alfaconverter.modules
 
-import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Merge
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Split
+import com.maeasoftworks.alfaconverter.core.Bind
+import com.maeasoftworks.alfaconverter.core.Conversion
+import com.maeasoftworks.alfaconverter.core.Merge
+import com.maeasoftworks.alfaconverter.core.Split
 import com.maeasoftworks.alfaconverter.core.xml.structure.ComplexType
 import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 import com.maeasoftworks.alfaconverter.core.xml.structure.Primitive
-import com.maeasoftworks.alfaconverter.models.XmlPreviewResponse
-import com.maeasoftworks.alfaconverter.plugins.serializer
+import com.maeasoftworks.alfaconverter.dto.XmlPreviewResponse
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
@@ -50,7 +49,7 @@ class XmlModuleTest {
 
     @Test
     fun `test post api-xml-preview`() = testApplication {
-        environment { config = ApplicationConfig("application-xml-tests.conf") }
+        environment { config = ApplicationConfig("application.conf") }
         client.post("/api/xml/preview") {
             setBody(
                 MultiPartFormDataContent(
@@ -136,7 +135,7 @@ class XmlModuleTest {
 
     @Test
     fun `test post api-xml-convert`() = testApplication {
-        environment { config = ApplicationConfig("application-xml-tests.conf") }
+        environment { config = ApplicationConfig("application.conf") }
         client.post("/api/xml/convert") {
             setBody(
                 MultiPartFormDataContent(

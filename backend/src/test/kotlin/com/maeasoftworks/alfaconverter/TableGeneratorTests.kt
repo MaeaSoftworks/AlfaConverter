@@ -1,7 +1,7 @@
 package com.maeasoftworks.alfaconverter
 
 import com.maeasoftworks.alfaconverter.core.Converter
-import com.maeasoftworks.alfaconverter.core.model.Table
+import com.maeasoftworks.alfaconverter.core.Table
 import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx
 import org.junit.Test
 import java.nio.file.Files
@@ -10,7 +10,8 @@ import kotlin.test.assertEquals
 
 class TableGeneratorTests {
     private val converter = Converter(
-        Xlsx(Files.readAllBytes(Path.of("src/test/resources/table generator/source.xlsx")))
+        Xlsx(Files.readAllBytes(Path.of("src/test/resources/table generator/source.xlsx"))),
+        modifier = Xlsx()
     )
 
     private val initial: Table

@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.xml
 
-import com.maeasoftworks.alfaconverter.core.model.Modifier
+import com.maeasoftworks.alfaconverter.core.Modifier
 
 class Xsd(xsd: ByteArray) : Modifier {
     private var schema = Schema(String(xsd))

@@ -1,4 +1,4 @@
-package com.maeasoftworks.alfaconverter.plugins
+package com.maeasoftworks.alfaconverter.modules
 
 import io.ktor.server.application.*
 import io.ktor.server.plugins.callloging.*

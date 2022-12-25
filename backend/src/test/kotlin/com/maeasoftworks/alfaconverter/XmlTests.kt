@@ -1,16 +1,16 @@
 package com.maeasoftworks.alfaconverter
 
+import com.maeasoftworks.alfaconverter.core.Bind
+import com.maeasoftworks.alfaconverter.core.Merge
+import com.maeasoftworks.alfaconverter.core.Split
 import com.maeasoftworks.alfaconverter.core.Converter
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Merge
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Split
 import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx
 import com.maeasoftworks.alfaconverter.core.xml.Schema
 import com.maeasoftworks.alfaconverter.core.xml.Xml
 import com.maeasoftworks.alfaconverter.core.xml.structure.ComplexType
 import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 import com.maeasoftworks.alfaconverter.core.xml.structure.Primitive
-import com.maeasoftworks.alfaconverter.plugins.serializer
+import com.maeasoftworks.alfaconverter.modules.serializer
 import kotlinx.serialization.encodeToString
 import org.junit.Test
 import java.io.File

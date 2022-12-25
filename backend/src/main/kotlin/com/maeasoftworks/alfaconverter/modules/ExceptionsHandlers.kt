@@ -1,4 +1,4 @@
-package com.maeasoftworks.alfaconverter.plugins
+package com.maeasoftworks.alfaconverter.modules
 
 import com.maeasoftworks.alfaconverter.exceptions.*
 import io.ktor.http.*
@@ -7,7 +7,7 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import kotlinx.serialization.encodeToString
 
-fun Application.configureStatusPages() {
+fun Application.configureExceptionsHandler() {
     install(StatusPages) {
         register<InvalidPartDataTypeException>(HttpStatusCode.BadRequest)
         register<RequiredPartNotFoundException>(HttpStatusCode.BadRequest)

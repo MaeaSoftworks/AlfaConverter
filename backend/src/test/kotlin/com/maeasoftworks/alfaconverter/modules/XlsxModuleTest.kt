@@ -2,10 +2,11 @@
 
 package com.maeasoftworks.alfaconverter.modules
 
-import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.core.conversions.actions.*
-import com.maeasoftworks.alfaconverter.models.XlsxPreviewResponse
-import com.maeasoftworks.alfaconverter.plugins.serializer
+import com.maeasoftworks.alfaconverter.core.Bind
+import com.maeasoftworks.alfaconverter.core.Conversion
+import com.maeasoftworks.alfaconverter.core.Merge
+import com.maeasoftworks.alfaconverter.core.Split
+import com.maeasoftworks.alfaconverter.dto.XlsxPreviewResponse
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
@@ -28,7 +29,7 @@ class XlsxModuleTest {
 
     @Test
     fun `test post api-xlsx-preview`() = testApplication {
-        environment { config = ApplicationConfig("application-xlsx-tests.conf") }
+        environment { config = ApplicationConfig("application.conf") }
         client.post("/api/xlsx/preview") {
             setBody(
                 MultiPartFormDataContent(
@@ -85,7 +86,7 @@ class XlsxModuleTest {
 
     @Test
     fun `test post api-xlsx-convert`() = testApplication {
-        environment { config = ApplicationConfig("application-xlsx-tests.conf") }
+        environment { config = ApplicationConfig("application.conf") }
         client.post("/api/xlsx/convert") {
             setBody(
                 MultiPartFormDataContent(
@@ -133,9 +134,9 @@ class XlsxModuleTest {
             )
         }.apply {
             val sheet = (
-                SpreadsheetMLPackage.load(ByteArrayInputStream(body()))
-                    .`package`.parts[PartName("/xl/worksheets/sheet1.xml")] as WorksheetPart
-                )
+                    SpreadsheetMLPackage.load(ByteArrayInputStream(body()))
+                        .`package`.parts[PartName("/xl/worksheets/sheet1.xml")] as WorksheetPart
+                    )
                 .contents.sheetData
             assertEquals(10, sheet.row.size)
             for (row in sheet.row) {

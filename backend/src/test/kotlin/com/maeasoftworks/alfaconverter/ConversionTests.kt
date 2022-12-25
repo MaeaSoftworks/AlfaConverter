@@ -1,14 +1,14 @@
 package com.maeasoftworks.alfaconverter
 
+import com.maeasoftworks.alfaconverter.core.Bind
+import com.maeasoftworks.alfaconverter.core.Conversion
+import com.maeasoftworks.alfaconverter.core.Merge
+import com.maeasoftworks.alfaconverter.core.Split
 import com.maeasoftworks.alfaconverter.core.Converter
-import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Merge
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Split
-import com.maeasoftworks.alfaconverter.core.model.Table
+import com.maeasoftworks.alfaconverter.core.Table
+import com.maeasoftworks.alfaconverter.core.xlsx.NumberData
+import com.maeasoftworks.alfaconverter.core.xlsx.StringData
 import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.NumberData
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
 import org.junit.Test
 import java.io.File
 import kotlin.test.assertEquals

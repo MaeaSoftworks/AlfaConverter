@@ -1,7 +1,7 @@
 package com.maeasoftworks.alfaconverter.core.xml
 
-import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
-import com.maeasoftworks.alfaconverter.core.model.Table
+import com.maeasoftworks.alfaconverter.core.ColumnAddress
+import com.maeasoftworks.alfaconverter.core.Table
 import com.maeasoftworks.alfaconverter.core.xml.structure.*
 import com.maeasoftworks.alfaconverter.exceptions.UnprocessableSchemaException
 import org.jdom2.Document

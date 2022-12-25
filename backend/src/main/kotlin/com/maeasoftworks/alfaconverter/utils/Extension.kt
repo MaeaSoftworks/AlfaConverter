@@ -1,4 +1,4 @@
-package com.maeasoftworks.alfaconverter.services
+package com.maeasoftworks.alfaconverter.utils
 
 import com.maeasoftworks.alfaconverter.exceptions.IncorrectFileException
 import org.apache.tika.Tika
