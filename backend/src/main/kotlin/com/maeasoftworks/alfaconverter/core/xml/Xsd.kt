@@ -7,5 +7,5 @@ class Xsd(xsd: ByteArray) : Modifier {
 
     override fun getHeaders() = schema.extractElementHeaders()
 
-    override fun getPayload() = schema.elements.first { it.type.dependent == 0 }
+    override fun getPayload() = schema.rootElement
 }

@@ -23,6 +23,19 @@ fun Column.getOrNull(pos: Int) = if (size <= pos || size == 0) null else this[po
  * Data store. All formats can be represented as table and all conversions also can be performed on tables.
  */
 class Table {
+    constructor()
+
+    constructor(vararg addresses: ColumnAddress) {
+        addresses.forEach { add(it) }
+    }
+
+    constructor(vararg column: Pair<ColumnAddress, Column>) {
+        column.forEach {
+            add(it.first)
+            values[it.first] = it.second
+        }
+    }
+
     /**
      * List of columns.
      */
@@ -53,7 +66,7 @@ class Table {
      * @return value of cell.
      */
     operator fun get(column: ColumnAddress, row: Int): Data? {
-        return values[column]?.get(row)
+        return values[column]?.let { if (it.size <= row) null else it[row] }
     }
 
     /**
@@ -90,7 +103,7 @@ class Table {
      * @param column column address.
      * @param row row index.
      */
-    operator fun set(column: ColumnAddress, row: Int, value: Data) {
+    operator fun set(column: ColumnAddress, row: Int, value: Data?) {
         values[column]?.let {
             if (it.size == row) {
                 it.add(value)
@@ -118,7 +131,7 @@ class Table {
          * @return list of values in [pos] row of columns.
          */
         fun slice(columns: List<Column>, pos: Int): List<Data?> {
-            return columns.map { it[pos] }
+            return columns.map { it.getOrNull(pos) }
         }
 
         /**

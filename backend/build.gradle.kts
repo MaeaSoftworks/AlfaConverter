@@ -1,12 +1,18 @@
 val ktorVersion: String by project
 val kotlinVersion: String by project
 val logbackVersion: String by project
+val kotestVersion: String by project
+
+repositories {
+    mavenCentral()
+}
 
 plugins {
     application
     kotlin("jvm") version "1.7.22"
     id("io.ktor.plugin") version "2.1.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.7.22"
+    jacoco
 }
 
 group = "com.maeasoftworks"
@@ -14,10 +20,6 @@ application {
     mainClass.set("io.ktor.server.netty.EngineMain")
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
@@ -38,9 +40,25 @@ dependencies {
 
     testImplementation("io.ktor:ktor-server-tests-jvm:2.2.1")
     testImplementation("io.ktor:ktor-server-test-host-jvm:2.2.1")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+}
+
+jacoco {
+    toolVersion = "0.8.7"
 }
 
 val start by tasks.registering {
     dependsOn("run")
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+    }
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
 }

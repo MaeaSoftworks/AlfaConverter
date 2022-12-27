@@ -79,7 +79,7 @@ class Merge(private val initialColumns: List<ColumnAddress>, private val targetC
             var result = pattern
             var pos = 0
             Table.slice(sourceColumns, y).forEach { cell ->
-                result = result.replace("\${${pos++}}", cell!!.getString())
+                result = result.replace("\${${pos++}}", cell?.getString() ?: "")
             }
             resultTable[targetColumn, y] = StringData(result)
         }
@@ -102,9 +102,15 @@ class Split(private val initialColumn: ColumnAddress, private val targetColumns:
     override fun run(initialTable: Table, resultTable: Table) {
         val initialColumn = initialTable[initialColumn]
         for (row in 0 until initialTable.rowsCount) {
-            val results = regex.matchEntire(initialColumn[row]!!.getString())!!.groups.filterNotNull().drop(1)
-            for (column in results.indices) {
-                resultTable[targetColumns[column], row] = StringData(results[column].value)
+            val results = initialColumn.getOrNull(row)?.getString()?.let { regex.matchEntire(it)?.groups?.filterNotNull()?.drop(1) }
+            if (results == null) {
+                for (column in targetColumns.indices) {
+                    resultTable[targetColumns[column], row] = null
+                }
+            } else {
+                for (column in results.indices) {
+                    resultTable[targetColumns[column], row] = StringData(results[column].value)
+                }
             }
         }
     }
