@@ -409,6 +409,32 @@
     cursor: pointer;
 }
 
+.control_button_reset {
+    background: url("reset_dark_bg.png");
+    padding: 0;
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
+.control_button_reset:hover{
+    padding: 0;
+    background: url("reset_light_bg.png");
+    border: none;
+    width: 81px;
+    height: 81px;
+    cursor: pointer;
+}
+
+.control_button_reset:active {
+    padding: 0;
+    background: url("reset_light_bg.png");
+    box-shadow: 0 0 14px 12px #ccc;
+    border: none;
+    width: 81px;
+    height: 81px;
+}
+
 .control_button_img {
 
 }

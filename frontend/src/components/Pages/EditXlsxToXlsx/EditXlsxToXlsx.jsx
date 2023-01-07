@@ -187,6 +187,10 @@ const EditXlsxToXlsx = () => {
         event.preventDefault();
         switchActions(action.delete);
     };
+    const resetOnClick = (event) => {
+        event.preventDefault();
+        setArrows([]);
+    };
 
     const switchActions = (buttonAction) => {
         console.log(currentAction.type);
@@ -557,6 +561,15 @@ const EditXlsxToXlsx = () => {
                                 <h2 className={css.control_name}>Удалить</h2>
                                 <p className={css.control_description}>Выберите действие/связь необходимое к
                                     удалению</p>
+                            </div>
+                        </li>
+                        <li className={css.control}>
+                            <button
+                                className={css.control_button_reset}
+                                onClick={resetOnClick}/>
+                            <div>
+                                <h2 className={css.control_name}>Сбросить</h2>
+                                <p className={css.control_description}>Сбросить все выстроенные связи</p>
                             </div>
                         </li>
                         <li>
