@@ -1,5 +1,5 @@
 import css from "../Main/Main.module.css";
-import banner_image from "./banner_image.png";
+import banner_image from "./banner_img.png";
 import {NavLink} from "react-router-dom";
 
 const Main = () => {

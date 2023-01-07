@@ -1,5 +1,5 @@
 import css from './EditXlsxToXml.module.css';
-import upload_image from './upload_header_laptop_img.png';
+import upload_image from './upload_header_analytics_img.png';
 import connection_light from './connection_light_bg.png';
 import split_light from './split_light_bg.png';
 import merge_light from './merge_light_bg.png';

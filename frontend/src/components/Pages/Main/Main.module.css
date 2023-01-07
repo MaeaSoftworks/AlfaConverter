@@ -8,6 +8,7 @@
 
     align-items: center;
     justify-content: center;
+    margin-bottom: -73px;
 }
 
 .banner_textblock {
@@ -36,8 +37,8 @@
 }
 
 .banner_image {
-    height: 408px;
-    width: 612px;
+    height: 503px;
+    width: 545px;
 }
 
 .choose_block {
