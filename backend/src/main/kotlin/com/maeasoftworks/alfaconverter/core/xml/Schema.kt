@@ -1,7 +1,7 @@
 package com.maeasoftworks.alfaconverter.core.xml
 
-import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
-import com.maeasoftworks.alfaconverter.core.model.Table
+import com.maeasoftworks.alfaconverter.core.ColumnAddress
+import com.maeasoftworks.alfaconverter.core.Table
 import com.maeasoftworks.alfaconverter.core.xml.structure.*
 import com.maeasoftworks.alfaconverter.exceptions.UnprocessableSchemaException
 import org.jdom2.Document
@@ -10,12 +10,16 @@ import org.jdom2.Element as XsdElement
 
 class Schema {
     var elements = mutableListOf<Element>()
-    var types = mutableListOf<Type>()
     lateinit var table: Table
 
+    val rootElement: Element
+        get() = elements.first { it.type != null && it.type.dependent == 0 }
+
+    private var types = mutableListOf<Type>()
     private val builder = SAXBuilder()
     private lateinit var document: Document
     private lateinit var prefix: String
+
     private val root: XsdElement
         get() = document.rootElement
 
@@ -49,10 +53,13 @@ class Schema {
     }
 
     private fun createElement(xsdElement: XsdElement) {
-        elements += xsdElement.getAttribute("name").value.let { Element(it, createType(xsdElement.children.first(), it)) }
+        elements += xsdElement.getAttribute("name").value.let { Element(it, createType(xsdElement.children.firstOrNull(), it)) }
     }
 
-    private fun createType(typeDeclaration: XsdElement, name: String): Type {
+    private fun createType(typeDeclaration: XsdElement?, name: String): Type? {
+        if (typeDeclaration == null) {
+            return null
+        }
         return when (typeDeclaration.name) {
             "simpleType" -> throw UnprocessableSchemaException("simpleType is not supported yet")
             "complexType" -> createComplexType(typeDeclaration, name)
@@ -95,7 +102,7 @@ class Schema {
     }
 
     fun extractElementHeaders() = mutableListOf<ColumnAddress>().also {
-        extractElementHeaders(elements.first { element -> element.type.dependent == 0 }.type, it)
+        extractElementHeaders(rootElement.type!!, it)
     }
 
     private fun extractElementHeaders(type: Type, result: MutableList<ColumnAddress>, current: ColumnAddress? = null) {
@@ -114,7 +121,7 @@ class Schema {
 
     fun save(): String {
         val root = elements.first().type
-        val example = root.fields.values.first()
+        val example = root!!.fields.values.first()
         val instances = mutableListOf<Type>()
         for (y in 0 until table.rowsCount) {
             val instance = example.clone()

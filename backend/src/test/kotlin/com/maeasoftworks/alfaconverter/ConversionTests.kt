@@ -1,92 +1,157 @@
 package com.maeasoftworks.alfaconverter
 
-import com.maeasoftworks.alfaconverter.core.Converter
-import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Bind
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Merge
-import com.maeasoftworks.alfaconverter.core.conversions.actions.Split
-import com.maeasoftworks.alfaconverter.core.model.Table
-import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.NumberData
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.StringData
-import org.junit.Test
-import java.io.File
-import kotlin.test.assertEquals
+import com.maeasoftworks.alfaconverter.core.Bind
+import com.maeasoftworks.alfaconverter.core.Merge
+import com.maeasoftworks.alfaconverter.core.Split
+import com.maeasoftworks.alfaconverter.core.Table
+import com.maeasoftworks.alfaconverter.core.xlsx.StringData
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 
-class ConversionTests {
-    private val converter = Converter(
-        source = Xlsx(File("src/test/resources/conversion/source.xlsx").readBytes()),
-        modifier = Xlsx(File("src/test/resources/conversion/modifier.xlsx").readBytes()),
-        result = Xlsx()
-    )
-
-    private val result: Table
-        get() = converter.result.table
-
-    private val conversion: Conversion
-        get() = converter.conversion
-
-    @Test
-    fun `binding test`() {
-        conversion.actions += Bind(listOf("Column to bind 1"), listOf("bind 1 here"))
-        converter.executeActions()
-        for (row in result[listOf("bind 1 here")].indices) {
-            val expected = NumberData((row + 1) * 10.0, 0)
-            assertEquals(
-                expected,
-                result[listOf("bind 1 here")][row],
-                "E: ${expected.getString()}; A: ${result[listOf("bind 1 here")][row]!!.getString()}"
+class ConversionTests : FunSpec() {
+    init {
+        test("bind works correctly") {
+            val source = Table(
+                listOf("Column to bind 1") to mutableListOf(StringData("a"), StringData("b"), StringData("c")),
+                listOf("Column to bind 2") to mutableListOf(StringData("d"), StringData("e"), StringData("f"))
             )
-        }
-    }
+            val result = Table(listOf("bind 1 here"), listOf("bind 2 here"))
+            Bind(listOf("Column to bind 1"), listOf("bind 1 here")).run(source, result)
+            Bind(listOf("Column to bind 2"), listOf("bind 2 here")).run(source, result)
+            result[listOf("bind 1 here"), 0]!!.getString() shouldBe "a"
+            result[listOf("bind 1 here"), 1]!!.getString() shouldBe "b"
+            result[listOf("bind 1 here"), 2]!!.getString() shouldBe "c"
 
-    @Test
-    fun `split test`() {
-        val getString = { x: Int ->
-            when (x % 3) {
-                0 -> "a"; 1 -> "b"; 2 -> "c"; else -> "d"
-            }
-        }
-        conversion.actions += Split(
-            listOf("Will be split"),
-            listOf(listOf("was"), listOf("split"), listOf("!!!")),
-            "(\\S+) (\\S+) (\\S+)"
-        )
-        converter.executeActions()
-        var pos = 0
-        for (columnPos in 2..4) {
-            val column = result[columnPos]
-            for (cell in column.indices) {
-                val expected = StringData(getString(pos++ + columnPos - 2))
-                assertEquals(
-                    expected,
-                    column[cell],
-                    "E: ${expected.getString()}; A: ${column[cell]!!.getString()}; at $columnPos:$cell"
-                )
-            }
-        }
-    }
-
-    @Test
-    fun `merge test`() {
-        val getString = { x: Int ->
-            when (x % 2) {
-                0 -> "1 2 3"; 1 -> "3 2 1"; else -> "0 0 0"
-            }
+            result[listOf("bind 2 here"), 0]!!.getString() shouldBe "d"
+            result[listOf("bind 2 here"), 1]!!.getString() shouldBe "e"
+            result[listOf("bind 2 here"), 2]!!.getString() shouldBe "f"
         }
 
-        conversion.actions += Merge(
-            listOf(listOf("Will"), listOf("be"), listOf("merged")),
-            listOf("merged"),
-            "\${0} \${1} \${2}"
-        )
-        converter.executeActions()
-        var pos = 0
-        for (cell in result[listOf("merged")]) {
-            assertEquals(
-                StringData(getString(pos++)),
-                cell
+        test("bind skips null cells") {
+            val source = Table(
+                listOf("Column to bind 1") to mutableListOf(StringData("a"), null, StringData("c")),
+                listOf("Column to bind 2") to mutableListOf(StringData("d"), null, StringData("f"))
             )
+            val result = Table(listOf("bind 1 here"), listOf("bind 2 here"))
+            Bind(listOf("Column to bind 1"), listOf("bind 1 here")).run(source, result)
+            Bind(listOf("Column to bind 2"), listOf("bind 2 here")).run(source, result)
+            result[listOf("bind 1 here"), 0]?.getString() shouldBe "a"
+            result[listOf("bind 1 here"), 1]?.getString() shouldBe null
+            result[listOf("bind 1 here"), 2]?.getString() shouldBe "c"
+
+            result[listOf("bind 2 here"), 0]?.getString() shouldBe "d"
+            result[listOf("bind 2 here"), 1]?.getString() shouldBe null
+            result[listOf("bind 2 here"), 2]?.getString() shouldBe "f"
+        }
+
+        test("bind works with column smaller than average size of table") {
+            val source = Table(
+                listOf("Column to bind 1") to mutableListOf(StringData("a"), StringData("b"), StringData("c")),
+                listOf("Column to bind 2") to mutableListOf(StringData("d"), StringData("f"))
+            )
+            val result = Table(listOf("bind 1 here"), listOf("bind 2 here"))
+            Bind(listOf("Column to bind 1"), listOf("bind 1 here")).run(source, result)
+            Bind(listOf("Column to bind 2"), listOf("bind 2 here")).run(source, result)
+            result[listOf("bind 1 here"), 0]?.getString() shouldBe "a"
+            result[listOf("bind 1 here"), 1]?.getString() shouldBe "b"
+            result[listOf("bind 1 here"), 2]?.getString() shouldBe "c"
+
+            result[listOf("bind 2 here"), 0]?.getString() shouldBe "d"
+            result[listOf("bind 2 here"), 1]?.getString() shouldBe "f"
+            result[listOf("bind 2 here"), 2]?.getString() shouldBe null
+        }
+
+        test("split works correctly") {
+            val source = Table(listOf("split me plz") to mutableListOf(StringData("abc"), StringData("bcd"), StringData("cde")))
+            val result = Table(listOf("split"), listOf("me"), listOf("plz"))
+            Split(listOf("split me plz"), listOf(listOf("split"), listOf("me"), listOf("plz")), "(.)(.)(.)").run(source, result)
+            result[listOf("split"), 0]!!.getString() shouldBe "a"
+            result[listOf("split"), 1]!!.getString() shouldBe "b"
+            result[listOf("split"), 2]!!.getString() shouldBe "c"
+
+            result[listOf("me"), 0]!!.getString() shouldBe "b"
+            result[listOf("me"), 1]!!.getString() shouldBe "c"
+            result[listOf("me"), 2]!!.getString() shouldBe "d"
+
+            result[listOf("plz"), 0]!!.getString() shouldBe "c"
+            result[listOf("plz"), 1]!!.getString() shouldBe "d"
+            result[listOf("plz"), 2]!!.getString() shouldBe "e"
+        }
+
+        test("split skips null values") {
+            val source = Table(listOf("split me plz") to mutableListOf(StringData("abc"), null, StringData("cde")))
+            val result = Table(listOf("split"), listOf("me"), listOf("plz"))
+            Split(listOf("split me plz"), listOf(listOf("split"), listOf("me"), listOf("plz")), "(.)(.)(.)").run(source, result)
+            result[listOf("split"), 0]!!.getString() shouldBe "a"
+            result[listOf("split"), 1]?.getString() shouldBe null
+            result[listOf("split"), 2]!!.getString() shouldBe "c"
+
+            result[listOf("me"), 0]!!.getString() shouldBe "b"
+            result[listOf("me"), 1]?.getString() shouldBe null
+            result[listOf("me"), 2]!!.getString() shouldBe "d"
+
+            result[listOf("plz"), 0]!!.getString() shouldBe "c"
+            result[listOf("plz"), 1]?.getString() shouldBe null
+            result[listOf("plz"), 2]!!.getString() shouldBe "e"
+        }
+
+        test("split works with column smaller than average size of table") {
+            val source = Table(
+                listOf("split me plz") to mutableListOf(StringData("abc"), StringData("cde")),
+                listOf("big brother") to mutableListOf(StringData("1"), StringData("2"), StringData("3"))
+            )
+            val result = Table(listOf("split"), listOf("me"), listOf("plz"))
+            Split(listOf("split me plz"), listOf(listOf("split"), listOf("me"), listOf("plz")), "(.)(.)(.)").run(source, result)
+            result[listOf("split"), 0]!!.getString() shouldBe "a"
+            result[listOf("split"), 1]!!.getString() shouldBe "c"
+            result[listOf("split"), 2]?.getString() shouldBe null
+
+            result[listOf("me"), 0]!!.getString() shouldBe "b"
+            result[listOf("me"), 1]!!.getString() shouldBe "d"
+            result[listOf("me"), 2]?.getString() shouldBe null
+
+            result[listOf("plz"), 0]!!.getString() shouldBe "c"
+            result[listOf("plz"), 1]!!.getString() shouldBe "e"
+            result[listOf("plz"), 2]?.getString() shouldBe null
+        }
+
+        test("merge works correctly") {
+            val source = Table(
+                listOf("merge") to mutableListOf(StringData("a"), StringData("b"), StringData("c")),
+                listOf("me") to mutableListOf(StringData("b"), StringData("c"), StringData("d")),
+                listOf("plz") to mutableListOf(StringData("c"), StringData("d"), StringData("e"))
+            )
+            val result = Table(listOf("merge me plz"))
+            Merge(listOf(listOf("merge"), listOf("me"), listOf("plz")), listOf("merge me plz"), "\${0}\${1}\${2}").run(source, result)
+            result[listOf("merge me plz"), 0]!!.getString() shouldBe "abc"
+            result[listOf("merge me plz"), 1]!!.getString() shouldBe "bcd"
+            result[listOf("merge me plz"), 2]!!.getString() shouldBe "cde"
+        }
+
+        test("merge skips null values as empty strings") {
+            val source = Table(
+                listOf("merge") to mutableListOf(StringData("a"), null, StringData("c")),
+                listOf("me") to mutableListOf(StringData("b"), null, StringData("d")),
+                listOf("plz") to mutableListOf(StringData("c"), null, StringData("e"))
+            )
+            val result = Table(listOf("merge me plz"))
+            Merge(listOf(listOf("merge"), listOf("me"), listOf("plz")), listOf("merge me plz"), "\${0}\${1}\${2}").run(source, result)
+            result[listOf("merge me plz"), 0]!!.getString() shouldBe "abc"
+            result[listOf("merge me plz"), 1]!!.getString() shouldBe ""
+            result[listOf("merge me plz"), 2]!!.getString() shouldBe "cde"
+        }
+
+        test("merge works with column smaller than average size of table") {
+            val source = Table(
+                listOf("merge") to mutableListOf(StringData("a"), StringData("b"), StringData("c")),
+                listOf("me") to mutableListOf(StringData("b"), StringData("d")),
+                listOf("plz") to mutableListOf(StringData("c"), StringData("e"))
+            )
+            val result = Table(listOf("merge me plz"))
+            Merge(listOf(listOf("merge"), listOf("me"), listOf("plz")), listOf("merge me plz"), "\${0}\${1}\${2}").run(source, result)
+            result[listOf("merge me plz"), 0]!!.getString() shouldBe "abc"
+            result[listOf("merge me plz"), 1]!!.getString() shouldBe "bde"
+            result[listOf("merge me plz"), 2]!!.getString() shouldBe "c"
         }
     }
 }

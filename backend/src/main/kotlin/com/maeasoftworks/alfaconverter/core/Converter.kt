@@ -1,11 +1,5 @@
 package com.maeasoftworks.alfaconverter.core
 
-import com.maeasoftworks.alfaconverter.core.conversions.Conversion
-import com.maeasoftworks.alfaconverter.core.model.Modifier
-import com.maeasoftworks.alfaconverter.core.model.Result
-import com.maeasoftworks.alfaconverter.core.model.Source
-import org.jetbrains.annotations.TestOnly
-
 /**
  * Main class for file conversions.
  * @param source object of [Source] with realization dependent on first input type.
@@ -45,14 +39,6 @@ class Converter<S : Source, M : Modifier?, R : Result?>(
         return result.convert()
     }
 }
-
-/**
- * Creates a new instance of Converter only with [source]. Only for testing!
- * @param source object of [Source] with realization dependent on first input type.
- * @return New instance of Converter.
- */
-@TestOnly
-fun <S : Source> Converter(source: S) = Converter(source, null, null)
 
 /**
  * Creates a new instance of Converter without [Modifier].

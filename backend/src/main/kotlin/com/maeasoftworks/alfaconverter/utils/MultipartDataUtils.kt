@@ -2,7 +2,7 @@ package com.maeasoftworks.alfaconverter.utils
 
 import com.maeasoftworks.alfaconverter.exceptions.InvalidPartDataTypeException
 import com.maeasoftworks.alfaconverter.exceptions.RequiredPartNotFoundException
-import com.maeasoftworks.alfaconverter.plugins.serializer
+import com.maeasoftworks.alfaconverter.modules.serializer
 import io.ktor.http.content.*
 import kotlinx.serialization.decodeFromString
 
@@ -15,15 +15,15 @@ suspend fun MultiPartData.extractParts(vararg parts: String): List<PartData> {
             throw RequiredPartNotFoundException(parts.joinToString(", "), result.keys.joinToString(", "))
         }
     }
-    if (!parts.toList().equalsIgnoreOrder(result.keys.toList())) {
-        throw RequiredPartNotFoundException(parts.joinToString(", "), result.keys.joinToString(", "))
+    val first = parts.toList()
+    val resultKeys = result.keys.toList()
+    if (!(first.size == resultKeys.size && first.toSet() == resultKeys.toSet())) {
+        throw RequiredPartNotFoundException(parts.joinToString(", "), resultKeys.joinToString(", "))
     }
     return parts.map { result[it]!! }.toList()
 }
 
-suspend inline fun <T1> MultiPartData.extractParts(
-    part: Pair<String, (PartData) -> T1>
-): T1 = part.second(extractParts(part.first)[0])
+suspend inline fun <T1> MultiPartData.extractParts(part: Pair<String, (PartData) -> T1>): T1 = part.second(extractParts(part.first)[0])
 
 suspend inline fun <T1, T2> MultiPartData.extractParts(
     part1: Pair<String, (PartData) -> T1>,
@@ -40,11 +40,11 @@ suspend inline fun <T1, T2, T3> MultiPartData.extractParts(
 
 fun PartData.asByteArray(): ByteArray {
     return (
-        this as? PartData.FileItem ?: throw InvalidPartDataTypeException(
-            this,
-            PartData.FileItem::class
-        )
-        ).streamProvider().readBytes()
+            this as? PartData.FileItem ?: throw InvalidPartDataTypeException(
+                this,
+                PartData.FileItem::class
+            )
+            ).streamProvider().readBytes()
 }
 
 inline fun <reified T> PartData.deserializeTo(): T {

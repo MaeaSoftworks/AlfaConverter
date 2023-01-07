@@ -1,9 +1,8 @@
 package com.maeasoftworks.alfaconverter.core.xlsx
 
-import com.maeasoftworks.alfaconverter.core.model.ColumnAddress
-import com.maeasoftworks.alfaconverter.core.model.Table
-import com.maeasoftworks.alfaconverter.core.model.getOrNull
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.*
+import com.maeasoftworks.alfaconverter.core.ColumnAddress
+import com.maeasoftworks.alfaconverter.core.Table
+import com.maeasoftworks.alfaconverter.core.getOrNull
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage
 import org.docx4j.openpackaging.parts.PartName
 import org.docx4j.openpackaging.parts.SpreadsheetML.Styles
@@ -65,22 +64,16 @@ class Spreadsheet {
         val sheetData = sheet.contents.sheetData
         val header = factory.createRow()
         for (columnNumber in 0 until table.values.size) {
-            val cell = StringData(table.headers[columnNumber][0]).getXlsxRepresentation()
-            cell.r = toExcel(columnNumber) + "1"
-            header.c.add(cell)
+            header.c.add(StringData(table.headers[columnNumber][0]).asCell().apply { r = toExcel(columnNumber) + "1" })
         }
         sheetData.row.add(header)
 
         for (rowNumber in 0 until table.rowsCount) {
-            val row = factory.createRow()
-            for (columnNumber in 0 until table.values.size) {
-                val cell = table[columnNumber].getOrNull(rowNumber)?.getXlsxRepresentation()
-                cell?.r = toExcel(columnNumber) + (rowNumber + 2).toString()
-                if (cell != null) {
-                    row.c.add(cell)
+            sheetData.row.add(factory.createRow().apply {
+                for (columnNumber in 0 until table.values.size) {
+                    table[columnNumber].getOrNull(rowNumber)?.asCell()?.apply { r = toExcel(columnNumber) + (rowNumber + 2).toString() }?.also { c.add(it) }
                 }
-            }
-            sheetData.row.add(row)
+            })
         }
         val stream = ByteArrayOutputStream()
         pkg.save(stream)
@@ -90,7 +83,7 @@ class Spreadsheet {
     private fun extractValue(docx4jCell: org.xlsx4j.sml.Cell): Data {
         return when (docx4jCell.t) {
             STCellType.B -> BooleanData(docx4jCell)
-            STCellType.N -> NumberData(docx4jCell.v.toDouble(), (document.parts[stylesPart] as Styles).getXfByIndex(docx4jCell.s).numFmtId)
+            STCellType.N -> NumberData(docx4jCell.v?.toDouble(), (document.parts[stylesPart] as Styles).getXfByIndex(docx4jCell.s).numFmtId)
             STCellType.E -> NullData()
             STCellType.S -> StringData(document, docx4jCell)
             STCellType.STR -> NullData()

@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="AlfaConverter [backend]" type="KtorApplicationConfigurationType" factoryName="Ktor">
     <module name="AlfaConverter.backend.main" />
+    <extension name="coverage" runner="jacoco" />
     <option name="alternativeJrePath" />
     <option name="alternativeJrePathEnabled" value="false" />
     <option name="includeProvidedScope" value="true" />

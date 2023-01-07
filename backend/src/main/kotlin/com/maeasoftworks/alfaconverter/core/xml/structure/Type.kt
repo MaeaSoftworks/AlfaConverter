@@ -1,6 +1,6 @@
 package com.maeasoftworks.alfaconverter.core.xml.structure
 
-import com.maeasoftworks.alfaconverter.core.xlsx.structure.Data
+import com.maeasoftworks.alfaconverter.core.xlsx.Data
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -49,17 +49,9 @@ sealed class Type(val name: String) : Cloneable {
     private fun toXml(targetName: String?, target: Target?): String {
         if (Primitive.findPrimitive(name, ":") != null) {
             return when (target) {
-                Target.FIELD -> {
-                    "<$targetName>${
-                    value!!.getXmlRepresentation().removePrefix("\"").removeSuffix("\"")
-                    }</$targetName>"
-                }
-
-                Target.ATTRIBUTE -> {
-                    value!!.getXmlRepresentation()
-                }
-
-                else -> value!!.getXmlRepresentation()
+                Target.FIELD -> "<$targetName>${value!!.asXmlValue().removePrefix("\"").removeSuffix("\"")}</$targetName>"
+                Target.ATTRIBUTE -> value!!.asXmlValue()
+                else -> value!!.asXmlValue()
             }
         }
         return if (collection != null) {
@@ -75,9 +67,7 @@ sealed class Type(val name: String) : Cloneable {
         }
     }
 
-    open fun createInstance(): Type {
-        return Instance(name)
-    }
+    open fun createInstance(): Type = Instance(name)
 
     class Instance(name: String) : Type(name)
 }

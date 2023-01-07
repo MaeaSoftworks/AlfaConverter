@@ -8,7 +8,7 @@ allprojects {
 	}
 
 	group = "com.maeasoftworks"
-	version = "2"
+	version = "1"
 }
 
 val start by tasks.registering {

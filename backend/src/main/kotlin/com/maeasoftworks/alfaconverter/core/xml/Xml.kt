@@ -1,8 +1,8 @@
 package com.maeasoftworks.alfaconverter.core.xml
 
 import com.maeasoftworks.alfaconverter.core.Converter
-import com.maeasoftworks.alfaconverter.core.model.Result
-import com.maeasoftworks.alfaconverter.core.model.Table
+import com.maeasoftworks.alfaconverter.core.Result
+import com.maeasoftworks.alfaconverter.core.Table
 import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 
 class Xml(element: Element) : Result {
