@@ -214,6 +214,10 @@ const EditXlsxToXlsx = () => {
         setArrowMoved(!arrowMoved);
     };
 
+    const updateState = () => {
+        setArrowMoved(!arrowMoved);
+    };
+
     const apply = (event) => {
         let i = 0;
         console.log('columnsFromFile');
@@ -437,8 +441,30 @@ const EditXlsxToXlsx = () => {
             </div>
             <div className={css.edit}>
                 {/*<Popup active={active} dataBundle={popupDataBundle}/>*/}
-                <div className={css.scheme_board} onMouseMove={mouseMoveHandler} onMouseLeave={breakCurrentUnattachedArrow}>
+                <div className={css.scheme_board} onMouseMove={mouseMoveHandler} onMouseLeave={breakCurrentUnattachedArrow} onScroll={updateState}>
                     <Xwrapper>
+
+                        {columnsFromFile.map((columnName, index) =>
+                            <SplitParametersSetupPopup active={activeSplitIndex === index}
+                                                       setActive={setActive}
+                                                       setActiveIndex={setActiveSplitIndex}
+                                                       fromIndex={index}
+                                                       bundle={[columnsFromFile, columnsToFile, arrows, zipped]}
+                                                       outerActions={outerActions}
+                                                       setOuterActions={setOuterActions}/>
+                        )}
+
+                        {columnsFromFile.map((columnName, index) =>
+                            <MergeParametersSetupPopup active={activeMergeIndex === index}
+                                                       setActive={setActive}
+                                                       setActiveIndex={setActiveMergeIndex}
+                                                       toIndex={index}
+                                                       bundle={[columnsFromFile, columnsToFile, arrows, zipped]}
+                                                       outerActions={outerActions}
+                                                       setOuterActions={setOuterActions}/>
+                        )}
+
+
                         <div className={css.dynamic_arrow_endpoint} id='dynamic_arrow_endpoint'>
                         </div>
                         <div className={css.file_struct}>
@@ -459,13 +485,13 @@ const EditXlsxToXlsx = () => {
                                         ${isThereNoPendingArrowsOfTypeWithId('merge', columnName[1]) ? '' : css.merge_point}
                                         ${isThereNoPendingArrowsOfTypeWithId('connect', columnName[1]) ? '' : css.connect_point}`
                                     }/>
-                                    <SplitParametersSetupPopup active={activeSplitIndex === index}
-                                                               setActive={setActive}
-                                                               setActiveIndex={setActiveSplitIndex}
-                                                               fromIndex={index}
-                                                               bundle={[columnsFromFile, columnsToFile, arrows, zipped]}
-                                                               outerActions={outerActions}
-                                                               setOuterActions={setOuterActions}/>
+                                    {/*<SplitParametersSetupPopup active={activeSplitIndex === index}*/}
+                                    {/*                           setActive={setActive}*/}
+                                    {/*                           setActiveIndex={setActiveSplitIndex}*/}
+                                    {/*                           fromIndex={index}*/}
+                                    {/*                           bundle={[columnsFromFile, columnsToFile, arrows, zipped]}*/}
+                                    {/*                           outerActions={outerActions}*/}
+                                    {/*                           setOuterActions={setOuterActions}/>*/}
                                     <button onClick={splitPopupClickHandler}
                                             data-target-index={index}
                                             className={css.popup_trigger + ' ' + css.split_popup_trigger + ' ' + (isThereNoPendingArrowsOfTypeWithId('split', columnName[1]) ? css.popup_trigger_invisible : '')}></button>
@@ -490,13 +516,13 @@ const EditXlsxToXlsx = () => {
                                         ${isThereNoPendingArrowsOfTypeWithId('merge', columnName[1]) ? '' : css.merge_point}
                                         ${isThereNoPendingArrowsOfTypeWithId('connect', columnName[1]) ? '' : css.connect_point}`
                                     }/>
-                                    <MergeParametersSetupPopup active={activeMergeIndex === index}
-                                                               setActive={setActive}
-                                                               setActiveIndex={setActiveMergeIndex}
-                                                               toIndex={index}
-                                                               bundle={[columnsFromFile, columnsToFile, arrows, zipped]}
-                                                               outerActions={outerActions}
-                                                               setOuterActions={setOuterActions}/>
+                                    {/*<MergeParametersSetupPopup active={activeMergeIndex === index}*/}
+                                    {/*                           setActive={setActive}*/}
+                                    {/*                           setActiveIndex={setActiveMergeIndex}*/}
+                                    {/*                           toIndex={index}*/}
+                                    {/*                           bundle={[columnsFromFile, columnsToFile, arrows, zipped]}*/}
+                                    {/*                           outerActions={outerActions}*/}
+                                    {/*                           setOuterActions={setOuterActions}/>*/}
                                     <button onClick={mergePopupClickHandler}
                                             data-target-index={index}
                                             className={css.popup_trigger + ' ' + css.merge_popup_trigger + ' ' + (isThereNoPendingArrowsOfTypeWithId('merge', columnName[1]) ? css.popup_trigger_invisible : '')}></button>
