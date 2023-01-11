@@ -146,6 +146,26 @@ const UploadXlsxToJson = () => {
             .catch(error => console.log('error', error));
     };
 
+    const onDragEnterAndOverHandler = (evt) => {
+        evt.preventDefault();
+    };
+
+    const onDropHandler = (evt) => {
+        evt.preventDefault();
+        let targetId = evt.target.htmlFor;
+        let fileInput = document.getElementById(targetId);
+        let file = evt.dataTransfer.files[0];
+
+        const dT = new DataTransfer();
+        dT.items.add(file);
+        fileInput.files = dT.files;
+
+        onInputFileFrom({target: fileInput});
+        //
+        // console.log('targetId', targetId);
+        // console.log('file', file);
+    };
+
     return (
         <div className={css.page}>
             <div className={css.upload}>
@@ -157,8 +177,12 @@ const UploadXlsxToJson = () => {
                 <form onSubmit={onSubmit} className={css.form}>
 
                     <div className={css.file_button_container}>
-                        <label htmlFor="source_file" className={css.file_input_label}>
-                            Выбрать файл для конвертации
+                        <label htmlFor="source_file" className={css.file_input_label}
+                               onDragEnter={onDragEnterAndOverHandler}
+                               onDrop={onDropHandler}
+                               onDragOver={onDragEnterAndOverHandler}
+                        >
+                            Выбрать .xlsx файл для конвертации
                         </label>
                         <div className={css.file_input_data}>
                             <p className={css.file_input_description}
