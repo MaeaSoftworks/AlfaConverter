@@ -1,5 +1,6 @@
 .header {
     width: 0;
+    z-index: 3;
 }
 
 .logo {

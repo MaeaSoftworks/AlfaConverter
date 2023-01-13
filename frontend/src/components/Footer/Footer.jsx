@@ -2,7 +2,9 @@ import css from './Footer.module.css';
 
 const Footer = () => {
     return (
-        <div className={css.footer}>
+        <div className={css.container}>
+            <div className={css.block}/>
+            <div className={css.footer}>
             <div className={css.top_section}>
                 <div className={css.top_links}>
                     <a className={css.link} href='https://alfabank.ru/currency/'>Курсы валют</a>
@@ -62,6 +64,7 @@ const Footer = () => {
                     </p>
                 </div>
             </div>
+        </div>
         </div>
     );
 };

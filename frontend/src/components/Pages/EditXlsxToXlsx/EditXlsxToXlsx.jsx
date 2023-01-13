@@ -414,7 +414,7 @@ const EditXlsxToXlsx = () => {
     };
 
     const isThereNoLinkedArrowsOfTypeWithId = (typeOfArrow, IdOfArrow) => {
-       return arrows.filter(arrow => arrow[2].type === typeOfArrow && arrow.includes(IdOfArrow) && arrow[1] !== 'dynamic_arrow_endpoint').length === 0;
+        return arrows.filter(arrow => arrow[2].type === typeOfArrow && arrow.includes(IdOfArrow) && arrow[1] !== 'dynamic_arrow_endpoint').length === 0;
     };
 
     const isThereNoPendingArrowsOfTypeWithId = (typeOfArrow, IdOfArrow) => {
@@ -431,17 +431,22 @@ const EditXlsxToXlsx = () => {
                 setActiveMergeIndex(-1);
             }
         }}>
-            <div className={css.header}>
-                <div className={css.header_text_block}>
-                    <h1 className={css.header_header}>Изменение структуры</h1>
-                    <p className={css.header_description}>Вам предстоит выбрать как будет выглядеть Ваш документ после
-                        конвертации</p>
+            <div className={css.header_container}>
+                <div className={css.header}>
+                    <div className={css.header_text_block}>
+                        <h1 className={css.header_header}>Изменение структуры</h1>
+                        <p className={css.header_description}>Вам предстоит выбрать как будет выглядеть Ваш документ
+                            после
+                            конвертации</p>
+                    </div>
+                    <img src={upload_image} className={css.header_img}/>
                 </div>
-                <img src={upload_image} className={css.header_img}/>
+                <div className={css.block}/>
             </div>
             <div className={css.edit}>
                 {/*<Popup active={active} dataBundle={popupDataBundle}/>*/}
-                <div className={css.scheme_board} onMouseMove={mouseMoveHandler} onMouseLeave={breakCurrentUnattachedArrow} onScroll={updateState}>
+                <div className={css.scheme_board} onMouseMove={mouseMoveHandler}
+                     onMouseLeave={breakCurrentUnattachedArrow} onScroll={updateState}>
                     <Xwrapper>
 
                         {columnsFromFile.map((columnName, index) =>
@@ -601,7 +606,8 @@ const EditXlsxToXlsx = () => {
                         <li>
                             {/*<Link to='/result'>*/}
                             <button className={css.apply_button} onClick={apply}>Преобразовать</button>
-                            <p className={isResponseOk ? css.server_error_hidden : css.server_error_showed}>Ошибка во время
+                            <p className={isResponseOk ? css.server_error_hidden : css.server_error_showed}>Ошибка во
+                                время
                                 обработки файла на сервере. Возможно, вы указали невозможное преобразование</p>
                             {/*</Link>*/}
                         </li>

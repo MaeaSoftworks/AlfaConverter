@@ -489,7 +489,6 @@ const EditXlsxToXml = () => {
         // console.log(keys);
 
 
-
         for (let i = 0; i < keys.length; i++) {
             if (Object.keys(input[keys[i]]).length === 1) {
                 // console.log(keys[i], 'X');
@@ -548,13 +547,17 @@ const EditXlsxToXml = () => {
                 setActiveMergeIndex(-1);
             }
         }}>
-            <div className={css.header}>
-                <div className={css.header_text_block}>
-                    <h1 className={css.header_header}>Изменение структуры</h1>
-                    <p className={css.header_description}>Вам предстоит выбрать как будет выглядеть Ваш документ после
-                        конвертации</p>
+            <div className={css.header_container}>
+                <div className={css.header}>
+                    <div className={css.header_text_block}>
+                        <h1 className={css.header_header}>Изменение структуры</h1>
+                        <p className={css.header_description}>Вам предстоит выбрать как будет выглядеть Ваш документ
+                            после
+                            конвертации</p>
+                    </div>
+                    <img src={upload_image} className={css.header_img}/>
                 </div>
-                <img src={upload_image} className={css.header_img}/>
+                <div className={css.block}/>
             </div>
             <div className={css.edit}>
                 {/*<Popup active={active} dataBundle={popupDataBundle}/>*/}
