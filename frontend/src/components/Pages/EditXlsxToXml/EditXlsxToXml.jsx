@@ -575,7 +575,7 @@ const EditXlsxToXml = () => {
                                                        setOuterActions={setOuterActions}/>
                         )}
 
-                        {columnsFromFile.map((columnName, index) =>
+                        {columnsToFile.map((columnName, index) =>
                             <MergeParametersSetupPopup active={activeMergeIndex === index}
                                                        setActive={setActive}
                                                        setActiveIndex={setActiveMergeIndex}
