@@ -1,8 +1,6 @@
 import css from './UploadXlsxToXml.module.css';
 import {useNavigate} from "react-router-dom";
-import upload_img from './upload_image.png';
-import React, {useState, useEffect} from 'react';
-import result from "../ResultXlsxToJson/ResultXlsxlToJson";
+import React, {useEffect, useState} from 'react';
 import arrowOk from './arrow_ok.svg';
 
 const UploadXlsxToXml = () => {
@@ -215,9 +213,9 @@ const UploadXlsxToXml = () => {
         dT.items.add(file);
         fileInput.files = dT.files;
 
-        if(targetId === 'source_file')
+        if (targetId === 'source_file')
             onInputFileFrom({target: fileInput});
-        else if(targetId === 'template_file')
+        else if (targetId === 'template_file')
             onInputFileTo({target: fileInput});
 
         console.log('targetId', targetId);

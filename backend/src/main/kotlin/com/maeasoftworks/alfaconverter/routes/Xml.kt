@@ -7,11 +7,7 @@ import com.maeasoftworks.alfaconverter.core.xml.Xml
 import com.maeasoftworks.alfaconverter.core.xml.Xsd
 import com.maeasoftworks.alfaconverter.core.xml.structure.Element
 import com.maeasoftworks.alfaconverter.dto.XmlPreviewResponse
-import com.maeasoftworks.alfaconverter.utils.Extension
-import com.maeasoftworks.alfaconverter.utils.with
-import com.maeasoftworks.alfaconverter.utils.asByteArray
-import com.maeasoftworks.alfaconverter.utils.deserializeTo
-import com.maeasoftworks.alfaconverter.utils.extractParts
+import com.maeasoftworks.alfaconverter.utils.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*

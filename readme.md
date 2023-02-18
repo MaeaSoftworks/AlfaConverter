@@ -1,6 +1,8 @@
 # ![logo](resources/alfa.svg) Alfa Converter
+
 Service for converting documents based on their content.   
 Supported file formats to conversion:
+
 - [x] `.xlsx` to `.xlsx` using second `.xlsx` as map
 - [x] `.xlsx` to `.xml` using `.xsd` scheme of expected `.xml` format
 - [x] `.xlsx` to `.json`
@@ -8,6 +10,7 @@ Supported file formats to conversion:
 Developed by Mæa Softworks special for Alfa-Bank ❤
 
 ## `.xlsx` recognizable data types and formats:
+
 |     Name      |  Type code   |        Format        | Format Code | Status |
 |:-------------:|:------------:|:--------------------:|:-----------:|:------:|
 |    Boolean    |     `B`      |                      |             |   ✔️   |
@@ -23,6 +26,7 @@ Developed by Mæa Softworks special for Alfa-Bank ❤
 | Inline string | `INLINE_STR` |                      |             |   ✔️   |
 
 ## `.xsd` recognizable tags:
+
 | Name                                  | Status |
 |---------------------------------------|:------:|
 | `xsd:all`                             |   ❌    |

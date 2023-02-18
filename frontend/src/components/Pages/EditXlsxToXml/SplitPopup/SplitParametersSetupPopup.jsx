@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import css from "./SplitParametersSetupPopup.module.css";
 
 const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex, bundle, outerActions, setOuterActions}) => {
@@ -14,7 +14,7 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
     const [formColumns, setFormColumns] = useState([]);
     const [chosenGroup, setDisabledGroup] = useState(1);
 
-    const [resultLength,setResultLength] = useState(-1);
+    const [resultLength, setResultLength] = useState(-1);
 
     useEffect(() => {
         initPopupValues();
@@ -39,24 +39,24 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
 
         if (values.multigroupSplitter !== '') {
             result = [];
-            for(let key in values) {
+            for (let key in values) {
                 result.push(resultSource);
                 result.push(values.multigroupSplitter);
             }
-            result = result.slice(2, result.length-1).join('');
+            result = result.slice(2, result.length - 1).join('');
         } else {
             result = [];
-            for(let key in values) {
+            for (let key in values) {
                 result.push(resultSource);
                 result.push(values[key]);
             }
-            result = result.slice(2, result.length-1).join('');
+            result = result.slice(2, result.length - 1).join('');
         }
         console.log(result);
 
         let index = columnsFromFile.map(element => element[0][0]);
         let sources = [];
-        for(let key in values) {
+        for (let key in values) {
             sources.push([key]);
         }
         sources = sources.slice(1, sources.length);
@@ -95,20 +95,20 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
         if (result.length < formCols.length) {
             console.log('result.length', result.length);
             console.log('resultLength', resultLength);
-            for(let i = result.length; i < formCols.length; i++) {
+            for (let i = result.length; i < formCols.length; i++) {
                 result.push('');
             }
         }
 
         console.log('setValues ->', vals);
-        console.log('setResultLength -> ',formCols.length);
-        console.log('setFormColumns -> ',formCols.slice(0, formCols.length-1));
-        console.log('setExampleStringSource -> ',exampleStringSrc);
-        console.log('setExampleStringResult -> ',[...result]);
+        console.log('setResultLength -> ', formCols.length);
+        console.log('setFormColumns -> ', formCols.slice(0, formCols.length - 1));
+        console.log('setExampleStringSource -> ', exampleStringSrc);
+        console.log('setExampleStringResult -> ', [...result]);
 
         setValues(structuredClone(vals));
         setResultLength(formCols.length);
-        setFormColumns(formCols.slice(0, formCols.length-1));
+        setFormColumns(formCols.slice(0, formCols.length - 1));
         setExampleStringSource(exampleStringSrc);
         setExampleStringResult([...result]);
 
@@ -217,7 +217,7 @@ const SplitParametersSetupPopup = ({active, setActive, setActiveIndex, fromIndex
 
     const expandResult = (resultElements, neededLength) => {
         resultElements = [...resultElements];
-        for(let i = resultElements.length; i < neededLength; i++) {
+        for (let i = resultElements.length; i < neededLength; i++) {
             resultElements.push('');
         }
         return resultElements;

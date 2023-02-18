@@ -1,13 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
 // import App from "./App";
-import ReactDOM from 'react-dom';
 import React from 'react';
-import {
-    BrowserRouter, Redirect,
-    Route, Routes, Navigate
-} from "react-router-dom";
-import ResultXlsxlToJson from "./components/Pages/ResultXlsxToJson/ResultXlsxlToJson";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Edit from "./components/Pages/EditXlsxToXlsx/EditXlsxToXlsx";
 import EditXlsxToXml from "./components/Pages/EditXlsxToXml/EditXlsxToXml";
 import UploadXlsxToXlsx from "./components/Pages/UploadXlsxToXlsx/UploadXlsxToXlsx";

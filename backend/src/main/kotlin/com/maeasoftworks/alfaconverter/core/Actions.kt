@@ -1,6 +1,5 @@
 package com.maeasoftworks.alfaconverter.core
 
-import com.maeasoftworks.alfaconverter.core.Table.*
 import com.maeasoftworks.alfaconverter.core.xlsx.NumberData
 import com.maeasoftworks.alfaconverter.core.xlsx.StringData
 import com.maeasoftworks.alfaconverter.core.xlsx.Xlsx

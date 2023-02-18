@@ -155,8 +155,8 @@
     top: 41%;
     left: 98%;
     border-radius: 50%;
-    height:10px;
-    width:10px;
+    height: 10px;
+    width: 10px;
     visibility: hidden;
 }
 
@@ -169,8 +169,8 @@
     top: 43%;
     left: -3%;
     border-radius: 50%;
-    height:10px;
-    width:10px;
+    height: 10px;
+    width: 10px;
     visibility: hidden;
 }
 
@@ -425,7 +425,7 @@
     min-height: 81px;
 }
 
-.control_button_reset:hover{
+.control_button_reset:hover {
     padding: 0;
     background: url("reset_light_bg.png");
     border: none;

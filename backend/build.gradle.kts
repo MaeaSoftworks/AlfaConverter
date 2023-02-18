@@ -24,24 +24,24 @@ application {
 
 dependencies {
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    implementation("io.ktor:ktor-server-content-negotiation-jvm:2.2.1")
-    implementation("io.ktor:ktor-server-core-jvm:2.2.1")
-    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.2.1")
-    implementation("io.ktor:ktor-server-call-logging-jvm:2.2.1")
-    implementation("io.ktor:ktor-server-default-headers-jvm:2.2.1")
-    implementation("io.ktor:ktor-server-cors-jvm:2.2.1")
-    implementation("io.ktor:ktor-server-host-common-jvm:2.2.1")
-    implementation("io.ktor:ktor-server-status-pages-jvm:2.2.1")
-    implementation("io.ktor:ktor-server-netty-jvm:2.2.1")
     implementation("org.docx4j:docx4j-JAXB-ReferenceImpl:11.4.8")
     implementation("commons-codec:commons-codec:1.15") // override vulnerable docx4j dependency
     implementation("org.jdom:jdom2:2.0.6.1")
     implementation("org.apache.tika:tika-core:2.6.0")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-default-headers-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-cors-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-host-common-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-status-pages-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
 
-    testImplementation("io.ktor:ktor-server-tests-jvm:2.2.1")
-    testImplementation("io.ktor:ktor-server-test-host-jvm:2.2.1")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion")
 }
 
 jacoco {

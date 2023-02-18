@@ -54,7 +54,8 @@ class XmlRoutesTest : FunSpec() {
                         appendFile("source", "src/test/resources/routes/xml", "source.xlsx", ContentType.Application.Xlsx)
                         appendFile("modifier", "src/test/resources/routes/xml", "modifier.xsd", ContentType.Application.Xml)
                     }))
-                }.bodyAsText() shouldBe """{"headers":[["ФИО"],["Дата рождения"],["Возраст пациента"],["Адрес прописки пациента"],["Диагноз (код)"],["Диагноз (расшифровка)"],["Тип исследования"],["Адрес лаборатории"],["Название лаборатории"],["Код лаборатории"],["Дата взятия анализа"],["Время взятия анализа"],["Дата выполнения"],["Время выполнения анализа"]],"examples":["Иванов Иван Иванович","21.06.1963","59","Псков, ул. Ленина 35-28","К29.3","Гастрит","Гематологическое исследование","Псков, 8 Марта, 23","Клинико-диагностический центр","145","22.06.2022","9:20:00","24.06.2022","13:53"],"schema":{"name":"root","type":{"type":"ComplexType","name":"root","fields":{"person":{"type":"ComplexType","name":"person","fields":{"firstname":{"type":"xsd:string"},"lastname":{"type":"xsd:string"},"middleName":{"type":"xsd:string"},"birthday":{"type":"xsd:date"},"age":{"type":"xsd:decimal"},"address":{"type":"xsd:string"},"diagnosis":{"type":"xsd:string"},"researchType":{"type":"xsd:string"},"lab":{"type":"ComplexType","name":"lab","attributes":{"address":{"type":"xsd:string"},"name":{"type":"xsd:string"},"code":{"type":"xsd:string"}}},"analysis":{"type":"ComplexType","name":"analysis","attributes":{"dateStart":{"type":"xsd:date"},"timeStart":{"type":"time"},"dateComplete":{"type":"xsd:date"},"timeComplete":{"type":"time"}}}}}}}},"endpoints":[["root","person","firstname"],["root","person","lastname"],["root","person","middleName"],["root","person","birthday"],["root","person","age"],["root","person","address"],["root","person","diagnosis"],["root","person","researchType"],["root","person","lab","address"],["root","person","lab","name"],["root","person","lab","code"],["root","person","analysis","dateStart"],["root","person","analysis","timeStart"],["root","person","analysis","dateComplete"],["root","person","analysis","timeComplete"]]}"""
+                }
+                    .bodyAsText() shouldBe """{"headers":[["ФИО"],["Дата рождения"],["Возраст пациента"],["Адрес прописки пациента"],["Диагноз (код)"],["Диагноз (расшифровка)"],["Тип исследования"],["Адрес лаборатории"],["Название лаборатории"],["Код лаборатории"],["Дата взятия анализа"],["Время взятия анализа"],["Дата выполнения"],["Время выполнения анализа"]],"examples":["Иванов Иван Иванович","21.06.1963","59","Псков, ул. Ленина 35-28","К29.3","Гастрит","Гематологическое исследование","Псков, 8 Марта, 23","Клинико-диагностический центр","145","22.06.2022","9:20:00","24.06.2022","13:53"],"schema":{"name":"root","type":{"type":"ComplexType","name":"root","fields":{"person":{"type":"ComplexType","name":"person","fields":{"firstname":{"type":"xsd:string"},"lastname":{"type":"xsd:string"},"middleName":{"type":"xsd:string"},"birthday":{"type":"xsd:date"},"age":{"type":"xsd:decimal"},"address":{"type":"xsd:string"},"diagnosis":{"type":"xsd:string"},"researchType":{"type":"xsd:string"},"lab":{"type":"ComplexType","name":"lab","attributes":{"address":{"type":"xsd:string"},"name":{"type":"xsd:string"},"code":{"type":"xsd:string"}}},"analysis":{"type":"ComplexType","name":"analysis","attributes":{"dateStart":{"type":"xsd:date"},"timeStart":{"type":"time"},"dateComplete":{"type":"xsd:date"},"timeComplete":{"type":"time"}}}}}}}},"endpoints":[["root","person","firstname"],["root","person","lastname"],["root","person","middleName"],["root","person","birthday"],["root","person","age"],["root","person","address"],["root","person","diagnosis"],["root","person","researchType"],["root","person","lab","address"],["root","person","lab","name"],["root","person","lab","code"],["root","person","analysis","dateStart"],["root","person","analysis","timeStart"],["root","person","analysis","dateComplete"],["root","person","analysis","timeComplete"]]}"""
             }
         }
 
@@ -67,7 +68,8 @@ class XmlRoutesTest : FunSpec() {
                         append("schema", serializer.encodeToString(element), Headers.build { append(HttpHeaders.ContentType, ContentType.Application.Json) })
                         append("conversion", createAndPrintConversion(), Headers.build { append(HttpHeaders.ContentType, ContentType.Application.Json) })
                     }))
-                }.bodyAsText() shouldBe """<root><person><firstname>Иван</firstname><lastname>Иванов</lastname><middleName>Иванович</middleName><birthday>21.06.1963</birthday><age>59</age><address>Псков, ул. Ленина 35-28</address><diagnosis>[К29.3] Гастрит</diagnosis><researchType>Гематологическое исследование</researchType><lab address="Псков, 8 Марта, 23" name="Клинико-диагностический центр" code=145/><analysis dateStart="22.06.2022" timeStart="9:20:00" dateComplete="24.06.2022" timeComplete="13:53"/></person></root>"""
+                }
+                    .bodyAsText() shouldBe """<root><person><firstname>Иван</firstname><lastname>Иванов</lastname><middleName>Иванович</middleName><birthday>21.06.1963</birthday><age>59</age><address>Псков, ул. Ленина 35-28</address><diagnosis>[К29.3] Гастрит</diagnosis><researchType>Гематологическое исследование</researchType><lab address="Псков, 8 Марта, 23" name="Клинико-диагностический центр" code=145/><analysis dateStart="22.06.2022" timeStart="9:20:00" dateComplete="24.06.2022" timeComplete="13:53"/></person></root>"""
             }
         }
     }
@@ -76,7 +78,11 @@ class XmlRoutesTest : FunSpec() {
         return serializer.encodeToString(
             Conversion(
                 mutableListOf(
-                    Split(listOf("ФИО"), listOf(listOf("root", "person", "lastname"), listOf("root", "person", "firstname"), listOf("root", "person", "middleName")), "(\\S+) (\\S+) (\\S+)"),
+                    Split(
+                        listOf("ФИО"),
+                        listOf(listOf("root", "person", "lastname"), listOf("root", "person", "firstname"), listOf("root", "person", "middleName")),
+                        "(\\S+) (\\S+) (\\S+)"
+                    ),
                     Bind(listOf("Дата рождения"), listOf("root", "person", "birthday")),
                     Bind(listOf("Возраст пациента"), listOf("root", "person", "age")),
                     Bind(listOf("Адрес прописки пациента"), listOf("root", "person", "address")),

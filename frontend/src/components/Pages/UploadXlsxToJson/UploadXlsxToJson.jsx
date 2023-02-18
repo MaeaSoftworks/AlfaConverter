@@ -1,8 +1,6 @@
 import css from './UploadXlsxToJson.module.css';
 import {useNavigate} from "react-router-dom";
-import upload_img from './upload_image.png';
-import React, {useState, useEffect} from 'react';
-import result from "../ResultXlsxToJson/ResultXlsxlToJson";
+import React, {useEffect, useState} from 'react';
 import arrowOk from "../UploadXlsxToXml/arrow_ok.svg";
 
 const UploadXlsxToJson = () => {
@@ -135,7 +133,7 @@ const UploadXlsxToJson = () => {
                     let prettyJsonString = JSON.stringify(result, null, 2);
                     let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(prettyJsonString);
                     let dlAnchorElem = document.createElement('a');
-                    dlAnchorElem.setAttribute("href",     dataStr     );
+                    dlAnchorElem.setAttribute("href", dataStr);
                     dlAnchorElem.setAttribute("download", `${Date.now()}.json`);
                     dlAnchorElem.click();
                     setIsResponseOk(true);
@@ -199,7 +197,8 @@ const UploadXlsxToJson = () => {
                             }>
                                 <img className={css.arrow_img} src={arrowOk}></img>
                             </div>
-                        </div>                        {/*<input type="file" name="source_file" id="source_file" className={css.file_input}/>*/}
+                        </div>
+                        {/*<input type="file" name="source_file" id="source_file" className={css.file_input}/>*/}
                         <input type="file" id="source_file" className={css.file_input} onChange={onInputFileFrom}/>
                     </div>
                     <p className={fileFromErrorClass[0]}>Ошибка! Файл имеет неверное расширение. Необходимо

@@ -1,12 +1,8 @@
 import css from './EditXlsxToXml.module.css';
 import upload_image from './upload_header_analytics_img.png';
-import connection_light from './connection_light_bg.png';
-import split_light from './split_light_bg.png';
-import merge_light from './merge_light_bg.png';
-import delete_light from './delete.png';
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Xarrow, {Xwrapper} from "react-xarrows";
-import React, {useEffect, useId, useState} from "react";
+import React, {useState} from "react";
 import SplitParametersSetupPopup from "./SplitPopup/SplitParametersSetupPopup";
 import MergeParametersSetupPopup from "./MergePopup/MergeParametersSetupPopup";
 
